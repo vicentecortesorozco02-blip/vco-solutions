@@ -1,0 +1,268 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   [BRAND] — Design tokens
+   Single source of truth. Never hardcode a colour, size or duration inside a
+   component: add or reuse a token here. See /docs/DESIGN_SYSTEM.md
+   ========================================================================== */
+
+@theme {
+  /* --- Brand hue -----------------------------------------------------------
+     The whole brand ramp derives from these two numbers. Changing them
+     re-skins the site. They are the only intentional magic numbers here.
+     h = OKLCH hue angle, c = chroma reference.                               */
+  --brand-h: 42;
+  --brand-c: 0.115;
+
+  --color-brand-50: oklch(0.972 calc(var(--brand-c) * 0.2) var(--brand-h));
+  --color-brand-100: oklch(0.94 calc(var(--brand-c) * 0.38) var(--brand-h));
+  --color-brand-200: oklch(0.885 calc(var(--brand-c) * 0.6) var(--brand-h));
+  --color-brand-300: oklch(0.81 calc(var(--brand-c) * 0.82) var(--brand-h));
+  --color-brand-400: oklch(0.71 calc(var(--brand-c) * 1) var(--brand-h));
+  --color-brand-500: oklch(0.62 calc(var(--brand-c) * 1.1) var(--brand-h));
+  --color-brand-600: oklch(0.545 calc(var(--brand-c) * 1.12) var(--brand-h));
+  --color-brand-700: oklch(0.465 calc(var(--brand-c) * 1) var(--brand-h));
+  --color-brand-800: oklch(0.385 calc(var(--brand-c) * 0.82) var(--brand-h));
+  --color-brand-900: oklch(0.3 calc(var(--brand-c) * 0.62) var(--brand-h));
+
+  /* --- Warm neutral ramp: the paper the brand is printed on ---------------- */
+  --color-ink-0: oklch(1 0 0);
+  --color-ink-25: oklch(0.988 0.003 85);
+  --color-ink-50: oklch(0.972 0.004 85);
+  --color-ink-100: oklch(0.945 0.005 82);
+  --color-ink-200: oklch(0.902 0.006 80);
+  --color-ink-300: oklch(0.835 0.007 78);
+  --color-ink-400: oklch(0.7 0.008 74);
+  --color-ink-500: oklch(0.575 0.008 70);
+  --color-ink-600: oklch(0.47 0.008 66);
+  --color-ink-700: oklch(0.37 0.008 62);
+  --color-ink-800: oklch(0.268 0.008 58);
+  --color-ink-900: oklch(0.196 0.008 56);
+  --color-ink-950: oklch(0.148 0.008 56);
+
+  /* --- Semantic surface / text tokens ------------------------------------- */
+  --color-bg: var(--color-ink-25);
+  --color-bg-subtle: var(--color-ink-50);
+  --color-bg-sunken: var(--color-ink-100);
+  --color-surface: var(--color-ink-0);
+  --color-inverse: var(--color-ink-950);
+  --color-inverse-subtle: oklch(0.205 0.008 56);
+
+  --color-fg: var(--color-ink-900);
+  --color-fg-muted: var(--color-ink-600);
+  /* Darker than ink-500 on purpose: at ink-500 this token measured 4.23:1 on
+     paper, below the 4.5:1 that WCAG AA requires for text at these sizes. */
+  --color-fg-subtle: oklch(0.535 0.009 68);
+  --color-fg-inverse: var(--color-ink-50);
+  --color-fg-inverse-muted: oklch(0.735 0.008 70);
+
+  --color-line: oklch(0.902 0.006 80);
+  --color-line-soft: oklch(0.938 0.005 82);
+  --color-line-strong: oklch(0.82 0.007 78);
+  --color-line-inverse: oklch(0.3 0.008 58);
+  /* Borders of interactive controls are UI components, not decoration: WCAG
+     1.4.11 asks for 3:1 against the background. `line` is decorative only. */
+  --color-line-field: oklch(0.64 0.009 72);
+
+  --color-accent: var(--color-brand-600);
+  --color-accent-hover: var(--color-brand-700);
+  --color-accent-fg: oklch(0.995 0.004 85);
+  --color-accent-quiet: var(--color-brand-100);
+  --color-accent-text: var(--color-brand-700);
+
+  --color-positive: oklch(0.52 0.095 158);
+  --color-positive-quiet: oklch(0.945 0.028 158);
+  --color-critical: oklch(0.505 0.165 27);
+  --color-critical-quiet: oklch(0.955 0.028 27);
+
+  /* --- Type families -------------------------------------------------------- */
+  --font-sans:
+    var(--font-instrument-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display:
+    var(--font-instrument-serif), ui-serif, Georgia, "Times New Roman", serif;
+
+  /* --- Fluid type scale ------------------------------------------------------
+     Tuned so a 16in laptop (1366-1536) reads as its own design, not a shrunk
+     27in. Every ceiling is reached around 1536 and then holds.                */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1.35;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.55;
+  --text-base: 1rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.0625rem;
+  --text-lg--line-height: 1.65;
+
+  --text-lead: clamp(1.0625rem, 1rem + 0.34vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+
+  --text-h4: clamp(1.0625rem, 1.02rem + 0.2vw, 1.1875rem);
+  --text-h4--line-height: 1.4;
+  --text-h3: clamp(1.3125rem, 1.19rem + 0.55vw, 1.6875rem);
+  --text-h3--line-height: 1.28;
+  --text-h2: clamp(1.875rem, 1.52rem + 1.5vw, 2.875rem);
+  --text-h2--line-height: 1.1;
+  --text-h1: clamp(2.375rem, 1.87rem + 2.2vw, 4rem);
+  --text-h1--line-height: 1.04;
+  --text-metric: clamp(2.25rem, 1.72rem + 2.3vw, 3.75rem);
+  --text-metric--line-height: 1;
+
+  /* --- Layout ---------------------------------------------------------------- */
+  --container-content: 46rem; /* long-form reading measure */
+  --container-page: 77.5rem; /* 1240px, the primary grid */
+  --container-wide: 90rem; /* 1440px, full-bleed panels */
+
+  /* --- Radii: restrained, editorial ------------------------------------------ */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* --- Elevation: borders first, shadow only for genuinely lifted surfaces --- */
+  --shadow-raise:
+    0 1px 2px oklch(0.196 0.008 56 / 0.05),
+    0 8px 24px -12px oklch(0.196 0.008 56 / 0.1);
+  --shadow-pop:
+    0 2px 4px oklch(0.196 0.008 56 / 0.06),
+    0 18px 48px -20px oklch(0.196 0.008 56 / 0.18);
+
+  /* --- Motion ----------------------------------------------------------------- */
+  --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 140ms;
+  --duration-base: 240ms;
+  --duration-slow: 420ms;
+  --duration-scene: 700ms;
+
+  /* --- Icon sizes ---------------------------------------------------------------- */
+  --size-icon-sm: 1rem;
+  --size-icon-md: 1.25rem;
+  --size-icon-lg: 1.5rem;
+
+  /* --- Breakpoints, named after the real devices they serve --------------------- */
+  --breakpoint-xs: 26.875rem; /* 430  large phones */
+  --breakpoint-sm: 40rem; /* 640 */
+  --breakpoint-md: 48rem; /* 768  tablet */
+  --breakpoint-lg: 64rem; /* 1024 */
+  --breakpoint-xl: 85.375rem; /* 1366 16in laptop */
+  --breakpoint-2xl: 96rem; /* 1536 */
+  --breakpoint-3xl: 120rem; /* 1920 */
+}
+
+@layer base {
+  :root {
+    --z-base: 0;
+    --z-raised: 10;
+    --z-sticky: 20;
+    --z-header: 40;
+    --z-overlay: 50;
+    --z-modal: 60;
+
+    --section-y: clamp(4.5rem, 3rem + 5vw, 8.5rem);
+    --gutter: clamp(1.25rem, 0.85rem + 1.6vw, 2.5rem);
+
+    color-scheme: light;
+  }
+
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem; /* header height + breathing room for anchors */
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, branded focus. Never remove without a replacement. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background-color: var(--color-brand-200);
+    color: var(--color-ink-950);
+  }
+}
+
+@layer utilities {
+  /* Numbers that must line up column-to-column. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  .u-gutter {
+    padding-inline: var(--gutter);
+  }
+
+  /* Faint engineering grid behind hero and diagram panels. */
+  .u-grid-field {
+    background-image:
+      linear-gradient(to right, var(--color-line-soft) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-line-soft) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    background-position: center;
+    mask-image: radial-gradient(
+      ellipse 80% 65% at 50% 40%,
+      black 20%,
+      transparent 78%
+    );
+  }
+
+  .u-grid-field-inverse {
+    background-image:
+      linear-gradient(to right, var(--color-line-inverse) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-line-inverse) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    background-position: center;
+    mask-image: radial-gradient(
+      ellipse 75% 60% at 50% 45%,
+      black 10%,
+      transparent 75%
+    );
+  }
+}
+
+/* Motion is polish, never a dependency. Honour the OS preference. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
