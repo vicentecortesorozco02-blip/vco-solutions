@@ -44,12 +44,13 @@ src/
     opengraph-image.tsx, sitemap.ts, robots.ts
   components/
     ui/                Primitivas: Button, Container, Section, SectionHeader, Faq…
-    layout/            Header, Footer, PageHero, Wordmark
+    brand/             Logo: el único sitio que dibuja la identidad
+    layout/            Header, Footer, PageHero
     sections/          Bloques de página, componibles y sin estado
     cards/             Tarjetas de solución y de caso
     diagrams/          ProcessFlow y ProcessRibbon: la firma visual
     features/          Piezas con estado: ContactForm, TimeCalculator
-  config/              brand.ts (marca) y site.ts (rutas y navegación)
+  config/              Identidad de marca (brand.ts, brand.css, fonts.ts) y rutas (site.ts)
   content/             Contenido tipado: soluciones, casos, método, FAQ
   lib/                 cn, seo, analytics, rate-limit, esquema de contacto
   app/globals.css      Design tokens. Única fuente de verdad visual.
@@ -60,6 +61,7 @@ e2e/                   Pruebas de extremo a extremo
 Documentación completa:
 
 - [`docs/BASELINE.md`](docs/BASELINE.md) — punto de retorno estable (`baseline-v1`)
+- [`docs/BRAND.md`](docs/BRAND.md) — posicionamiento, voz y sistema de identidad
 - [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) — tokens y reglas visuales
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — decisiones técnicas
 - [`docs/CONTENT.md`](docs/CONTENT.md) — arquitectura de contenido y tono
@@ -72,9 +74,18 @@ Documentación completa:
 El nombre definitivo se decidirá más adelante. Hasta entonces el sitio muestra
 el marcador `[BRAND]`.
 
-Para cambiarlo: editar `src/config/brand.ts`. Nada más. Ningún componente,
-metadato, texto legal ni documento contiene el nombre escrito a mano, y hay un
-test que lo comprueba indirectamente a través de la configuración.
+Toda la identidad vive en cuatro archivos y solo cuatro:
+
+| Archivo | Qué controla |
+| --- | --- |
+| `src/config/brand.ts` | Nombre, razón social, contacto, metadatos, logotipo, favicon, espejo de la paleta |
+| `src/config/brand.css` | Color de marca (dos números) y pilas tipográficas |
+| `src/config/fonts.ts` | Carga de las tipografías |
+| `src/components/brand/Logo.tsx` | Cómo se dibuja el logotipo |
+
+`src/config/brand.test.ts` falla si alguien escribe el nombre, el dominio, el
+correo o un color hexadecimal fuera de ahí. La guía completa, con la lista de
+comprobación para aplicar la marca, está en [`docs/BRAND.md`](docs/BRAND.md).
 
 ## Variables de entorno
 

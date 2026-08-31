@@ -201,3 +201,46 @@ branding en un experimento reversible en lugar de en una apuesta.
 **Consecuencia.** El favicon del andamiaje de Next se eliminó en este commit: es
 el logotipo de Next.js y publicarlo como identidad propia sería incorrecto.
 Hasta que haya branding, el sitio no sirve favicon.
+
+---
+
+## D-015 · La marca se separa de la estructura
+
+**Contexto.** Fase de branding. `--brand-h` y `--brand-c` vivían mezclados con
+el resto de tokens en `globals.css`, las tipografías se cargaban en
+`app/layout.tsx` y el logotipo era un componente de `layout/`. Aplicar una
+identidad obligaba a abrir archivos que no tienen nada que ver con la marca.
+
+**Decisión.** La identidad vive en cuatro archivos y solo cuatro:
+`config/brand.ts`, `config/brand.css`, `config/fonts.ts` y
+`components/brand/Logo.tsx`. `globals.css` queda como estructura pura:
+espaciado, escala, radios, movimiento. Un rebranding no debería abrirlo.
+
+**Motivo.** El objetivo declarado de la fase es que aplicar el naming sea un
+cambio pequeño y seguro. Eso exige que la superficie de cambio sea enumerable.
+
+**Verificación.** `config/brand.test.ts` recorre el código y falla si aparece el
+marcador, el dominio, el correo o un color hexadecimal fuera de la
+configuración. La extracción se comprobó además píxel a píxel contra
+`baseline-v1`: 28 capturas de página completa idénticas.
+
+---
+
+## D-016 · `brand.colors`, un espejo consciente
+
+**Contexto.** Bug encontrado al centralizar el color: la imagen social llevaba
+toda la fase 1 con literales escritos a mano que se habían desviado de los
+tokens. El acento del sitio es `#ac522d`; el de la imagen social era `#b0631c`.
+También `theme-color` estaba desviado.
+
+**Causa.** La imagen social se genera en un worker que no puede leer CSS, y
+`theme-color` es un metadato. Ninguno de los dos puede consumir un token.
+
+**Decisión.** Un único espejo hexadecimal en `brand.colors`, marcado como copia,
+con instrucciones de regeneración en `BRAND.md` §11 y una prueba e2e
+(`e2e/brand.spec.ts`) que resuelve los tokens reales en un navegador y falla si
+se desvían.
+
+**Alternativa descartada.** Mover la paleta a TypeScript y generar el CSS desde
+ahí: añadiría un paso de compilación y JavaScript para resolver algo que CSS ya
+hace mejor. Una copia vigilada por una prueba es más simple que un generador.

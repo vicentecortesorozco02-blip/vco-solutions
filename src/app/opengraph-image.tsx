@@ -14,10 +14,11 @@ export const contentType = "image/png";
  * at build time, which keeps generation fast and removes a failure mode.
  */
 export default function OpengraphImage() {
-  const ink = "#25211f";
-  const paper = "#fbfaf8";
-  const accent = "#b0631c";
-  const muted = "#6d6660";
+  // La imagen se genera en un worker que no puede leer CSS, así que la paleta
+  // llega del espejo hexadecimal de la configuración de marca. Antes eran
+  // literales escritos a mano y se habían desviado de los tokens reales: el
+  // acento estaba en #b0631c cuando la marca es #ac522d. Ver docs/BRAND.md.
+  const { fg: ink, bg: paper, accent, fgMuted: muted, line } = brand.colors;
 
   return new ImageResponse(
     (
@@ -72,7 +73,7 @@ export default function OpengraphImage() {
               key={step}
               style={{
                 display: "flex",
-                border: `1px solid #ded9d3`,
+                border: `1px solid ${line}`,
                 color: muted,
                 fontSize: 20,
                 padding: "8px 14px",

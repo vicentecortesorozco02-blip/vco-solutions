@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Wordmark } from "@/components/layout/Wordmark";
+import { Logo } from "@/components/brand/Logo";
 import { Container } from "@/components/ui/Container";
 import { brand } from "@/config/brand";
 import { footerNav } from "@/config/site";
@@ -20,7 +20,7 @@ export function Footer() {
       <Container className="py-14 lg:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,2fr)] lg:gap-20">
           <div className="flex max-w-[38ch] flex-col gap-5">
-            <Wordmark />
+            <Logo />
             <p className="text-sm text-fg-muted">{brand.description}</p>
             <a
               href={`mailto:${brand.email}`}

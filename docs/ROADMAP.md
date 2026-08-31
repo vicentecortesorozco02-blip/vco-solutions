@@ -25,14 +25,16 @@ Base completa y desplegable.
 
 Bloqueantes. Ninguno es de código.
 
-1. **Naming y marca.** Decidir el nombre y rellenar `src/config/brand.ts`
-   entero: nombre, dominio, correo, razón social, NIF.
+1. **Naming y marca.** Decidir el nombre y aplicarlo. La infraestructura ya
+   está preparada: la lista exacta de pasos está en
+   [`BRAND.md`](BRAND.md), sección 15.
 2. **Transporte del formulario.** Configurar `CONTACT_WEBHOOK_URL`. Sin esto el
    formulario devuelve 503 a propósito.
 3. **Revisión legal.** Aviso legal, privacidad y cookies están estructurados
    pero llevan marcadores `[PENDIENTE]` y no los ha revisado un abogado.
-4. **Logo.** Hoy es un lockup tipográfico en `components/layout/Wordmark.tsx`.
-   Cuando exista un logo real, solo cambia ese archivo.
+4. **Logo.** Hoy es un marcador tipográfico en `components/brand/Logo.tsx`, con
+   variantes ya previstas (lockup, wordmark, símbolo, compacta; tono claro y
+   oscuro). Cuando exista el asset real, se activa desde `brand.ts`.
 5. **Favicon.** No hay ninguno. Se eliminó el que trae el andamiaje de Next
    porque es el logotipo de Next.js y no podemos publicarlo como identidad
    propia. Se añadirá con el branding, como `src/app/icon.svg`.

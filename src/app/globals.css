@@ -1,19 +1,19 @@
 @import "tailwindcss";
+@import "../config/brand.css";
 
 /* ==========================================================================
-   [BRAND] — Design tokens
-   Single source of truth. Never hardcode a colour, size or duration inside a
-   component: add or reuse a token here. See /docs/DESIGN_SYSTEM.md
+   Design tokens — ESTRUCTURA
+   Fuente de verdad del sistema visual. Ningún componente escribe un color, un
+   tamaño, un radio o una duración a mano: se añade o se reutiliza un token.
+
+   Las decisiones de MARCA (tono de color y tipografías) no están aquí: viven
+   en src/config/brand.css, que se importa arriba. Un rebranding no debería
+   tocar este archivo.
+
+   Ver /docs/DESIGN_SYSTEM.md y /docs/BRAND.md
    ========================================================================== */
 
 @theme {
-  /* --- Brand hue -----------------------------------------------------------
-     The whole brand ramp derives from these two numbers. Changing them
-     re-skins the site. They are the only intentional magic numbers here.
-     h = OKLCH hue angle, c = chroma reference.                               */
-  --brand-h: 42;
-  --brand-c: 0.115;
-
   --color-brand-50: oklch(0.972 calc(var(--brand-c) * 0.2) var(--brand-h));
   --color-brand-100: oklch(0.94 calc(var(--brand-c) * 0.38) var(--brand-h));
   --color-brand-200: oklch(0.885 calc(var(--brand-c) * 0.6) var(--brand-h));
@@ -72,15 +72,13 @@
 
   --color-positive: oklch(0.52 0.095 158);
   --color-positive-quiet: oklch(0.945 0.028 158);
+  /* Brillo interior de las superficies de acento. Es un token porque un
+     componente no debe escribir un color, ni siquiera dentro de una sombra. */
+  --color-glint: oklch(1 0 0 / 0.18);
   --color-critical: oklch(0.505 0.165 27);
   --color-critical-quiet: oklch(0.955 0.028 27);
 
-  /* --- Type families -------------------------------------------------------- */
-  --font-sans:
-    var(--font-instrument-sans), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display:
-    var(--font-instrument-serif), ui-serif, Georgia, "Times New Roman", serif;
+  /* Las familias tipográficas se declaran en src/config/brand.css. */
 
   /* --- Fluid type scale ------------------------------------------------------
      Tuned so a 16in laptop (1366-1536) reads as its own design, not a shrunk

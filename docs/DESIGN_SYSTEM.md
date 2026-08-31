@@ -1,7 +1,11 @@
 # Sistema de diseño
 
-Fuente de verdad: `src/app/globals.css`. Este documento explica el porqué; el
-archivo manda sobre los valores.
+Fuente de verdad: `src/app/globals.css` para la estructura y
+`src/config/brand.css` para las decisiones de marca. Este documento explica el
+porqué; los archivos mandan sobre los valores.
+
+Separación deliberada: un rebranding toca `brand.css` y no debería necesitar
+abrir `globals.css`. Ver [`BRAND.md`](BRAND.md).
 
 Regla única: **si un componente contiene un color, un tamaño, un radio o una
 duración escritos a mano, está mal.**
@@ -30,7 +34,7 @@ hace cosas con IA". Por eso:
 
 ### Marca
 
-Toda la rampa de marca deriva de dos números en `@theme`:
+Toda la rampa de marca deriva de dos números en `src/config/brand.css`:
 
 ```css
 --brand-h: 42;      /* ángulo de tono OKLCH */
@@ -67,6 +71,7 @@ Nunca uses `ink-600` en un componente. Usa el token semántico:
 | `line-soft`       | Retícula de fondo                                |
 | `line-strong`     | Filete de énfasis                                |
 | `line-field`      | Borde de controles interactivos                  |
+| `glint`           | Brillo interior de las superficies de acento     |
 | `accent`          | Acción principal y marcadores de "sistema"       |
 | `accent-text`     | Acento sobre papel para texto (más oscuro)       |
 | `critical`        | Errores de formulario                            |
@@ -99,7 +104,8 @@ Si añades un token de texto o de borde interactivo, mídelo antes de usarlo.
 ## 3. Tipografía
 
 Dos familias, ambas variables, ambas servidas desde el propio dominio por
-`next/font`.
+`next/font`. Se cargan en `src/config/fonts.ts` y se declaran como pilas en
+`src/config/brand.css`.
 
 - **Instrument Serif** — solo display: `h1`, títulos de sección, cifras
   grandes. Aporta la voz editorial.

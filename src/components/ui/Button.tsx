@@ -15,12 +15,12 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-accent text-accent-fg shadow-[0_1px_0_oklch(1_0_0/0.18)_inset] hover:bg-accent-hover",
+    "bg-accent text-accent-fg shadow-[0_1px_0_var(--color-glint)_inset] hover:bg-accent-hover",
   secondary:
     "border border-line-strong bg-surface text-fg hover:border-fg hover:bg-bg-subtle",
   quiet: "text-fg hover:bg-bg-sunken",
   inverse:
-    "border border-line-inverse bg-transparent text-fg-inverse hover:border-fg-inverse-muted hover:bg-white/5",
+    "border border-line-inverse bg-transparent text-fg-inverse hover:border-fg-inverse-muted hover:bg-fg-inverse/5",
 };
 
 const sizes: Record<Size, string> = {

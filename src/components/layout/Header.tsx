@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 
-import { Wordmark } from "@/components/layout/Wordmark";
+import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { brand, primaryCta } from "@/config/brand";
@@ -71,7 +71,7 @@ export function Header() {
         )}
       >
         <Container className="flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
-          <Wordmark />
+          <Logo />
 
           <nav aria-label="Principal" className="hidden lg:block">
             <ul className="flex items-center gap-1">

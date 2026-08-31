@@ -12,6 +12,7 @@ está terminada.
 1. Lee este archivo.
 2. Lee `docs/DESIGN_SYSTEM.md` si vas a tocar cualquier cosa visual.
 3. Lee `docs/ARCHITECTURE.md` si vas a añadir rutas, dependencias o capas.
+   Lee `docs/BRAND.md` si vas a tocar identidad, copy de marca o naming.
 4. Lee `docs/CONTENT.md` si vas a escribir o cambiar textos.
 5. Busca si el patrón que necesitas ya existe. Casi siempre existe.
 
@@ -41,9 +42,18 @@ Consecuencias que afectan a cada línea de código y de copy:
 
 ### 3.1 Marca
 
-- **Nunca** escribas el nombre de la empresa en un componente, un texto, un
-  metadato o un documento. Importa desde `src/config/brand.ts`.
+- **Nunca** escribas el nombre de la empresa, el dominio, el correo ni un color
+  de marca en un componente, un texto, un metadato o un documento.
+- La identidad vive en cuatro archivos: `src/config/brand.ts` (texto y valores
+  que el CSS no sirve), `src/config/brand.css` (color y tipografías),
+  `src/config/fonts.ts` (carga) y `src/components/brand/Logo.tsx` (dibujo).
 - El nombre actual es el marcador `[BRAND]` y es intencionado.
+- `src/config/brand.test.ts` falla si se escribe identidad fuera de ahí. Si esa
+  prueba falla, la solución es mover el valor a la configuración, nunca relajar
+  la prueba.
+- `brand.colors` es un espejo hexadecimal para superficies que no leen CSS
+  (imagen social, `theme-color`). Al cambiar el color hay que regenerarlo: ver
+  `docs/BRAND.md`, sección 11. Hay una prueba e2e que detecta la desviación.
 - Las rutas se declaran en `src/config/site.ts`. No escribas rutas a mano.
 
 ### 3.2 Design tokens

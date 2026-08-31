@@ -28,7 +28,9 @@ config/     → content/ → components/ → app/
 
 La dependencia va en una sola dirección. Concretamente:
 
-- `config/` no importa nada del proyecto. Es la raíz.
+- `config/` no importa nada del proyecto. Es la raíz. Contiene la identidad de
+  marca (`brand.ts`, `brand.css`, `fonts.ts`) y la topología del sitio
+  (`site.ts`).
 - `content/` importa tipos y, para los iconos, `lucide-react`. Nunca importa
   componentes.
 - `components/` importa de `content`, `config` y `lib`. Nunca de `app`.
@@ -102,6 +104,10 @@ Centralizado en `src/lib/seo.ts`. Ninguna página construye metadatos a mano.
 - Los breadcrumbs son visibles además de estructurados: en un sitio con
   soluciones y casos anidados son navegación real.
 
+**Marca.** `lib/seo.ts` no contiene identidad: la lee de `config/brand.ts`. La
+imagen social y `theme-color` usan `brand.colors`, un espejo hexadecimal de los
+tokens para superficies que no pueden leer CSS, vigilado por `e2e/brand.spec.ts`.
+
 **Internacionalización.** Todavía no está, pero la estructura no la impide:
 `brand.locale` y `brand.language` ya están centralizados y todo el texto vive en
 `content/`. Añadir inglés sería un segmento `[locale]` y un segundo juego de
@@ -155,8 +161,9 @@ cosas en el mismo cambio.
 | --------- | ----------- | -------------------------------------------------------- |
 | Unitario  | Vitest      | Utilidades, esquema de contacto, rate limit               |
 | Contenido | Vitest      | Slugs únicos, enlaces internos, la regla de credibilidad  |
+| Marca     | Vitest      | Que la identidad no se escriba fuera de la configuración  |
 | Componente| Vitest + RTL| Botón y formulario, incluida su accesibilidad             |
-| E2E       | Playwright  | Rutas, navegación, menú móvil, desbordes, objetivos táctiles, formulario |
+| E2E       | Playwright  | Rutas, navegación, menú móvil, desbordes, objetivos táctiles, formulario, sincronía de la paleta |
 
 Playwright ejecuta tres perfiles: móvil (390), portátil de 16" (1366) y
 escritorio (1920).
