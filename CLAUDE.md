@@ -47,7 +47,8 @@ Consecuencias que afectan a cada línea de código y de copy:
 - La identidad vive en cuatro archivos: `src/config/brand.ts` (texto y valores
   que el CSS no sirve), `src/config/brand.css` (color y tipografías),
   `src/config/fonts.ts` (carga) y `src/components/brand/Logo.tsx` (dibujo).
-- El nombre actual es el marcador `[BRAND]` y es intencionado.
+- El nombre es **VCO Solutions** y la forma corta **VCO**. Vive en `brand.ts`:
+  no lo teclees en ningún otro sitio, ni siquiera en un comentario de producción.
 - `src/config/brand.test.ts` falla si se escribe identidad fuera de ahí. Si esa
   prueba falla, la solución es mover el valor a la configuración, nunca relajar
   la prueba.

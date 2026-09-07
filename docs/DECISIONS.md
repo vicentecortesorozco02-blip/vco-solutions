@@ -244,3 +244,48 @@ se desvían.
 **Alternativa descartada.** Mover la paleta a TypeScript y generar el CSS desde
 ahí: añadiría un paso de compilación y JavaScript para resolver algo que CSS ya
 hace mejor. Una copia vigilada por una prueba es más simple que un generador.
+
+---
+
+## D-017 · El nombre es VCO Solutions
+
+**Contexto.** D-001 dejó la marca como marcador a la espera del naming. Se
+exploraron dos rondas de candidatos y se auditó VALDRA a fondo: sin marcas
+idénticas en OEPM ni EUIPO, pero con una marca UE casi homófona registrada
+hasta 2030 (VALTRA, AGCO, clase 9 con software descargable), con `.com` y `.ai`
+en manos de una empresa homónima de software y con el `.com` fuera de alcance.
+Resultado de la auditoría: ámbar, condicionado a dictamen jurídico.
+
+**Decisión.** Se descarta VALDRA. El nombre es **VCO Solutions**, forma corta
+**VCO**, razón social **VCO Solutions S.L.**, dominio **vcosolutions.es**.
+
+**Motivo.** Es la decisión del fundador. Lo que la sostiene: `VCO` son sus
+iniciales, la cadena completa no existe como marca registrada en OEPM ni EUIPO
+en ninguna clase, todos los dominios relevantes están libres —incluido el
+`.com`, que en el candidato anterior no lo estaba— y la marca comercial
+coincide con la razón social, así que la factura, el contrato y la web dicen lo
+mismo.
+
+**Lo que cuesta, escrito para que nadie lo redescubra dentro de dos años.**
+
+1. `Solutions` es el sufijo genérico que `BRAND.md` §5 desaconseja y que
+   `CLAUDE.md` §2 cita como ejemplo de jerga vacía. La web está construida
+   para no sonar a proveedor genérico y el nombre empuja en sentido contrario.
+   Lo compensa el copy, no el nombre.
+2. La marca es débil por construcción: `Solutions` es descriptivo y no da
+   exclusividad a nadie. Lo único protegible es `VCO`, y existe una EUTM `VCO`
+   registrada en clases 41 y 42 (Virtual Competition Organisation GmbH, 2020).
+   Antes de solicitar marca hace falta un dictamen sobre esa anterioridad.
+3. Existe ya un producto de software llamado literalmente «VCO Solutions»
+   (Veridico, `vco.solutions`, apps publicadas en iOS y Android). No es una
+   marca registrada, pero comparte SERP y nombre exacto en el mismo sector.
+4. `V-C-O` hay que deletrearlo siempre por teléfono, y `vcosolutions.es` son
+   quince caracteres sin separador. El dictado es peor que el de cualquier
+   candidato de las dos rondas.
+
+**Consecuencia.** La diferenciación de la marca recae por completo en el
+mensaje: el lema, el hero y el pie. Al revisar copy, esa es la prioridad.
+
+**Coste de revertir.** Bajo mientras no se registre la marca ni la sociedad, y
+mientras el dominio no lleve tiempo indexado: es editar `brand.ts` y cuatro
+documentos. Alto después.

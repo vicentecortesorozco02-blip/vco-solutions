@@ -1,10 +1,10 @@
-# [BRAND] — sitio corporativo
+# VCO Solutions — sitio corporativo
 
 Web principal de una empresa de ingeniería de procesos: analizamos cómo trabaja
 una empresa y construimos los sistemas que eliminan su trabajo manual.
 
-La marca todavía no tiene nombre. Todo lo que la identifica vive en
-`src/config/brand.ts` y se sustituye desde ahí. Ver [Naming](#naming).
+Todo lo que identifica a la marca vive en `src/config/brand.ts` y se sustituye
+desde ahí. Ver [Marca](#marca).
 
 ## Requisitos
 
@@ -69,10 +69,11 @@ Documentación completa:
 - [`docs/DECISIONS.md`](docs/DECISIONS.md) — decisiones importantes y su motivo
 - [`CLAUDE.md`](CLAUDE.md) — reglas obligatorias para agentes de IA
 
-## Naming
+## Marca
 
-El nombre definitivo se decidirá más adelante. Hasta entonces el sitio muestra
-el marcador `[BRAND]`.
+El nombre es **VCO Solutions**; la forma corta, **VCO**. Todavía no hay
+logotipo, favicon ni NIF: el color es el cobre del sistema y el símbolo sigue
+siendo el rombo tipográfico.
 
 Toda la identidad vive en cuatro archivos y solo cuatro:
 
@@ -83,8 +84,8 @@ Toda la identidad vive en cuatro archivos y solo cuatro:
 | `src/config/fonts.ts` | Carga de las tipografías |
 | `src/components/brand/Logo.tsx` | Cómo se dibuja el logotipo |
 
-`src/config/brand.test.ts` falla si alguien escribe el nombre, el dominio, el
-correo o un color hexadecimal fuera de ahí. La guía completa, con la lista de
+`src/config/brand.test.ts` falla si alguien escribe el nombre, la razón social,
+el dominio, el correo o un color hexadecimal fuera de ahí. La guía completa, con la lista de
 comprobación para aplicar la marca, está en [`docs/BRAND.md`](docs/BRAND.md).
 
 ## Variables de entorno

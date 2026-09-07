@@ -25,9 +25,9 @@ Base completa y desplegable.
 
 Bloqueantes. Ninguno es de código.
 
-1. **Naming y marca.** Decidir el nombre y aplicarlo. La infraestructura ya
-   está preparada: la lista exacta de pasos está en
-   [`BRAND.md`](BRAND.md), sección 15.
+1. **Dominio.** El nombre ya está aplicado (VCO Solutions, ver D-017), pero
+   `vcosolutions.es` todavía no está registrado. Sin él, `brand.url` apunta a
+   un sitio que no existe. Registrar también `vcosolutions.com` como defensivo.
 2. **Transporte del formulario.** Configurar `CONTACT_WEBHOOK_URL`. Sin esto el
    formulario devuelve 503 a propósito.
 3. **Revisión legal.** Aviso legal, privacidad y cookies están estructurados

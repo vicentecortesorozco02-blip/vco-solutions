@@ -57,7 +57,10 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col gap-3 border-t border-line pt-6 text-2xs text-fg-subtle sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {brand.legalName}. Todos los derechos reservados.
+            {/* La razón social acaba en «S.L.»: sin recortar el punto final
+                se lee «S.L..». */}
+            © {year} {brand.legalName.replace(/\.$/, "")}. Todos los derechos
+            reservados.
           </p>
           <p>{brand.tagline}</p>
         </div>

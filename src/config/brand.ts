@@ -1,9 +1,8 @@
 /**
  * IDENTIDAD DE MARCA — fuente única de verdad textual.
  *
- * La empresa todavía no tiene nombre. Toda mención visible de la marca sale de
- * aquí, de modo que naming, dominio, contacto y razón social se sustituyen en
- * un solo commit.
+ * Toda mención visible de la marca sale de aquí, de modo que nombre, dominio,
+ * contacto y razón social se sustituyen en un solo commit.
  *
  * Regla: nunca escribas el nombre, el dominio, el correo ni un color de marca
  * dentro de un componente, un texto, un metadato o un documento. Impórtalo.
@@ -19,12 +18,15 @@
 
 export const brand = {
   // --- Nombre -------------------------------------------------------------
-  /** companyName. Marcador deliberadamente visible hasta decidir el naming. */
-  name: "[BRAND]",
-  /** Forma corta para espacios estrechos: cabecera móvil, pie, imagen social. */
-  shortName: "[BRAND]",
-  /** Razón social. Se completa al constituir la sociedad. */
-  legalName: "[BRAND] S.L.",
+  /** companyName. */
+  name: "VCO Solutions",
+  /**
+   * Forma corta para espacios estrechos: cabecera móvil, pie, imagen social.
+   * «Solutions» es la parte prescindible: lo que identifica es VCO.
+   */
+  shortName: "VCO",
+  /** Razón social. Pendiente de la certificación negativa del RMC. */
+  legalName: "VCO Solutions S.L.",
   /** Obligatorio en las páginas legales. No borrar el marcador sin el dato. */
   taxId: "[NIF PENDIENTE]",
 
@@ -43,10 +45,10 @@ export const brand = {
   promise: "Menos trabajo manual",
 
   // --- Contacto y dominio -------------------------------------------------
-  domain: "example.com",
+  domain: "vcosolutions.es",
   /** website. Origen canónico de producción. */
-  url: "https://example.com",
-  email: "hola@example.com",
+  url: "https://vcosolutions.es",
+  email: "hola@vcosolutions.es",
   phone: "",
 
   /** Alimenta el esquema Organization / LocalBusiness. */
@@ -82,7 +84,7 @@ export const brand = {
     /** Cuenta de X sin la arroba. Vacío mientras no exista. */
     twitterHandle: "",
     /** Texto alternativo de la imagen social. */
-    ogImageAlt: "",
+    ogImageAlt: "VCO Solutions — ingeniería de procesos para empresas",
   },
 
   // --- Logotipo -----------------------------------------------------------

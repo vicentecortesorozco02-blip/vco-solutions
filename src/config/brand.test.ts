@@ -54,10 +54,16 @@ describe("identidad desacoplada", () => {
     expect(files.length).toBeGreaterThan(40);
   });
 
-  it("no escribe el marcador de marca fuera de la configuración", () => {
+  it("no escribe el nombre de la marca fuera de la configuración", () => {
+    // Antes vigilaba el marcador `[BRAND]`. Con la marca aplicada el riesgo es
+    // el mismo y el remedio también: importar `brand`, no teclear el nombre.
     const offenders = files
       .filter((file) => !ALLOWED.has(file.path))
-      .filter((file) => file.content.includes("[BRAND]"))
+      .filter(
+        (file) =>
+          file.content.includes(brand.name) ||
+          file.content.includes(brand.legalName),
+      )
       .map((file) => file.path);
 
     expect(offenders).toEqual([]);
@@ -108,11 +114,5 @@ describe("configuración de marca", () => {
     for (const [name, value] of Object.entries(brand.colors)) {
       expect(value, name).toMatch(/^#[0-9a-f]{6}$/);
     }
-  });
-
-  it("sigue sin publicar un nombre inventado", () => {
-    // Recordatorio deliberado: mientras el naming no esté decidido, el sitio
-    // muestra un marcador. Esta prueba se elimina al aplicar la marca real.
-    expect(brand.name).toBe("[BRAND]");
   });
 });

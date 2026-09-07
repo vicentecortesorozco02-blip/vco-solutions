@@ -1,8 +1,8 @@
 # Guía de marca
 
-Estado: **A — infraestructura preparada.** No hay nombre, logotipo ni color
-definitivos. Este documento define qué es la marca y deja el sistema listo para
-recibirlos.
+Estado: **B — nombre aplicado.** El nombre es **VCO Solutions**, forma corta
+**VCO**. Siguen pendientes el logotipo, el favicon, el NIF y la confirmación
+del color definitivo. Este documento define qué es la marca y qué falta.
 
 ---
 
@@ -235,9 +235,31 @@ tarifa. Ver `DECISIONS.md`, D-012.
 
 ---
 
-## 9. Territorio de naming
+## 9. Naming
 
-**El nombre no está decidido.** Aquí queda el criterio, no la respuesta.
+**Decidido: VCO Solutions.** `VCO` son las iniciales del fundador; `Solutions`
+es el sufijo genérico habitual de una sociedad de servicios en España.
+
+El territorio y los criterios que siguen se conservan como registro de lo que
+se buscaba, no como validación de lo que se eligió. El nombre elegido no los
+cumple, y conviene tenerlo escrito:
+
+| Criterio | Cumple |
+| --- | --- |
+| 2–3 sílabas, 5–8 letras | No: 3 letras deletreadas + 3 sílabas inglesas |
+| Se dicta sin deletrear | No: `V-C-O` hay que deletrearlo siempre |
+| Sin sufijo genérico | No: `Solutions` es exactamente el sufijo que §5 desaconseja |
+| Diferenciación | Baja: la parte protegible es `VCO`, y existe una marca UE `VCO` en clases 41 y 42 |
+
+**Consecuencia práctica, no cosmética.** La web entera está escrita para no
+sonar a proveedor genérico (§1, §5). El nombre empuja en la otra dirección. El
+copy tiene que compensarlo: el lema, la primera frase del hero y el pie cargan
+ahora con la diferenciación que el nombre no aporta. Al revisar textos, esa es
+la prioridad.
+
+**Lo que sí resuelve.** Cero riesgo de confusión con una marca conocida, todos
+los dominios libres, y coincide con la razón social: una sola identidad en la
+factura, en el contrato y en la web.
 
 ### Campo semántico
 
@@ -447,22 +469,35 @@ Comprobar que se distingue sobre pestañas claras y oscuras.
 
 ## 15. Checklist de aplicación de marca
 
-Cuando lleguen nombre, dominio, color y logotipo:
+Estado a 2026-09-06. Lo marcado está hecho; lo que queda depende de datos que
+todavía no existen.
 
-- [ ] `brand.ts`: `name`, `shortName`, `legalName`, `taxId`
-- [ ] `brand.ts`: `domain`, `url`, `email`, `phone`
-- [ ] `brand.ts`: `location`, `social`
-- [ ] `brand.ts`: `metadata.twitterHandle`, `metadata.ogImageAlt`
-- [ ] `brand.css`: `--brand-h`, `--brand-c`
-- [ ] Comprobar contraste (§11) y corregir si algún par baja del umbral
-- [ ] Regenerar `brand.colors` (§11) y pasar `e2e/brand.spec.ts`
-- [ ] `fonts.ts` si cambian las tipografías
-- [ ] `public/marca/` + `logo.hasCustomAsset` si hay logotipo
-- [ ] `src/app/icon.svg` y `favicon.present: true`
-- [ ] `README.md`: el título de la primera línea lleva el marcador
+- [x] `brand.ts`: `name`, `shortName`, `legalName`
+- [ ] `brand.ts`: `taxId` — requiere la sociedad constituida
+- [x] `brand.ts`: `domain`, `url`, `email`
+- [ ] `brand.ts`: `phone` — vacío a propósito mientras no haya línea
+- [ ] `brand.ts`: `location`, `social` — sin oficina ni perfiles reales
+- [x] `brand.ts`: `metadata.ogImageAlt`
+- [ ] `brand.ts`: `metadata.twitterHandle` — sin cuenta
+- [ ] `brand.css`: `--brand-h`, `--brand-c` — el cobre se mantiene; confirmar
+      o cambiar al haber logotipo
+- [ ] Comprobar contraste (§11) al tocar el color
+- [ ] Regenerar `brand.colors` (§11) al tocar el color
+- [ ] `fonts.ts` — sin cambio de tipografías
+- [ ] `public/marca/` + `logo.hasCustomAsset` — sin logotipo todavía
+- [ ] `src/app/icon.svg` y `favicon.present: true` — sin favicon todavía
+- [x] `README.md`: título y sección de marca
 - [ ] Sustituir los `[PENDIENTE]` de las páginas legales con datos reales
-- [ ] Eliminar de `brand.test.ts` la prueba «sigue sin publicar un nombre
-      inventado», que existe solo mientras dure el marcador
-- [ ] `npm run verify && npm run test:e2e`
-- [ ] Revisión visual a 390, 768, 1366 y 1920 px
-- [ ] Actualizar `DECISIONS.md` con el porqué del nombre y del color elegidos
+- [x] `brand.test.ts`: la prueba del marcador pasa a vigilar el nombre real
+- [x] `npm run verify && npm run test:e2e`
+- [x] Revisión visual a 390, 768, 1366 y 1920 px
+- [x] Actualizar `DECISIONS.md`
+
+### Fuera del código
+
+- [ ] Registrar `vcosolutions.es` en un agente acreditado (dominios.es)
+- [ ] Registrar `vcosolutions.com` como defensivo y redirigirlo al `.es`
+- [ ] Certificación negativa de denominación en el Registro Mercantil Central
+- [ ] Solicitud de marca en OEPM, clases 35 y 42, con dictamen previo sobre la
+      EUTM `VCO` (Virtual Competition Organisation GmbH, clases 41 y 42)
+- [ ] Configurar `CONTACT_WEBHOOK_URL` y el buzón `hola@vcosolutions.es`
