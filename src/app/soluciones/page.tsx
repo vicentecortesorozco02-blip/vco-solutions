@@ -50,7 +50,7 @@ export default function SolutionsPage() {
         </Container>
       </Section>
 
-      <FinalCta index="02" />
+      <FinalCta />
 
       <script
         type="application/ld+json"

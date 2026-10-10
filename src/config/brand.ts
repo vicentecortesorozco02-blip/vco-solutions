@@ -91,9 +91,9 @@ export const brand = {
   /**
    * Configuración del sistema de logotipo. Ver src/components/brand/Logo.tsx.
    *
-   * Hoy el símbolo es un rombo geométrico dibujado en CSS y la marca denominativa
-   * es tipográfica. Es un marcador honesto, no un logotipo: no hay identidad
-   * que representar todavía.
+   * Hoy la marca denominativa es tipográfica (forma corta en negrita, resto en
+   * peso ligero, mayúsculas anchas) y el símbolo es un rombo dibujado en CSS
+   * que solo se usa donde no cabe el nombre.
    *
    * Cuando exista el logotipo real:
    *   1. Coloca los SVG en public/marca/ (símbolo y, si procede, lockup).
@@ -130,8 +130,9 @@ export const brand = {
    * documentación y la interfaz de administración futura.
    */
   typography: {
-    sans: "Instrument Sans",
-    display: "Instrument Serif",
+    sans: "Archivo",
+    display: "Archivo (ancha, en mayúsculas)",
+    mono: "Geist Mono",
   },
 
   /**
@@ -146,15 +147,15 @@ export const brand = {
    * que compara estos valores con los tokens reales y falla si se desvían.
    */
   colors: {
-    bg: "#fcfbf9",
+    bg: "#ffffff",
     surface: "#ffffff",
-    inverse: "#0d0a08",
-    fg: "#181412",
-    fgMuted: "#5e5a56",
-    fgSubtle: "#716c68",
-    line: "#e1deda",
-    accent: "#ac522d",
-    accentFg: "#fffdfa",
+    inverse: "#071c17",
+    fg: "#0b1311",
+    fgMuted: "#5c6965",
+    fgSubtle: "#616c68",
+    line: "#e3e7e5",
+    accent: "#0e3b31",
+    accentFg: "#ffffff",
   },
 } as const;
 

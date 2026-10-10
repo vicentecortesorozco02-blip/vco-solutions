@@ -4,29 +4,32 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { AnalyticsEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "secondary" | "quiet" | "inverse";
+type Variant = "primary" | "secondary" | "quiet" | "inverse" | "light";
 type Size = "md" | "lg";
 
 const base =
-  "group/btn inline-flex items-center justify-center gap-2 rounded-sm font-medium " +
-  "tracking-[-0.005em] whitespace-nowrap transition-[background-color,border-color,color,box-shadow] " +
-  "duration-[var(--duration-fast)] ease-[var(--ease-out-quart)] " +
+  "group/btn inline-flex items-center justify-center gap-2 rounded-full font-medium " +
+  "tracking-[-0.01em] whitespace-nowrap transition-[background-color,color,box-shadow,transform] " +
+  "duration-[var(--duration-base)] ease-[var(--ease-out-soft)] active:scale-[0.98] " +
   "disabled:pointer-events-none disabled:opacity-55";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-accent text-accent-fg shadow-[0_1px_0_var(--color-glint)_inset] hover:bg-accent-hover",
-  secondary:
-    "border border-line-strong bg-surface text-fg hover:border-fg hover:bg-bg-subtle",
+  /** The dominant action. One per view. */
+  primary: "bg-accent text-accent-fg hover:bg-accent-hover",
+  /** An outlined pill: everything that is not the dominant action. */
+  secondary: "text-fg ring-1 ring-inset ring-line-field hover:ring-fg",
   quiet: "text-fg hover:bg-bg-sunken",
+  /** Outlined pill on the dark block. */
   inverse:
-    "border border-line-inverse bg-transparent text-fg-inverse hover:border-fg-inverse-muted hover:bg-fg-inverse/5",
+    "text-fg-inverse ring-1 ring-inset ring-fg-inverse-quiet hover:ring-fg-inverse",
+  /** The dominant action on the dark block: a paper pill. */
+  light: "bg-surface text-fg hover:bg-accent-quiet",
 };
 
 const sizes: Record<Size, string> = {
   /** 44px tall: the minimum comfortable touch target. */
-  md: "min-h-11 px-5 text-[0.9375rem]",
-  lg: "min-h-[3.25rem] px-7 text-base",
+  md: "min-h-11 px-5 text-sm",
+  lg: "min-h-[3.25rem] px-6 text-[0.9375rem]",
 };
 
 interface CommonProps {
@@ -53,10 +56,10 @@ type NativeButtonProps = CommonProps & {
 export type ButtonProps = AnchorProps | NativeButtonProps;
 
 /**
- * The only button in the system.
+ * The only button in the system. Pills, as in YourHotelWeb.
  *
- * There is one dominant action per view. `primary` is reserved for it.
- * Everything else is `secondary` or `quiet`. This component is server-safe:
+ * There is one dominant action per view. `primary` is reserved for it (or
+ * `light` on the dark block). Everything else is `secondary` or `quiet`. This component is server-safe:
  * click tracking happens through data attributes, not an onClick handler, so
  * a CTA never forces a client bundle.
  */

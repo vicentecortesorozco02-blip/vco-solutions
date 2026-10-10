@@ -44,10 +44,10 @@ export default function ContactPage() {
         <Container className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-20">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-6">
-              <p className="text-2xs font-medium uppercase tracking-[0.18em] text-fg-subtle">
+              <p className="type-label text-fg-subtle">
                 Contacto
               </p>
-              <h1 className="max-w-[16ch] font-display text-h1 font-normal tracking-[-0.015em] text-fg">
+              <h1 className="max-w-[16ch] type-display text-h1 text-fg">
                 {primaryCta.label}
               </h1>
               <p className="max-w-[52ch] text-lead text-fg-muted">

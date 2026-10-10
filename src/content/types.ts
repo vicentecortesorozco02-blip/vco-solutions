@@ -78,6 +78,11 @@ export interface SolutionSummary {
   slug: string;
   /** Outcome-led, not technology-led. */
   title: string;
+  /**
+   * One word, for the big uppercase list on the home page ("Presupuestos").
+   * Must still make sense on its own.
+   */
+  shortTitle: string;
   /** One sentence a non-technical manager understands immediately. */
   excerpt: string;
   /** Compressed flow shown on cards: "Solicitud > cálculo > PDF > respuesta". */
@@ -111,7 +116,29 @@ export interface Solution extends SolutionSummary {
   seo: { title: string; description: string };
 }
 
-export type CaseKind = "demonstration" | "project";
+/**
+ * `demonstration` a worked example built by us to show the shape of a
+ *                 project. Labelled as such everywhere it appears.
+ * `product`       software we built and run for our own business. Real and
+ *                 in use, but not a client engagement: it says so.
+ * `project`       a real delivered engagement for a client. Requires a named
+ *                 client or explicit consent.
+ */
+export type CaseKind = "demonstration" | "product" | "project";
+
+/**
+ * A real screenshot of delivered work, shown inside a device frame. Never a
+ * mock-up of something that does not exist.
+ */
+export interface Shot {
+  /** Path under /public. */
+  src: string;
+  /** Describes what the screen shows, for people who cannot see it. */
+  alt: string;
+  /** One line under the image. Say when the data on screen is sample data. */
+  caption: string;
+  device: "laptop" | "phone";
+}
 
 export interface CaseSummary {
   slug: string;
@@ -119,13 +146,14 @@ export interface CaseSummary {
   /** Sector in generic terms while we cannot name clients. */
   sector: string;
   excerpt: string;
-  /**
-   * `demonstration` is a worked example built by us to show the shape of a
-   * project. It is labelled as such everywhere it appears. `project` is a
-   * real delivered engagement and requires a named client or explicit consent.
-   */
   kind: CaseKind;
   headline: Metric;
+  /** The name of the product or project itself, when it has one. */
+  name?: string;
+  /** Screenshot used on cards and on the home page. Real work only. */
+  cover?: Shot;
+  /** Public address of the work, when there is one to visit. */
+  url?: string;
   order: number;
   published: boolean;
 }
@@ -143,5 +171,7 @@ export interface CaseStudy extends CaseSummary {
   results: Metric[];
   /** The arithmetic behind the headline figure, shown openly. */
   workings?: string;
+  /** Screens of the real thing. Products and projects only. */
+  gallery?: Shot[];
   seo: { title: string; description: string };
 }

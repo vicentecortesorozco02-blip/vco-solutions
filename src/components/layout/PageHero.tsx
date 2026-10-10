@@ -72,11 +72,16 @@ export function PageHero({
           )}
         >
           <div className="flex flex-col gap-6">
-            <p className="text-2xs font-medium uppercase tracking-[0.18em] text-fg-subtle">
+            <p className="type-label text-fg-subtle">
               {eyebrow}
             </p>
 
-            <h1 className="max-w-[20ch] font-display text-h1 font-normal tracking-[-0.015em] text-fg">
+            <h1
+              className={cn(
+                "max-w-[18ch] type-display text-fg",
+                aside ? "text-h2" : "text-h1",
+              )}
+            >
               {title}
             </h1>
 

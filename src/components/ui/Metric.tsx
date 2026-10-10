@@ -1,4 +1,4 @@
-import type { Metric as MetricData } from "@/content/types";
+import type { CaseKind, Metric as MetricData } from "@/content/types";
 import { cn } from "@/lib/cn";
 
 interface MetricProps {
@@ -22,7 +22,7 @@ export function MetricValue({ metric, size = "md", tone = "default", className }
     <div className={cn("flex flex-col gap-2", className)}>
       <p
         className={cn(
-          "tnum font-display font-normal tracking-[-0.02em]",
+          "tnum type-display",
           size === "lg" ? "text-metric" : "text-h2",
           inverse ? "text-fg-inverse" : "text-fg",
         )}
@@ -58,29 +58,53 @@ export function MetricValue({ metric, size = "md", tone = "default", className }
   );
 }
 
+const kindLabel: Record<CaseKind, string> = {
+  demonstration: "Demostración",
+  product: "Producto propio",
+  project: "Proyecto de cliente",
+};
+
 /**
- * Explicit label for content that is a worked example rather than a client
- * result. Used wherever a demonstration appears.
+ * Says what kind of work an entry is, wherever it appears. A demonstration is
+ * never allowed to pass for a client result, and our own product is never
+ * allowed to pass for a client project.
  */
-export function DemonstrationBadge({
+export function KindBadge({
+  kind,
   tone = "default",
   className,
 }: {
+  kind: CaseKind;
   tone?: "default" | "inverse";
   className?: string;
 }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-2xs font-medium uppercase tracking-[0.14em]",
+        "inline-flex items-center gap-2 rounded-full border px-3 py-1 type-label",
         tone === "inverse"
           ? "border-line-inverse text-fg-inverse-muted"
           : "border-line-strong text-fg-muted",
         className,
       )}
     >
-      <span aria-hidden className="size-1.5 rounded-full bg-accent" />
-      Demostración
+      <span
+        aria-hidden
+        className={cn(
+          "size-1.5 rounded-full",
+          kind === "demonstration" ? "border border-current" : "bg-accent",
+          tone === "inverse" && kind !== "demonstration" && "bg-fg-inverse",
+        )}
+      />
+      {kindLabel[kind]}
     </span>
   );
+}
+
+/** Shorthand used wherever a demonstration appears. */
+export function DemonstrationBadge(props: {
+  tone?: "default" | "inverse";
+  className?: string;
+}) {
+  return <KindBadge kind="demonstration" {...props} />;
 }

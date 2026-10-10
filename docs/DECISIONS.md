@@ -289,3 +289,54 @@ mensaje: el lema, el hero y el pie. Al revisar copy, esa es la prioridad.
 **Coste de revertir.** Bajo mientras no se registre la marca ni la sociedad, y
 mientras el dominio no lleve tiempo indexado: es editar `brand.ts` y cuatro
 documentos. Alto después.
+
+---
+
+## D-018 · El sistema visual de YourHotelWeb
+
+**Contexto.** YourHotelWeb es un producto propio del fundador (webs para
+hoteles, con su CRM y sus cobros). Su web pública tiene un sistema visual y una
+estructura que el fundador quiere también para VCO Solutions: «estilo y
+estructura», con el mismo verde pino.
+
+**Decisión.** VCO adopta el sistema de YourHotelWeb:
+
+- Archivo en dos anchos: ancha, en mayúsculas y con la segunda línea del
+  titular en gris (`type-display`, `TitleLines`); normal para leer.
+- Geist Mono para las etiquetas pequeñas (`type-label`).
+- Papel blanco, gris claro para alternar secciones, verde pino profundo para
+  los bloques oscuros y el pie. Acento: pino `#0e3b31`.
+- Botones en forma de píldora; trabajo real enseñado en portátiles y móviles
+  dibujados en CSS (`ui/Devices`).
+- La home sigue la estructura de YourHotelWeb contada para procesos: hero con
+  el sistema en pantalla, lista grande de frentes, problema numerado, «De esto.
+  A esto.» en oscuro, trabajo real, la cuenta, integraciones en oscuro, método,
+  preguntas y cierre con pasos.
+
+**Revierte.** D-004 (Instrument Serif + Sans, sin monoespaciada), D-005 (cobre)
+y, en parte, D-006: siguen sin usarse sombras en paneles, pero ahora hay
+superficies redondeadas y los marcos de dispositivo proyectan sombra.
+
+**Lo que no se copia.** La regla de las cifras. YourHotelWeb y VCO se escriben
+igual de honestos: YourHotelWeb aparece como `kind: "product"` (producto
+propio, no cliente), con capturas del sistema real, datos de ejemplo
+señalados como tales y ninguna hora ahorrada que no se haya medido.
+
+**Coste.** Visualmente, VCO y YourHotelWeb pasan a parecer la misma casa. Es
+intencionado: son del mismo fundador. Si algún día deben separarse, el color
+son dos números en `brand.css` y la tipografía un archivo.
+
+---
+
+## D-019 · Tres tipos de trabajo: demostración, producto propio, proyecto
+
+**Contexto.** Hasta ahora `CaseKind` era `demonstration | project`. Publicar
+YourHotelWeb como `project` habría dicho que es un trabajo para un cliente, y
+habría hecho desaparecer el aviso «todavía no hay proyectos de clientes», que
+sigue siendo cierto.
+
+**Decisión.** Nuevo tipo `product`: software construido y desplegado para un
+negocio propio. Se etiqueta como «Producto propio» allí donde aparece
+(`KindBadge`). Sus cifras son hechos comprobables sobre el sistema, nunca
+ahorros sin medir. El aviso de `/casos` depende ahora de que no exista ningún
+`project` (`noClientProjects`).

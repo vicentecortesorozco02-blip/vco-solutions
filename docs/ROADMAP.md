@@ -55,8 +55,10 @@ Lo que más va a mover la aguja. En cuanto haya un proyecto entregado con
 permiso del cliente:
 
 - `kind: "project"`, sector concreto, cifras `measured` con su `source`.
-- El aviso de "todavía no hay proyectos publicados" de `/casos` desaparece solo:
-  está condicionado a `allCasesAreDemonstrations`.
+- El aviso de "todavía no hay proyectos de clientes" de `/casos` desaparece
+  solo: está condicionado a `noClientProjects`.
+- YourHotelWeb ya está publicado como `product` (producto propio). Cuando tenga
+  meses de uso, sus horas ahorradas pueden medirse y publicarse con su método.
 
 ### Diagnóstico completo
 

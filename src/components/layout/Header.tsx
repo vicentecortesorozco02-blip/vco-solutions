@@ -70,8 +70,8 @@ export function Header() {
             : "border-b border-transparent bg-transparent",
         )}
       >
-        <Container className="flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
-          <Logo />
+        <Container className="grid h-16 grid-cols-[1fr_auto] items-center gap-6 lg:h-[4.5rem] lg:grid-cols-[1fr_auto_1fr]">
+          <Logo className="justify-self-start" />
 
           <nav aria-label="Principal" className="hidden lg:block">
             <ul className="flex items-center gap-1">
@@ -81,7 +81,7 @@ export function Header() {
                     href={item.href}
                     aria-current={isActive(item.href) ? "page" : undefined}
                     className={cn(
-                      "inline-flex h-9 items-center rounded-sm px-3 text-[0.9375rem] transition-colors duration-[var(--duration-fast)]",
+                      "inline-flex h-9 items-center rounded-full px-3.5 text-sm transition-colors duration-[var(--duration-fast)]",
                       isActive(item.href)
                         ? "text-fg"
                         : "text-fg-muted hover:text-fg",
@@ -94,7 +94,7 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="hidden lg:block">
+          <div className="hidden justify-self-end lg:block">
             <Button
               href={primaryCta.href}
               size="md"
@@ -110,7 +110,7 @@ export function Header() {
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="menu-movil"
-            className="-mr-2 inline-flex size-11 items-center justify-center rounded-sm text-fg lg:hidden"
+            className="-mr-2 inline-flex size-11 items-center justify-center justify-self-end rounded-full text-fg lg:hidden"
           >
             <span className="sr-only">{open ? "Cerrar menú" : "Abrir menú"}</span>
             {open ? (
@@ -146,7 +146,7 @@ export function Header() {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="flex flex-col gap-1">
-                    <span className="font-display text-h3 text-fg">{item.label}</span>
+                    <span className="type-display text-h3 text-fg">{item.label}</span>
                     {item.description ? (
                       <span className="text-sm text-fg-muted">{item.description}</span>
                     ) : null}

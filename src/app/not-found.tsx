@@ -10,11 +10,11 @@ export default function NotFound() {
   return (
     <Section tone="paper" rhythm="loose">
       <Container className="flex flex-col gap-8">
-        <p className="text-2xs font-medium uppercase tracking-[0.18em] text-fg-subtle">
+        <p className="type-label text-fg-subtle">
           Error 404
         </p>
 
-        <h1 className="max-w-[18ch] font-display text-h1 font-normal tracking-[-0.015em] text-fg">
+        <h1 className="max-w-[18ch] type-display text-h1 text-fg">
           Esta página no existe.
         </h1>
 

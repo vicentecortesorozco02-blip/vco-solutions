@@ -1,109 +1,103 @@
 import { ArrowRight } from "lucide-react";
 
-import { ProcessRibbon } from "@/components/diagrams/ProcessRibbon";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { Reveal } from "@/components/ui/Reveal";
+import { Laptop, Phone } from "@/components/ui/Devices";
+import { TitleLines } from "@/components/ui/SectionHeader";
 import { brand, primaryCta, secondaryCta } from "@/config/brand";
+import { realWork } from "@/content/cases";
 
 /**
  * Hero.
  *
- * One idea, one dominant action. The headline names the reader's problem
- * instead of describing our capabilities, and the diagram carries the argument
- * so the copy can stay short.
+ * Centred headline in two tones, one dominant action, and under it the proof:
+ * a system we built, on a laptop and a phone. The screens are real
+ * screenshots, never a mock-up of something that does not exist.
  *
  * Nothing above the fold is animated on entry: the LCP element must paint on
  * the first frame, not after an IntersectionObserver callback.
  */
 export function Hero() {
+  const work = realWork[0];
+  const laptop = work?.cover;
+  const phone = work?.gallery?.find((shot) => shot.device === "phone");
+
   return (
-    <section className="relative overflow-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 u-grid-field opacity-70"
-      />
+    <section className="relative overflow-x-clip">
+      <Container className="pt-[clamp(3.5rem,2rem+5vw,7.5rem)] text-center">
+        {/* The label is part of the h1: it carries what the page is about. */}
+        <h1>
+          <span className="type-label block text-fg-subtle">{brand.tagline} </span>
+          <span className="type-display mx-auto mt-6 block max-w-[17ch] text-h1 text-fg lg:max-w-none">
+            <TitleLines
+              title={["Menos trabajo a mano.", "Más horas para tu equipo."]}
+            />
+          </span>
+        </h1>
 
-      <Container className="relative pb-[calc(var(--section-y)*0.85)] pt-[clamp(3rem,1.5rem+5vw,6.5rem)]">
-        <div className="flex max-w-[54rem] flex-col gap-7">
-          <p className="text-2xs font-medium uppercase tracking-[0.18em] text-fg-subtle">
-            {brand.tagline}
-          </p>
+        <p className="mx-auto mt-7 max-w-[36rem] text-lead text-fg-muted">
+          Tu empresa tiene tareas que nadie debería seguir haciendo a mano.
+          Analizamos cómo trabajáis y construimos los sistemas que las eliminan.
+        </p>
 
-          <h1 className="max-w-[17ch] font-display text-h1 font-normal tracking-[-0.015em] text-fg">
-            Tu empresa tiene tareas que nadie debería seguir haciendo a mano.
-          </h1>
+        <div className="mt-9 flex flex-col items-center gap-x-7 gap-y-4 xs:flex-row xs:justify-center">
+          <Button
+            href={primaryCta.href}
+            size="lg"
+            block
+            className="xs:w-auto"
+            event="cta_primary_click"
+            eventLocation="hero"
+          >
+            {primaryCta.label}
+            <ArrowRight
+              className="size-4 transition-transform duration-[var(--duration-base)] ease-[var(--ease-out-soft)] group-hover/btn:translate-x-0.5"
+              strokeWidth={2}
+            />
+          </Button>
+          <Button
+            href={secondaryCta.href}
+            variant="quiet"
+            size="lg"
+            event="cta_secondary_click"
+            eventLocation="hero"
+          >
+            {secondaryCta.label}
+            <ArrowRight className="size-4" strokeWidth={2} />
+          </Button>
+        </div>
+      </Container>
 
-          <p className="max-w-[56ch] text-lead text-fg-muted">
-            Analizamos cómo trabaja tu empresa y construimos los sistemas que
-            eliminan ese trabajo repetitivo. Menos errores, más capacidad y horas
-            que vuelven a tu equipo.
-          </p>
+      {laptop ? (
+        <div className="relative mt-14 md:mt-20">
+          {/* Ground the devices: a quiet surface that starts behind the laptop. */}
+          <div aria-hidden className="absolute inset-x-0 bottom-0 top-[38%] bg-bg-subtle" />
 
-          <div className="flex flex-col gap-4 pt-2">
-            <div className="flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:items-center">
-              <Button
-                href={primaryCta.href}
-                size="lg"
-                block
-                className="xs:w-auto"
-                event="cta_primary_click"
-                eventLocation="hero"
-              >
-                {primaryCta.label}
-                <ArrowRight
-                  className="size-4 transition-transform duration-[var(--duration-base)] ease-[var(--ease-out-quart)] group-hover/btn:translate-x-0.5"
-                  strokeWidth={2}
+          <Container className="relative pb-14 md:pb-20">
+            <div className="relative mx-auto max-w-[62rem]">
+              <Laptop
+                src={laptop.src}
+                alt={laptop.alt}
+                priority
+                sizes="(min-width: 1240px) 900px, 88vw"
+              />
+              {phone ? (
+                <Phone
+                  src={phone.src}
+                  alt={phone.alt}
+                  sizes="(min-width: 1240px) 130px, 22vw"
+                  className="absolute -bottom-[9%] right-[1%] w-[22%] sm:w-[13%]"
                 />
-              </Button>
-
-              <Button
-                href={secondaryCta.href}
-                variant="secondary"
-                size="lg"
-                block
-                className="xs:w-auto"
-                event="cta_secondary_click"
-                eventLocation="hero"
-              >
-                {secondaryCta.label}
-              </Button>
+              ) : null}
             </div>
 
-            <p className="text-sm text-fg-subtle">
-              La primera conversación no cuesta nada. Si no vemos recorrido, te lo
-              decimos.
+            <p className="type-label mt-14 text-center text-fg-subtle md:mt-20">
+              {work.name ? `${work.name} · ` : null}
+              {laptop.caption}
             </p>
-          </div>
+          </Container>
         </div>
-
-        <Reveal className="mt-[clamp(3rem,2rem+3.5vw,5rem)]">
-          <ProcessRibbon
-            caption="Ejemplo: una solicitud de presupuesto que entra por correo"
-            manual={{
-              title: "Hoy",
-              cost: "≈ 25 min de una persona",
-              nodes: [
-                { label: "Correo" },
-                { label: "Alguien lo lee" },
-                { label: "Busca tarifas" },
-                { label: "Calcula" },
-                { label: "Monta el PDF" },
-                { label: "Responde" },
-              ],
-            }}
-            automated={{
-              title: "Con el sistema",
-              cost: "≈ 2 min de revisión",
-              nodes: [
-                { label: "Correo", kind: "edge" },
-                { label: "Sistema", kind: "system" },
-                { label: "Presupuesto enviado" },
-              ],
-            }}
-          />
-        </Reveal>
-      </Container>
+      ) : null}
     </section>
   );
 }

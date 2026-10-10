@@ -69,7 +69,7 @@ export default async function SolutionPage({ params }: PageProps) {
         crumbs={crumbs}
         aside={
           <div className="flex flex-col gap-5 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
-            <p className="text-2xs font-medium uppercase tracking-[0.16em] text-fg-subtle">
+            <p className="type-label text-fg-subtle">
               El recorrido
             </p>
             <ol className="flex flex-col gap-3">
@@ -98,7 +98,7 @@ export default async function SolutionPage({ params }: PageProps) {
 
       <Section tone="paper">
         <Container className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-20">
-          <SectionHeader index="01" eyebrow="El problema" title={solution.problem.title} />
+          <SectionHeader size="side" index="01" eyebrow="El problema" title={solution.problem.title} />
 
           <div className="flex flex-col gap-8">
             <p className="max-w-[62ch] text-lead text-fg-muted">
@@ -137,7 +137,7 @@ export default async function SolutionPage({ params }: PageProps) {
 
       <Section tone="paper" divided>
         <Container className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-20">
-          <SectionHeader
+          <SectionHeader size="side"
             index="03"
             eyebrow="Qué construimos"
             title="Las piezas que suele tener un sistema así"
@@ -154,7 +154,7 @@ export default async function SolutionPage({ params }: PageProps) {
             </ul>
 
             <div className="flex flex-col gap-4 border-t border-line pt-6">
-              <p className="text-2xs font-medium uppercase tracking-[0.16em] text-fg-subtle">
+              <p className="type-label text-fg-subtle">
                 Con qué se conecta
               </p>
               <ul className="flex flex-wrap gap-2">
@@ -199,15 +199,14 @@ export default async function SolutionPage({ params }: PageProps) {
 
       <FaqSection
         items={solution.faq}
-        index="05"
-        title="Dudas sobre esta solución"
+        title={["Dudas sobre", "esta solución."]}
         lead="Si te falta alguna, escríbenos y te contestamos sin comercial de por medio."
       />
 
       {related.length > 0 ? (
         <Section tone="paper" divided rhythm="tight">
           <Container className="flex flex-col gap-8">
-            <p className="border-t border-line pt-4 text-2xs font-medium uppercase tracking-[0.16em] text-fg-subtle">
+            <p className="border-t border-line pt-4 type-label text-fg-subtle">
               Relacionado
             </p>
             <ul className="grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2">
@@ -236,7 +235,7 @@ export default async function SolutionPage({ params }: PageProps) {
         </Section>
       ) : null}
 
-      <FinalCta index="06" />
+      <FinalCta />
 
       <script
         type="application/ld+json"

@@ -34,7 +34,7 @@ export default function CompanyPage() {
 
       <Section tone="paper">
         <Container className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.5fr)] lg:gap-20">
-          <SectionHeader index="01" eyebrow="Por qué existimos" title="El hueco que vimos" />
+          <SectionHeader size="side" index="01" eyebrow="Por qué existimos" title="El hueco que vimos" />
 
           <div className="flex max-w-[64ch] flex-col gap-5 text-lead text-fg-muted">
             {companyStory.paragraphs.map((paragraph) => (
@@ -109,7 +109,7 @@ export default function CompanyPage() {
         </Container>
       </Section>
 
-      <FinalCta index="04" />
+      <FinalCta />
 
       <script
         type="application/ld+json"

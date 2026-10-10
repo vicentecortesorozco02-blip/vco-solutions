@@ -1,4 +1,4 @@
-import { Instrument_Sans, Instrument_Serif } from "next/font/google";
+import { Archivo, Geist_Mono } from "next/font/google";
 
 /**
  * Tipografía de marca.
@@ -8,28 +8,34 @@ import { Instrument_Sans, Instrument_Serif } from "next/font/google";
  * la carga ocurra en el ámbito de módulo, por eso son constantes y no una
  * función.
  *
- * Al sustituirlas, mantener los nombres de variable CSS (`--font-brand-sans`,
- * `--font-brand-display`): el resto del sistema los referencia desde
- * `src/config/brand.css` y no debería enterarse del cambio.
+ * Una familia en dos anchos y una monoespaciada para etiquetas:
+ *  - Archivo, con el eje de anchura (`wdth`). Ancha y en mayúsculas para los
+ *    titulares (`type-display`), normal para todo lo que se lee. El eje es lo
+ *    que da carácter a los titulares: sin él, `font-stretch` no hace nada.
+ *  - Geist Mono, solo para etiquetas pequeñas en mayúsculas (`type-label`).
+ *    Nunca para párrafos.
  *
- * Reglas heredadas del sistema de diseño:
- *  - Display solo para titulares y cifras. Sans para todo lo que se lee.
- *  - `display: "swap"` para no bloquear el primer renderizado.
- *  - Servidas desde el propio dominio: sin peticiones a terceros.
+ * Al sustituirlas, mantener los nombres de variable CSS (`--font-brand-*`):
+ * el resto del sistema los referencia desde `src/config/brand.css`.
+ *
+ * `display: "swap"` para no bloquear el primer renderizado. Servidas desde el
+ * propio dominio: sin peticiones a terceros.
  */
 
-export const brandSans = Instrument_Sans({
+export const brandSans = Archivo({
   subsets: ["latin"],
+  axes: ["wdth"],
   display: "swap",
   variable: "--font-brand-sans",
 });
 
-export const brandDisplay = Instrument_Serif({
+export const brandMono = Geist_Mono({
   subsets: ["latin"],
-  weight: "400",
   display: "swap",
-  variable: "--font-brand-display",
+  variable: "--font-brand-mono",
+  // Solo etiquetas: no compite por el primer renderizado.
+  preload: false,
 });
 
 /** Clases que el `<html>` necesita para exponer las variables CSS. */
-export const fontVariables = `${brandSans.variable} ${brandDisplay.variable}`;
+export const fontVariables = `${brandSans.variable} ${brandMono.variable}`;

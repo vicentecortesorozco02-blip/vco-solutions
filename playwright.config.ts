@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 3100;
+// Overridable because this machine runs other apps: with `reuseExistingServer`
+// a busy port means the suite silently tests someone else's site.
+const PORT = Number(process.env.E2E_PORT ?? 3100);
 const baseURL = `http://127.0.0.1:${PORT}`;
 
 /**

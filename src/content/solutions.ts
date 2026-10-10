@@ -23,6 +23,7 @@ export const solutions: Solution[] = [
     published: true,
     icon: FileSignature,
     title: "Presupuestos automáticos",
+    shortTitle: "Presupuestos",
     heading: "Del correo del cliente al presupuesto enviado, sin intervención",
     excerpt:
       "La solicitud entra, el sistema la interpreta, aplica tus tarifas, genera el PDF y deja la respuesta lista.",
@@ -123,6 +124,7 @@ export const solutions: Solution[] = [
     published: true,
     icon: Receipt,
     title: "Automatización administrativa",
+    shortTitle: "Administración",
     heading: "El papeleo que hoy hace una persona, hecho por un sistema",
     excerpt:
       "Facturas, albaranes, documentos y datos que hoy se leen, se copian y se comprueban a mano.",
@@ -215,6 +217,7 @@ export const solutions: Solution[] = [
     published: true,
     icon: Inbox,
     title: "Correo y comunicación",
+    shortTitle: "Correo",
     heading: "El buzón deja de ser una lista de tareas pendientes",
     excerpt:
       "Clasificar, extraer lo importante, responder lo repetitivo y arrancar el proceso que toque.",
@@ -307,6 +310,7 @@ export const solutions: Solution[] = [
     published: true,
     icon: Route,
     title: "Procesos comerciales",
+    shortTitle: "Ventas",
     heading: "Que ningún cliente potencial se enfríe esperando",
     excerpt:
       "Leads, seguimiento, CRM y todo lo que hoy depende de que alguien se acuerde.",
@@ -399,6 +403,7 @@ export const solutions: Solution[] = [
     published: true,
     icon: LayoutDashboard,
     title: "Herramientas internas",
+    shortTitle: "Herramientas",
     heading: "Software hecho para cómo trabaja tu empresa, no al revés",
     excerpt:
       "Sustituye el Excel compartido, el grupo de WhatsApp y los cuatro programas que no se hablan entre sí.",
@@ -490,6 +495,7 @@ export const solutions: Solution[] = [
     published: true,
     icon: Sparkles,
     title: "IA aplicada al negocio",
+    shortTitle: "IA aplicada",
     heading: "Inteligencia artificial conectada a tus datos y a tus procesos",
     excerpt:
       "Útil cuando hay que leer, entender o decidir sobre texto. Innecesaria para el resto.",
@@ -581,9 +587,10 @@ export const publishedSolutions: Solution[] = solutions
   .sort((a, b) => a.order - b.order);
 
 export const solutionSummaries: SolutionSummary[] = publishedSolutions.map(
-  ({ slug, title, excerpt, chain, icon, order, published }) => ({
+  ({ slug, title, shortTitle, excerpt, chain, icon, order, published }) => ({
     slug,
     title,
+    shortTitle,
     excerpt,
     chain,
     icon,

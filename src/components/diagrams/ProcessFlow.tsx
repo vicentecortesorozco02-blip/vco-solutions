@@ -82,7 +82,7 @@ export function FlowColumn({ side, variant, className }: FlowColumnProps) {
     <div className={cn("flex flex-col", className)}>
       <p
         className={cn(
-          "text-2xs font-medium uppercase tracking-[0.16em]",
+          "type-label",
           manual ? "text-fg-subtle" : "text-accent-text",
         )}
       >

@@ -1,8 +1,9 @@
 # Guía de marca
 
-Estado: **B — nombre aplicado.** El nombre es **VCO Solutions**, forma corta
-**VCO**. Siguen pendientes el logotipo, el favicon, el NIF y la confirmación
-del color definitivo. Este documento define qué es la marca y qué falta.
+Estado: **C — nombre y sistema visual aplicados.** El nombre es **VCO
+Solutions**, forma corta **VCO**. El sistema visual es el de YourHotelWeb
+(D-018): Archivo ancha en mayúsculas, verde pino, marca denominativa
+tipográfica. Siguen pendientes el favicon y el NIF.
 
 ---
 
@@ -162,11 +163,10 @@ El diagrama antes/después no es un componente de la home: es **lenguaje de
 marca**. Puede vivir en una propuesta, una factura, una presentación o un
 informe, y seguir siendo reconocible.
 
-Dos implementaciones del mismo idioma:
-
-- `ProcessRibbon` — forma comprimida y horizontal. Hero e imagen social.
-- `BeforeAfter` / `ProcessFlow` — forma completa en dos columnas. Soluciones y
-  casos.
+Implementación: `BeforeAfter` / `ProcessFlow`, forma completa en dos
+columnas. Sección «De esto. A esto.» de la home, soluciones y casos. (La forma
+comprimida, `ProcessRibbon`, se retiró con el hero nuevo: ahora el hero enseña
+un sistema real en pantalla. Ver D-018.)
 
 ### Gramática
 
@@ -332,15 +332,15 @@ añadiría ruido.
 Dos números en `src/config/brand.css`:
 
 ```css
---brand-h: 42;     /* ángulo de tono OKLCH, 0-360 */
---brand-c: 0.115;  /* croma de referencia */
+--brand-h: 175;     /* ángulo de tono OKLCH, 0-360 */
+--brand-c: 0.0515;  /* croma del acento */
 ```
 
-De ahí sale la rampa `brand-50` … `brand-900` y, con ella, el acento, el color
-de los enlaces, los marcadores de los diagramas y los estados de foco.
+De ahí salen `brand-50` … `brand-700` y, con ellos, el acento, el bloque
+oscuro, el pie, los marcadores de los diagramas y los estados de foco.
 
-El acento actual es un cobre cálido, elegido por descarte: el azul y el morado
-son el uniforme de las consultoras de IA. Ver `DECISIONS.md`, D-005.
+El acento actual es el verde pino de YourHotelWeb. Ver `DECISIONS.md`, D-018
+(sustituye al cobre de D-005).
 
 ### Después de cambiarlo, obligatorio
 
@@ -365,7 +365,7 @@ for (const [fg, bg] of [["--color-accent","--color-bg"],
 ```
 
 Si `--color-accent-fg` sobre `--color-accent` baja de 4,5:1, el texto de los
-botones deja de ser accesible: ajusta la luminosidad de `brand-600`.
+botones deja de ser accesible: ajusta la luminosidad de `brand-500`.
 
 **2. Sincronizar la paleta.** `brand.colors` es un espejo hexadecimal para las
 superficies que no leen CSS: la imagen social se genera en un worker y
@@ -393,19 +393,19 @@ la fase 1 con un acento distinto al del sitio.
 
 ## 12. Tipografía
 
-Dos familias, ambas variables y servidas desde el propio dominio.
+Una familia en dos anchos y una monoespaciada, servidas desde el propio
+dominio.
 
 | Papel | Familia actual | Uso |
 | --- | --- | --- |
-| Display | Instrument Serif | Titulares, títulos de sección, cifras grandes |
-| Texto | Instrument Sans | Párrafos, interfaz, etiquetas, navegación |
-
-Sin monoespaciada: la sensación técnica la dan las mayúsculas espaciadas y las
-cifras tabulares, no una fuente de terminal.
+| Display | Archivo ancha (eje `wdth`), mayúsculas | Titulares, listas grandes, cifras (`type-display`) |
+| Texto | Archivo | Párrafos, interfaz, navegación |
+| Etiquetas | Geist Mono | Etiquetas pequeñas en mayúsculas (`type-label`) |
 
 Para cambiarlas: `src/config/fonts.ts` (la carga) y `src/config/brand.css` (las
 pilas de respaldo). Mantener los nombres de variable `--font-brand-sans` y
-`--font-brand-display` y el resto del sistema no se entera.
+`--font-brand-mono` y el resto del sistema no se entera. Archivo necesita el
+eje de anchura cargado: sin él, `font-stretch` no hace nada.
 
 Al elegir una tipografía nueva, comprobar: acentos y eñe completos, cifras
 tabulares, y que el titular del hero siga cayendo en un número razonable de
@@ -421,19 +421,20 @@ líneas a 390 px y a 1366 px.
 
 | Variante | Contenido | Dónde |
 | --- | --- | --- |
-| `lockup` | Símbolo + denominación | Cabecera, pie. Por defecto |
-| `wordmark` | Solo denominación | Cuando el símbolo ya está presente |
-| `symbol` | Solo isotipo | Espacios estrechos, avatares, favicon |
-| `compact` | Símbolo + nombre corto | Anchos reducidos |
+| `lockup` | Denominación: forma corta en negrita + resto ligero | Cabecera, pie. Por defecto |
+| `wordmark` | Igual que `lockup` | Compatibilidad |
+| `symbol` | Solo isotipo (rombo) | Espacios estrechos, avatares, favicon |
+| `compact` | Solo la forma corta, en negrita | Anchos reducidos |
 
 Tonos: `default` sobre papel, `inverse` sobre el bloque oscuro.
 Tamaños: `sm`, `md`, `lg`.
 
 ### Estado actual
 
-No hay logotipo. Lo que se dibuja es un marcador honesto: un rombo geométrico
-en color de acento y el nombre en tipografía de marca. El rombo es el mismo
-signo que marca «resultado» en los diagramas de proceso.
+El logotipo es tipográfico, como el de YourHotelWeb: **VCO**SOLUTIONS, en
+mayúsculas anchas, con la forma corta en negrita y el resto en peso ligero, sin
+espacio. La división sale de `brand.name` y `brand.shortName`. El rombo queda
+como isotipo para donde no cabe el nombre.
 
 ### Cuando exista el logotipo real
 
@@ -479,12 +480,11 @@ todavía no existen.
 - [ ] `brand.ts`: `location`, `social` — sin oficina ni perfiles reales
 - [x] `brand.ts`: `metadata.ogImageAlt`
 - [ ] `brand.ts`: `metadata.twitterHandle` — sin cuenta
-- [ ] `brand.css`: `--brand-h`, `--brand-c` — el cobre se mantiene; confirmar
-      o cambiar al haber logotipo
-- [ ] Comprobar contraste (§11) al tocar el color
-- [ ] Regenerar `brand.colors` (§11) al tocar el color
-- [ ] `fonts.ts` — sin cambio de tipografías
-- [ ] `public/marca/` + `logo.hasCustomAsset` — sin logotipo todavía
+- [x] `brand.css`: `--brand-h`, `--brand-c` — verde pino (D-018)
+- [x] Comprobar contraste (§11) — medido, ver `DESIGN_SYSTEM.md` §2
+- [x] Regenerar `brand.colors` (§11)
+- [x] `fonts.ts` — Archivo + Geist Mono
+- [x] Logotipo tipográfico en `Logo.tsx` (sin asset: no hace falta)
 - [ ] `src/app/icon.svg` y `favicon.present: true` — sin favicon todavía
 - [x] `README.md`: título y sección de marca
 - [ ] Sustituir los `[PENDIENTE]` de las páginas legales con datos reales

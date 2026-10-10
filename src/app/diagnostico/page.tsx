@@ -65,7 +65,7 @@ export default function DiagnosisPage() {
 
       <Section tone="surface" divided>
         <Container className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] lg:gap-20">
-          <SectionHeader
+          <SectionHeader size="side"
             index="01"
             eyebrow="En construcción"
             title="Esta herramienta va a crecer"
@@ -73,7 +73,7 @@ export default function DiagnosisPage() {
           />
 
           <div className="flex flex-col gap-6">
-            <p className="text-2xs font-medium uppercase tracking-[0.16em] text-fg-subtle">
+            <p className="type-label text-fg-subtle">
               Lo que añadiremos
             </p>
             <ul className="border-t border-line">
@@ -90,7 +90,7 @@ export default function DiagnosisPage() {
         </Container>
       </Section>
 
-      <FinalCta index="02" />
+      <FinalCta />
 
       <script
         type="application/ld+json"

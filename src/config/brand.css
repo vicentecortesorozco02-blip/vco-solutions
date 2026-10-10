@@ -12,25 +12,27 @@
 
 @theme {
   /* --- Color de marca -------------------------------------------------------
-     Toda la rampa `brand-*` deriva de estos dos números. Cambiarlos reskinea
-     el sitio entero: es el punto de cambio único de la fase de branding.
+     El acento, sus variantes y los neutros toman el tono de estos dos números.
+     Cambiarlos reskinea el sitio entero.
 
      h = ángulo de tono OKLCH (0-360)
-     c = croma de referencia (0 = gris, ~0.15 = saturado)
+     c = croma del acento (0 = gris)
 
-     Actual: cobre cálido, elegido para no parecer una consultora de IA.
+     Actual: verde pino, el mismo sistema que YourHotelWeb (ver D-018).
      Al cambiarlo, comprobar contraste: ver docs/DESIGN_SYSTEM.md, sección
-     "Contraste medido". El script de comprobación está en docs/BRAND.md.     */
-  --brand-h: 42;
-  --brand-c: 0.115;
+     "Contraste medido".                                                       */
+  --brand-h: 175;
+  --brand-c: 0.0515;
 
   /* --- Tipografía de marca --------------------------------------------------
-     Las familias concretas se cargan en src/config/fonts.ts, que expone las
-     variables CSS que se referencian aquí. Cambiar de tipografía son dos
-     sitios: aquel archivo y estas dos pilas de respaldo.                     */
+     Las familias se cargan en src/config/fonts.ts, que expone las variables
+     CSS que se referencian aquí. Display y texto son la misma familia en dos
+     anchos: la diferencia la pone la utilidad `type-display` de globals.css. */
   --font-sans:
     var(--font-brand-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display:
-    var(--font-brand-display), ui-serif, Georgia, "Times New Roman", serif;
+  --font-display: var(--font-sans);
+  --font-mono:
+    var(--font-brand-mono), ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
 }

@@ -48,7 +48,7 @@ src/
     layout/            Header, Footer, PageHero
     sections/          Bloques de página, componibles y sin estado
     cards/             Tarjetas de solución y de caso
-    diagrams/          ProcessFlow y ProcessRibbon: la firma visual
+    diagrams/          ProcessFlow: el antes y el después
     features/          Piezas con estado: ContactForm, TimeCalculator
   config/              Identidad de marca (brand.ts, brand.css, fonts.ts) y rutas (site.ts)
   content/             Contenido tipado: soluciones, casos, método, FAQ
@@ -71,9 +71,9 @@ Documentación completa:
 
 ## Marca
 
-El nombre es **VCO Solutions**; la forma corta, **VCO**. Todavía no hay
-logotipo, favicon ni NIF: el color es el cobre del sistema y el símbolo sigue
-siendo el rombo tipográfico.
+El nombre es **VCO Solutions**; la forma corta, **VCO**. El sistema visual es
+el de YourHotelWeb (verde pino, Archivo ancha en mayúsculas, logotipo
+tipográfico; ver `docs/DECISIONS.md`, D-018). Faltan el favicon y el NIF.
 
 Toda la identidad vive en cuatro archivos y solo cuatro:
 

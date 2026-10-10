@@ -86,7 +86,7 @@ export function TimeCalculator({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 gap-10 border border-line bg-surface p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14 lg:p-10",
+        "grid grid-cols-1 gap-10 rounded-2xl bg-surface p-6 ring-1 ring-line sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14 lg:p-10",
         className,
       )}
     >
@@ -145,12 +145,12 @@ export function TimeCalculator({ className }: { className?: string }) {
       <div className="flex flex-col justify-between gap-8 border-t border-line pt-8 lg:border-l lg:border-t-0 lg:pl-14 lg:pt-0">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <p className="text-2xs font-medium uppercase tracking-[0.16em] text-fg-subtle">
+            <p className="type-label text-fg-subtle">
               Esa tarea consume
             </p>
             <p
               aria-live="polite"
-              className="tnum font-display text-metric font-normal tracking-[-0.02em] text-fg"
+              className="tnum type-display text-metric text-fg"
             >
               {integer.format(Math.round(result.hoursPerYear))}
               <span className="ml-2 align-baseline font-sans text-[0.32em] font-medium tracking-normal text-fg-subtle">
@@ -161,7 +161,7 @@ export function TimeCalculator({ className }: { className?: string }) {
 
           <dl className="grid grid-cols-2 gap-x-8 gap-y-4 border-t border-line pt-6">
             <div className="flex flex-col gap-1">
-              <dt className="text-2xs uppercase tracking-[0.1em] text-fg-subtle">
+              <dt className="type-label text-fg-subtle">
                 A la semana
               </dt>
               <dd className="tnum text-h4 text-fg">
@@ -169,7 +169,7 @@ export function TimeCalculator({ className }: { className?: string }) {
               </dd>
             </div>
             <div className="flex flex-col gap-1">
-              <dt className="text-2xs uppercase tracking-[0.1em] text-fg-subtle">
+              <dt className="type-label text-fg-subtle">
                 Al mes
               </dt>
               <dd className="tnum text-h4 text-fg">

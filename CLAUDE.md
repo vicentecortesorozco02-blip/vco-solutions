@@ -82,8 +82,10 @@ Antes de crear un componente nuevo, comprueba que no exista:
 | Preguntas frecuentes     | `components/ui/Faq`                              |
 | Una cifra                | `components/ui/Metric`                           |
 | Un antes/después         | `components/diagrams/ProcessFlow`                |
-| La cadena comprimida     | `components/diagrams/ProcessRibbon`              |
 | La cabecera de una página interna | `components/layout/PageHero`            |
+| Un titular en dos tonos  | `SectionHeader` con `title` como array, o `TitleLines` |
+| Una captura de trabajo real | `components/ui/Devices` (`Laptop`, `Phone`, `Browser`) |
+| Qué tipo de trabajo es   | `KindBadge` (demostración, producto propio, cliente) |
 
 ### 3.4 Cifras y credibilidad
 

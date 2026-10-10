@@ -34,18 +34,9 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div
-            style={{
-              width: 16,
-              height: 16,
-              backgroundColor: accent,
-              transform: "rotate(45deg)",
-            }}
-          />
-          <div style={{ fontSize: 26, color: ink, letterSpacing: -0.4 }}>
-            {brand.name}
-          </div>
+        <div style={{ display: "flex", fontSize: 26, color: ink, letterSpacing: 1 }}>
+          <div style={{ fontWeight: 700 }}>{brand.shortName.toUpperCase()}</div>
+          <div>{brand.name.slice(brand.shortName.length).trim().toUpperCase()}</div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -59,7 +50,7 @@ export default function OpengraphImage() {
               maxWidth: 900,
             }}
           >
-            Tu empresa tiene tareas que nadie debería seguir haciendo a mano.
+            Menos trabajo a mano. Más horas para tu equipo.
           </div>
 
           <div style={{ display: "flex", fontSize: 26, color: muted, maxWidth: 780 }}>
@@ -77,7 +68,7 @@ export default function OpengraphImage() {
                 color: muted,
                 fontSize: 20,
                 padding: "8px 14px",
-                borderRadius: 4,
+                borderRadius: 999,
               }}
             >
               {step}
@@ -93,7 +84,7 @@ export default function OpengraphImage() {
               color: paper,
               fontSize: 20,
               padding: "8px 14px",
-              borderRadius: 4,
+              borderRadius: 999,
             }}
           >
             Sistema

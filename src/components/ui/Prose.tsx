@@ -20,7 +20,7 @@ export function Prose({
     <div
       className={cn(
         "max-w-[68ch] text-fg-muted",
-        "[&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-h3 [&_h2]:font-normal [&_h2]:text-fg",
+        "[&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:type-display [&_h2]:text-h3 [&_h2]:text-fg",
         "[&_h3]:mb-2 [&_h3]:mt-8 [&_h3]:text-h4 [&_h3]:font-medium [&_h3]:text-fg",
         "[&_p]:mb-4",
         "[&_ul]:mb-4 [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2",

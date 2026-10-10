@@ -48,10 +48,10 @@ export default function MethodPage() {
         crumbs={crumbs}
         aside={
           <div className="flex flex-col gap-4 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
-            <p className="text-2xs font-medium uppercase tracking-[0.16em] text-fg-subtle">
+            <p className="type-label text-fg-subtle">
               El primer entregable
             </p>
-            <p className="font-display text-h3 text-fg">{methodName}</p>
+            <p className="type-display text-h3 text-fg">{methodName}</p>
             <p className="text-sm text-fg-muted">
               Un documento con tu proceso dibujado paso a paso, quién hace qué,
               cuánto tiempo consume cada parte y qué se puede quitar. Es tuyo,
@@ -116,7 +116,7 @@ export default function MethodPage() {
         </Container>
       </Section>
 
-      <FinalCta index="04" />
+      <FinalCta />
 
       <script
         type="application/ld+json"

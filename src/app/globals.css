@@ -14,75 +14,82 @@
    ========================================================================== */
 
 @theme {
-  --color-brand-50: oklch(0.972 calc(var(--brand-c) * 0.2) var(--brand-h));
-  --color-brand-100: oklch(0.94 calc(var(--brand-c) * 0.38) var(--brand-h));
-  --color-brand-200: oklch(0.885 calc(var(--brand-c) * 0.6) var(--brand-h));
-  --color-brand-300: oklch(0.81 calc(var(--brand-c) * 0.82) var(--brand-h));
-  --color-brand-400: oklch(0.71 calc(var(--brand-c) * 1) var(--brand-h));
-  --color-brand-500: oklch(0.62 calc(var(--brand-c) * 1.1) var(--brand-h));
-  --color-brand-600: oklch(0.545 calc(var(--brand-c) * 1.12) var(--brand-h));
-  --color-brand-700: oklch(0.465 calc(var(--brand-c) * 1) var(--brand-h));
-  --color-brand-800: oklch(0.385 calc(var(--brand-c) * 0.82) var(--brand-h));
-  --color-brand-900: oklch(0.3 calc(var(--brand-c) * 0.62) var(--brand-h));
+  /* --- Acento ---------------------------------------------------------------
+     Toda la familia de acento sale de --brand-h y --brand-c (brand.css).
+     Las luminosidades reproducen el pino de YourHotelWeb: 500 es el acento,
+     700 su versión profunda (bloques oscuros), 50-200 sus fondos suaves.     */
+  --color-brand-50: oklch(0.968 calc(var(--brand-c) * 0.08) var(--brand-h));
+  --color-brand-100: oklch(0.942 calc(var(--brand-c) * 0.2) var(--brand-h));
+  --color-brand-200: oklch(0.885 calc(var(--brand-c) * 0.35) var(--brand-h));
+  --color-brand-500: oklch(0.319 var(--brand-c) var(--brand-h));
+  --color-brand-700: oklch(0.207 calc(var(--brand-c) * 0.57) var(--brand-h));
 
-  /* --- Warm neutral ramp: the paper the brand is printed on ---------------- */
+  /* --- Neutros: grises fríos con una gota del tono de marca ----------------- */
   --color-ink-0: oklch(1 0 0);
-  --color-ink-25: oklch(0.988 0.003 85);
-  --color-ink-50: oklch(0.972 0.004 85);
-  --color-ink-100: oklch(0.945 0.005 82);
-  --color-ink-200: oklch(0.902 0.006 80);
-  --color-ink-300: oklch(0.835 0.007 78);
-  --color-ink-400: oklch(0.7 0.008 74);
-  --color-ink-500: oklch(0.575 0.008 70);
-  --color-ink-600: oklch(0.47 0.008 66);
-  --color-ink-700: oklch(0.37 0.008 62);
-  --color-ink-800: oklch(0.268 0.008 58);
-  --color-ink-900: oklch(0.196 0.008 56);
-  --color-ink-950: oklch(0.148 0.008 56);
+  --color-ink-50: oklch(0.968 0.004 160);
+  --color-ink-100: oklch(0.942 0.006 165);
+  --color-ink-200: oklch(0.924 0.005 165);
+  --color-ink-300: oklch(0.86 0.008 168);
+  --color-ink-600: oklch(0.509 0.017 175);
+  --color-ink-900: oklch(0.178 0.0128 177.6);
 
   /* --- Semantic surface / text tokens ------------------------------------- */
-  --color-bg: var(--color-ink-25);
+  --color-bg: var(--color-ink-0);
   --color-bg-subtle: var(--color-ink-50);
   --color-bg-sunken: var(--color-ink-100);
   --color-surface: var(--color-ink-0);
-  --color-inverse: var(--color-ink-950);
-  --color-inverse-subtle: oklch(0.205 0.008 56);
+  --color-inverse: var(--color-brand-700);
+  --color-inverse-subtle: oklch(0.25 calc(var(--brand-c) * 0.55) var(--brand-h));
 
   --color-fg: var(--color-ink-900);
   --color-fg-muted: var(--color-ink-600);
-  /* Darker than ink-500 on purpose: at ink-500 this token measured 4.23:1 on
-     paper, below the 4.5:1 that WCAG AA requires for text at these sizes. */
-  --color-fg-subtle: oklch(0.535 0.009 68);
-  --color-fg-inverse: var(--color-ink-50);
-  --color-fg-inverse-muted: oklch(0.735 0.008 70);
+  /* Etiquetas y notas. El gris "faint" de YourHotelWeb mide 3,05:1 sobre
+     blanco y no sirve para texto: este pasa 4,5:1 también sobre bg-subtle. */
+  --color-fg-subtle: oklch(0.52 0.015 172);
+  /* La segunda línea de los titulares, más callada que la primera. Solo para
+     texto display de 32 px o más, donde WCAG pide 3:1. */
+  --color-fg-quiet: oklch(0.63 0.012 172);
+  --color-fg-inverse: oklch(0.985 0.003 165);
+  --color-fg-inverse-muted: oklch(0.78 0.012 170);
+  --color-fg-inverse-quiet: oklch(0.6 0.02 172);
 
-  --color-line: oklch(0.902 0.006 80);
-  --color-line-soft: oklch(0.938 0.005 82);
-  --color-line-strong: oklch(0.82 0.007 78);
-  --color-line-inverse: oklch(0.3 0.008 58);
+  --color-line: var(--color-ink-200);
+  --color-line-soft: var(--color-ink-100);
+  --color-line-strong: var(--color-ink-300);
+  --color-line-inverse: oklch(0.3 calc(var(--brand-c) * 0.5) var(--brand-h));
   /* Borders of interactive controls are UI components, not decoration: WCAG
      1.4.11 asks for 3:1 against the background. `line` is decorative only. */
-  --color-line-field: oklch(0.64 0.009 72);
+  --color-line-field: oklch(0.62 0.014 172);
 
-  --color-accent: var(--color-brand-600);
+  --color-accent: var(--color-brand-500);
   --color-accent-hover: var(--color-brand-700);
-  --color-accent-fg: oklch(0.995 0.004 85);
+  --color-accent-fg: oklch(1 0 0);
   --color-accent-quiet: var(--color-brand-100);
-  --color-accent-text: var(--color-brand-700);
+  --color-accent-text: var(--color-brand-500);
 
   --color-positive: oklch(0.52 0.095 158);
   --color-positive-quiet: oklch(0.945 0.028 158);
   /* Brillo interior de las superficies de acento. Es un token porque un
      componente no debe escribir un color, ni siquiera dentro de una sombra. */
-  --color-glint: oklch(1 0 0 / 0.18);
+  --color-glint: oklch(1 0 0 / 0.12);
   --color-critical: oklch(0.505 0.165 27);
   --color-critical-quiet: oklch(0.955 0.028 27);
+
+  /* Marcos de dispositivo. El trabajo real se enseña dentro de un portátil o
+     un móvil dibujados en CSS: estos son sus materiales. */
+  --color-device: oklch(0.205 0.006 200);
+  --color-device-screen: oklch(0.15 0.004 200);
+  --color-device-base: oklch(0.9 0.003 165);
+  --color-device-base-shade: oklch(0.74 0.005 165);
 
   /* Las familias tipográficas se declaran en src/config/brand.css. */
 
   /* --- Fluid type scale ------------------------------------------------------
      Tuned so a 16in laptop (1366-1536) reads as its own design, not a shrunk
-     27in. Every ceiling is reached around 1536 and then holds.                */
+     27in. Every ceiling is reached around 1536 and then holds.
+
+     h1, h2, h3, list and metric are set with `type-display`: wide, uppercase,
+     tight. Line-heights under 1 are deliberate: capitals have no descenders. */
   --text-2xs: 0.6875rem;
   --text-2xs--line-height: 1.35;
   --text-xs: 0.75rem;
@@ -94,17 +101,24 @@
   --text-lg: 1.0625rem;
   --text-lg--line-height: 1.65;
 
-  --text-lead: clamp(1.0625rem, 1rem + 0.34vw, 1.3125rem);
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   --text-lead--line-height: 1.55;
 
   --text-h4: clamp(1.0625rem, 1.02rem + 0.2vw, 1.1875rem);
   --text-h4--line-height: 1.4;
-  --text-h3: clamp(1.3125rem, 1.19rem + 0.55vw, 1.6875rem);
-  --text-h3--line-height: 1.28;
-  --text-h2: clamp(1.875rem, 1.52rem + 1.5vw, 2.875rem);
-  --text-h2--line-height: 1.1;
-  --text-h1: clamp(2.375rem, 1.87rem + 2.2vw, 4rem);
-  --text-h1--line-height: 1.04;
+  --text-h3: clamp(1.375rem, 1.222rem + 0.68vw, 1.875rem);
+  --text-h3--line-height: 1.02;
+  --text-h2: clamp(2rem, 1.388rem + 2.72vw, 4rem);
+  --text-h2--line-height: 0.94;
+  /* h2 in a side column (headline left, text right). Wide capitals at full h2
+     do not fit a 40 % column once a word passes ten letters. */
+  --text-h2-side: clamp(1.75rem, 1.2rem + 1.4vw, 2.625rem);
+  --text-h2-side--line-height: 0.96;
+  --text-h1: clamp(2.375rem, 1.494rem + 3.91vw, 5.25rem);
+  --text-h1--line-height: 0.94;
+  /* Big word lists ("PRESUPUESTOS", "FACTURAS"...), between h2 and h1. */
+  --text-list: clamp(1.875rem, 1.39rem + 2.15vw, 3.5rem);
+  --text-list--line-height: 1.12;
   --text-metric: clamp(2.25rem, 1.72rem + 2.3vw, 3.75rem);
   --text-metric--line-height: 1;
 
@@ -113,23 +127,28 @@
   --container-page: 77.5rem; /* 1240px, the primary grid */
   --container-wide: 90rem; /* 1440px, full-bleed panels */
 
-  /* --- Radii: restrained, editorial ------------------------------------------ */
+  /* --- Radii. Buttons are pills (rounded-full); panels and screenshots use
+     lg to 2xl. Hairline tables stay square. ---------------------------------- */
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
 
   /* --- Elevation: borders first, shadow only for genuinely lifted surfaces --- */
   --shadow-raise:
-    0 1px 2px oklch(0.196 0.008 56 / 0.05),
-    0 8px 24px -12px oklch(0.196 0.008 56 / 0.1);
+    0 1px 2px oklch(0.178 0.0128 177.6 / 0.05),
+    0 8px 24px -12px oklch(0.178 0.0128 177.6 / 0.1);
   --shadow-pop:
-    0 2px 4px oklch(0.196 0.008 56 / 0.06),
-    0 18px 48px -20px oklch(0.196 0.008 56 / 0.18);
+    0 2px 4px oklch(0.178 0.0128 177.6 / 0.06),
+    0 18px 48px -20px oklch(0.178 0.0128 177.6 / 0.18);
+  /* Only device frames cast a real shadow: they are objects, not panels. */
+  --shadow-device: 0 40px 60px -30px oklch(0.178 0.0128 177.6 / 0.45);
 
   /* --- Motion ----------------------------------------------------------------- */
   --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-fast: 140ms;
   --duration-base: 240ms;
@@ -160,7 +179,7 @@
     --z-overlay: 50;
     --z-modal: 60;
 
-    --section-y: clamp(4.5rem, 3rem + 5vw, 8.5rem);
+    --section-y: clamp(6rem, 4.3rem + 4.4vw, 10rem);
     --gutter: clamp(1.25rem, 0.85rem + 1.6vw, 2.5rem);
 
     color-scheme: light;
@@ -206,8 +225,31 @@
 
   ::selection {
     background-color: var(--color-brand-200);
-    color: var(--color-ink-950);
+    color: var(--color-ink-900);
   }
+}
+
+/* Display type: wide, uppercase, tight. Headlines, big lists and metrics
+   only. Pair it with a size token (text-h1, h2, h3, list or metric). */
+@utility type-display {
+  font-family: var(--font-display);
+  font-stretch: 122%;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  /* Wide capitals run out of room fast: a single long word (a brand name, a
+     figure like AUTOMÁTICO) must break rather than push the page sideways. */
+  overflow-wrap: break-word;
+}
+
+/* Small uppercase label set in mono. Eyebrows, captions, footnotes. */
+@utility type-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 @layer utilities {

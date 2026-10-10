@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { BeforeAfter } from "@/components/diagrams/ProcessFlow";
 import { PageHero } from "@/components/layout/PageHero";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { DemonstrationBadge, MetricValue } from "@/components/ui/Metric";
+import { Laptop, Phone } from "@/components/ui/Devices";
+import { KindBadge, MetricValue } from "@/components/ui/Metric";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -60,33 +61,73 @@ export default async function CasePage({ params }: PageProps) {
   return (
     <>
       <PageHero
-        eyebrow={entry.sector}
+        eyebrow={entry.name ? `${entry.name} · ${entry.sector}` : entry.sector}
         title={entry.title}
         lead={entry.excerpt}
         crumbs={crumbs}
         aside={
           <div className="flex flex-col gap-5 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
             <MetricValue metric={entry.headline} />
-            {entry.kind === "demonstration" ? (
-              <DemonstrationBadge className="self-start" />
-            ) : null}
+            <KindBadge kind={entry.kind} className="self-start" />
           </div>
         }
       >
-        <Button
-          href={primaryCta.href}
-          event="cta_primary_click"
-          eventLocation="case_hero"
-          eventId={entry.slug}
-        >
-          {primaryCta.shortLabel}
-          <ArrowRight className="size-4" strokeWidth={1.75} />
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            href={primaryCta.href}
+            event="cta_primary_click"
+            eventLocation="case_hero"
+            eventId={entry.slug}
+          >
+            {primaryCta.shortLabel}
+            <ArrowRight className="size-4" strokeWidth={1.75} />
+          </Button>
+          {entry.url ? (
+            <Button href={entry.url} variant="secondary" target="_blank">
+              Ver la web en directo
+              <ArrowUpRight className="size-4" strokeWidth={1.75} />
+            </Button>
+          ) : null}
+        </div>
       </PageHero>
+
+      {entry.gallery && entry.gallery.length > 0 ? (
+        <Section tone="sunken" ariaLabel="Capturas del sistema">
+          <Container className="grid grid-cols-1 gap-x-10 gap-y-14 md:grid-cols-2">
+            {entry.gallery.map((shot, index) => (
+              <Reveal
+                key={shot.src}
+                delay={Math.min(index % 2, 1)}
+                className={
+                  shot.device === "phone"
+                    ? "flex flex-col items-center gap-5"
+                    : "flex flex-col gap-5"
+                }
+              >
+                {shot.device === "phone" ? (
+                  <Phone
+                    src={shot.src}
+                    alt={shot.alt}
+                    sizes="(min-width: 768px) 220px, 55vw"
+                    className="w-[55%] max-w-[15rem]"
+                  />
+                ) : (
+                  <Laptop
+                    src={shot.src}
+                    alt={shot.alt}
+                    sizes="(min-width: 1240px) 600px, (min-width: 768px) 48vw, 92vw"
+                  />
+                )}
+                <p className="type-label text-center text-fg-subtle">{shot.caption}</p>
+              </Reveal>
+            ))}
+          </Container>
+        </Section>
+      ) : null}
 
       <Section tone="paper">
         <Container className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-20">
-          <SectionHeader index="01" eyebrow="El punto de partida" title="Cómo se trabajaba" />
+          <SectionHeader size="side" index="01" eyebrow="El punto de partida" title="Cómo se trabajaba" />
           <p className="max-w-[64ch] text-lead text-fg-muted">{entry.situation}</p>
         </Container>
       </Section>
@@ -108,7 +149,7 @@ export default async function CasePage({ params }: PageProps) {
 
       <Section tone="paper" divided>
         <Container className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-20">
-          <SectionHeader index="03" eyebrow="La solución" title={entry.solution.title} />
+          <SectionHeader size="side" index="03" eyebrow="La solución" title={entry.solution.title} />
 
           <div className="flex flex-col gap-8">
             <p className="max-w-[64ch] text-lead text-fg-muted">{entry.solution.body}</p>
@@ -129,10 +170,16 @@ export default async function CasePage({ params }: PageProps) {
 
       <Section tone="surface" divided>
         <Container className="flex flex-col gap-12">
-          <SectionHeader index="04" eyebrow="El resultado" title="Qué cambia, en números" />
+          <SectionHeader
+            index="04"
+            eyebrow="El resultado"
+            title={
+              entry.kind === "demonstration" ? "Qué cambia, en números" : "Qué hace, comprobable"
+            }
+          />
 
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-20">
-            <dl className="grid grid-cols-2 gap-x-10 gap-y-10">
+            <dl className="grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2">
               {entry.results.map((metric) => (
                 <div key={metric.label}>
                   <MetricValue metric={metric} />
@@ -142,8 +189,10 @@ export default async function CasePage({ params }: PageProps) {
 
             {entry.workings ? (
               <div className="flex flex-col gap-4 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-20 lg:pt-0">
-                <p className="text-2xs font-medium uppercase tracking-[0.16em] text-fg-subtle">
-                  Cómo sale ese número
+                <p className="type-label text-fg-subtle">
+                  {entry.kind === "demonstration"
+                    ? "Cómo sale ese número"
+                    : "Lo que todavía no está medido"}
                 </p>
                 <p className="text-sm text-fg-muted">{entry.workings}</p>
               </div>
@@ -152,7 +201,7 @@ export default async function CasePage({ params }: PageProps) {
         </Container>
       </Section>
 
-      <FinalCta index="05" />
+      <FinalCta />
 
       <script
         type="application/ld+json"

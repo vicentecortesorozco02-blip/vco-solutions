@@ -81,6 +81,7 @@ Todo es Server Component salvo cuatro archivos:
 | `Reveal`          | `IntersectionObserver`                         |
 | `ContactForm`     | Estado de formulario                           |
 | `TimeCalculator`  | Estado de los controles                        |
+| `FrontPicker`     | Qué frente está resaltado en la lista grande de la home. Sin JS la lista se lee entera |
 | `AnalyticsBridge` | Un único listener delegado                     |
 
 `Button` es deliberadamente server-safe: la instrumentación viaja como atributos

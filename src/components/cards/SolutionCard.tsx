@@ -49,7 +49,7 @@ export function SolutionCard({
         <p className="text-sm text-fg-muted">{solution.excerpt}</p>
       </div>
 
-      <p className="mt-auto flex flex-wrap items-center gap-x-1.5 gap-y-1 pt-2 text-2xs uppercase tracking-[0.1em] text-fg-subtle">
+      <p className="mt-auto flex flex-wrap items-center gap-x-1.5 gap-y-1 pt-2 type-label text-fg-subtle">
         {solution.chain.map((step, index) => (
           <span key={step} className="flex items-center gap-1.5">
             {index > 0 ? <span aria-hidden>→</span> : null}

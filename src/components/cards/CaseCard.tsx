@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-import { DemonstrationBadge } from "@/components/ui/Metric";
+import Image from "next/image";
+
+import { KindBadge } from "@/components/ui/Metric";
 import { routes } from "@/config/site";
 import type { CaseSummary } from "@/content/types";
 import { cn } from "@/lib/cn";
@@ -23,9 +25,21 @@ export function CaseCard({
         className,
       )}
     >
+      {entry.cover ? (
+        <div className="relative aspect-[16/10] overflow-hidden rounded-lg bg-bg-subtle ring-1 ring-line">
+          <Image
+            src={entry.cover.src}
+            alt={entry.cover.alt}
+            fill
+            sizes="(min-width: 1280px) 380px, (min-width: 768px) 46vw, 90vw"
+            className="object-cover object-top transition-transform duration-[var(--duration-scene)] ease-[var(--ease-out-soft)] group-hover:scale-[1.02]"
+          />
+        </div>
+      ) : null}
+
       <div className="flex items-start justify-between gap-4">
-        <span className="text-2xs uppercase tracking-[0.14em] text-fg-subtle">
-          {entry.sector}
+        <span className="type-label text-fg-subtle">
+          {entry.name ? `${entry.name} · ${entry.sector}` : entry.sector}
         </span>
         <ArrowUpRight
           aria-hidden
@@ -35,7 +49,7 @@ export function CaseCard({
       </div>
 
       <div className="flex flex-col gap-2.5">
-        <h3 className="font-display text-h3 font-normal text-fg">{entry.title}</h3>
+        <h3 className="type-display text-h3 text-fg">{entry.title}</h3>
         <p className="text-sm text-fg-muted">{entry.excerpt}</p>
       </div>
 
@@ -44,7 +58,7 @@ export function CaseCard({
           <p className="tnum text-h4 font-medium text-fg">{entry.headline.value}</p>
           <p className="text-2xs text-fg-subtle">{entry.headline.label}</p>
         </div>
-        {entry.kind === "demonstration" ? <DemonstrationBadge /> : null}
+        <KindBadge kind={entry.kind} className="self-start" />
       </div>
     </Link>
   );

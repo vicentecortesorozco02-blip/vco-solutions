@@ -4,16 +4,151 @@ import type { CaseStudy, CaseSummary } from "./types";
  * Cases.
  *
  * IMPORTANT — credibility rule.
- * Until there are delivered projects with client consent, every entry here has
- * `kind: "demonstration"`. The UI labels demonstrations explicitly and never
- * presents their figures as client results. Figures in a demonstration are
- * arithmetic from stated assumptions, and the arithmetic is shown in
- * `workings` so the reader can check it.
+ * Three kinds, and the UI says which one every entry is:
  *
- * To publish a real project: set `kind: "project"`, name the sector precisely,
- * and fill `results[].source` with how each figure was measured.
+ *  - `product`: software we built and run for our own business. Real and
+ *    deployed, but not a client engagement. Its figures are facts about the
+ *    system (what it does, what it counts), never savings we have not measured.
+ *  - `demonstration`: a worked example. Figures are arithmetic from stated
+ *    assumptions, shown in `workings` so the reader can check them.
+ *  - `project`: a delivered client engagement, with consent. There are none
+ *    yet. When there are, fill `results[].source` with how each figure was
+ *    measured.
  */
 export const cases: CaseStudy[] = [
+  {
+    slug: "yourhotelweb",
+    order: 5,
+    published: true,
+    kind: "product",
+    name: "YourHotelWeb",
+    sector: "Producto propio · Webs para hoteles",
+    title: "La web, el CRM y los cobros en un solo sistema",
+    excerpt:
+      "Nuestro propio negocio de webs para hoteles. Lo construimos entero: la web que capta, el CRM que vende y la propuesta que el hotel acepta y paga.",
+    url: "https://yourhotelweb.vercel.app",
+    headline: {
+      label: "Web pública, CRM, propuestas, cobros y facturas",
+      value: "1 sistema",
+      provenance: "measured",
+      source: "Una sola aplicación desplegada en Vercel, con los datos en Supabase.",
+    },
+    cover: {
+      src: "/trabajos/yourhotelweb/crm-hoy.jpg",
+      alt: "CRM de YourHotelWeb, pantalla Hoy: contadores de prospectos, leads y respuestas, próximas acciones y últimos leads.",
+      caption: "CRM, pantalla «Hoy». Datos de ejemplo.",
+      device: "laptop",
+    },
+    situation:
+      "YourHotelWeb es un negocio nuestro: diseñamos webs para hoteles independientes. Vender una web a un hotel tiene muchos pasos: encontrarlo, entender qué falla en su web actual, contactar, enseñarle algo, enviar una propuesta, cobrar en dos plazos y facturar. Hecho a mano, cada paso vive en un programa distinto y el seguimiento depende de que alguien se acuerde. Antes de ofrecer a nadie un sistema así, lo construimos para nosotros.",
+    process: {
+      before: {
+        title: "Sin sistema",
+        summary: "Cada paso a mano, cada dato en un programa distinto.",
+        steps: [
+          { id: "b1", label: "Buscar hoteles uno a uno", actor: "person" },
+          { id: "b2", label: "Copiar sus datos a una hoja", actor: "person" },
+          { id: "b3", label: "Escribir cada correo desde cero", actor: "person" },
+          { id: "b4", label: "Montar la propuesta en un documento", actor: "person" },
+          { id: "b5", label: "Perseguir el pago", actor: "person" },
+          { id: "b6", label: "Hacer la factura a mano", actor: "person" },
+        ],
+      },
+      after: {
+        title: "Con YourHotelWeb",
+        summary: "Una persona decide. El sistema prepara, registra y factura.",
+        steps: [
+          { id: "a1", label: "Hotel añadido o importado", actor: "trigger" },
+          { id: "a2", label: "Auditoría de su web y ficha", actor: "system" },
+          { id: "a3", label: "Correo revisado y enviado", actor: "person", note: "nada sale sin revisar" },
+          { id: "a4", label: "Propuesta online con seguimiento", actor: "system" },
+          { id: "a5", label: "Cliente, proyecto y factura", actor: "outcome" },
+        ],
+      },
+    },
+    solution: {
+      title: "Qué construimos",
+      body: "Una sola aplicación con tres caras. La web pública capta hoteles con una auditoría gratuita de su web y cuatro webs de ejemplo navegables. El CRM lleva cada hotel desde que es un nombre en una lista hasta que es cliente, y dice cada mañana qué toca hacer. Y la propuesta es una página privada que el hotel abre, acepta y paga; el primer pago lo convierte en cliente con su proyecto y su factura.",
+      components: [
+        "Web pública en español e inglés",
+        "Auditoría gratuita de la web del hotel",
+        "Prospectos con importación sin duplicados",
+        "Pipeline con próxima acción en cada hotel",
+        "Correos con plantilla, siempre revisados antes de salir",
+        "Propuesta online con visitas, aceptación y versiones",
+        "Cobro en dos plazos con tarjeta o transferencia",
+        "Facturas numeradas en PDF",
+        "Finanzas: cobrado, pendiente e ingresos recurrentes",
+        "Pantalla «Hoy» con lo que toca hacer",
+      ],
+    },
+    results: [
+      {
+        label: "Correos que salen sin que una persona los revise",
+        value: "0",
+        provenance: "measured",
+        source: "Regla del sistema: no se envía nada sin pulsar «enviar».",
+      },
+      {
+        label: "Basta para que el sistema cree cliente, proyecto y factura de anticipo",
+        value: "1",
+        unit: "pago",
+        provenance: "measured",
+        source: "Así funciona el cobro en el CRM desplegado.",
+      },
+      {
+        label: "Etapas del pipeline, de prospecto a ganado o perdido",
+        value: "11",
+        provenance: "measured",
+        source: "Pipeline del CRM, tal como está desplegado.",
+      },
+      {
+        label: "Webs de hotel de ejemplo, navegables",
+        value: "4",
+        provenance: "measured",
+        source: "yourhotelweb.vercel.app, sección Trabajos.",
+      },
+    ],
+    workings:
+      "Aquí no hay horas ahorradas porque todavía no se han medido: el sistema está recién desplegado. Lo que sí se puede comprobar es lo que hace. La web pública está en producción, y las capturas del CRM y de la propuesta son del propio sistema, con datos de ejemplo.",
+    gallery: [
+      {
+        src: "/trabajos/yourhotelweb/web-desktop.jpg",
+        alt: "Página de inicio de YourHotelWeb: titular «Tu hotel merece una web mejor» y una web de hotel en un portátil.",
+        caption: "La web pública, en producción.",
+        device: "laptop",
+      },
+      {
+        src: "/trabajos/yourhotelweb/web-mobile.jpg",
+        alt: "Página de inicio de YourHotelWeb en un móvil.",
+        caption: "La web pública en el móvil.",
+        device: "phone",
+      },
+      {
+        src: "/trabajos/yourhotelweb/demo-boutique.jpg",
+        alt: "Web de ejemplo de un hotel boutique ficticio, Casa Marès: foto del puerto y el nombre del hotel en grande.",
+        caption: "Una de las cuatro webs de hotel de ejemplo. Hotel ficticio.",
+        device: "laptop",
+      },
+      {
+        src: "/trabajos/yourhotelweb/crm-pipeline.jpg",
+        alt: "Pipeline del CRM con columnas por etapa y tarjetas de hotel con su próxima acción.",
+        caption: "Pipeline. Datos de ejemplo.",
+        device: "laptop",
+      },
+      {
+        src: "/trabajos/yourhotelweb/crm-finanzas.jpg",
+        alt: "Pantalla de finanzas: ingresos del mes, ingresos recurrentes, valor medio por proyecto y pendiente de cobro.",
+        caption: "Finanzas. Datos de ejemplo.",
+        device: "laptop",
+      },
+    ],
+    seo: {
+      title: "YourHotelWeb: web, CRM y cobros en un solo sistema",
+      description:
+        "Nuestro propio producto: la web que capta hoteles, el CRM que los acompaña hasta cliente y la propuesta que aceptan y pagan online.",
+    },
+  },
   {
     slug: "presupuestos-por-correo",
     order: 10,
@@ -277,13 +412,16 @@ export const publishedCases: CaseStudy[] = cases
   .sort((a, b) => a.order - b.order);
 
 export const caseSummaries: CaseSummary[] = publishedCases.map(
-  ({ slug, title, sector, excerpt, kind, headline, order, published }) => ({
+  ({ slug, title, sector, excerpt, kind, name, headline, cover, url, order, published }) => ({
     slug,
+    name,
     title,
     sector,
     excerpt,
     kind,
     headline,
+    cover,
+    url,
     order,
     published,
   }),
@@ -293,10 +431,17 @@ export function getCase(slug: string): CaseStudy | undefined {
   return publishedCases.find((entry) => entry.slug === slug);
 }
 
-/** The case featured on the home page. */
-export const featuredCase = publishedCases[0];
+/**
+ * The process shown end to end on the home page. Always a demonstration: it is
+ * the one with the arithmetic printed underneath.
+ */
+export const featuredCase =
+  publishedCases.find((entry) => entry.kind === "demonstration") ?? publishedCases[0];
 
-/** True while no delivered project has been published. Drives honest labelling. */
-export const allCasesAreDemonstrations = publishedCases.every(
-  (entry) => entry.kind === "demonstration",
+/** Real software: our own products and, when there are any, client projects. */
+export const realWork: CaseStudy[] = publishedCases.filter(
+  (entry) => entry.kind !== "demonstration",
 );
+
+/** True while no client project has been published. Drives honest labelling. */
+export const noClientProjects = !publishedCases.some((entry) => entry.kind === "project");

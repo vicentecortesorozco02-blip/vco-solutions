@@ -14,18 +14,20 @@ duración escritos a mano, está mal.**
 
 ## 1. Intención visual
 
-La referencia no es una landing de SaaS. Es un **documento técnico bien
-compuesto**: papel cálido, tinta, retículas, numeración de secciones, una sola
-tinta de color.
+El mismo sistema que YourHotelWeb (ver `DECISIONS.md`, D-018): titulares
+anchos en mayúsculas, mucho aire, papel blanco, gris claro y bloques de verde
+pino profundo. La prueba no se describe: se enseña, con capturas reales dentro
+de portátiles y móviles.
 
-Queremos que la sensación sea "esta gente entiende procesos", no "esta gente
-hace cosas con IA". Por eso:
+Queremos que la sensación sea "esta gente construye sistemas que funcionan",
+no "esta gente hace cosas con IA". Por eso:
 
-- Los bloques se separan con filetes de 1 px y cambios de tono, no con tarjetas
-  flotantes ni sombras.
-- La rejilla es visible como estructura, no como decoración.
-- Hay un único momento de contraste fuerte por página (el bloque oscuro del
-  método). Dos serían ruido.
+- Los titulares van en dos tonos: la primera línea afirma, la segunda, en gris,
+  remata. Cortos: cuatro líneas como mucho a 1366 px.
+- Las secciones alternan blanco y gris claro; como mucho dos bloques oscuros
+  en la home, nunca seguidos.
+- Las tablas de datos siguen siendo filetes de 1 px. Lo redondeado es para
+  paneles, capturas y botones.
 - Ninguna forma es gratuita: los diagramas explican, no adornan.
 
 ---
@@ -34,24 +36,20 @@ hace cosas con IA". Por eso:
 
 ### Marca
 
-Toda la rampa de marca deriva de dos números en `src/config/brand.css`:
+Toda la familia de acento deriva de dos números en `src/config/brand.css`:
 
 ```css
---brand-h: 42;      /* ángulo de tono OKLCH */
---brand-c: 0.115;   /* croma de referencia */
+--brand-h: 175;     /* ángulo de tono OKLCH */
+--brand-c: 0.0515;  /* croma del acento */
 ```
 
-Cambiar esos dos valores reskinea el sitio entero. Es el punto de cambio único
-que exige la fase de branding pendiente.
-
-El acento actual es un cobre cálido. Se eligió por descarte razonado: el azul y
-el morado son el uniforme de las consultoras de IA, y no queremos parecernos.
+Con ellos, `brand-500` es el pino de YourHotelWeb (`#0e3b31`) y `brand-700` su
+versión profunda (`#071c17`), que es el fondo de los bloques oscuros y del pie.
 
 ### Neutros
 
-Rampa `ink-*` cálida, de `ink-0` (blanco) a `ink-950`. El fondo del sitio no es
-blanco puro: es `ink-25`, un papel muy claro. El blanco puro se reserva para
-superficies que deben leerse como "encima" del papel.
+Rampa `ink-*` de grises fríos con una gota del tono de marca. El fondo del
+sitio es blanco; `bg-subtle` (`#f2f5f3`) alterna secciones.
 
 ### Tokens semánticos
 
@@ -67,6 +65,8 @@ Nunca uses `ink-600` en un componente. Usa el token semántico:
 | `fg`              | Texto principal                                  |
 | `fg-muted`        | Texto secundario y párrafos largos               |
 | `fg-subtle`       | Etiquetas, notas al pie, unidades                |
+| `fg-quiet`        | Segunda línea de los titulares (solo display ≥ 32 px) |
+| `fg-inverse-quiet`| Lo mismo sobre el bloque oscuro                  |
 | `line`            | Filete estándar (decorativo)                     |
 | `line-soft`       | Retícula de fondo                                |
 | `line-strong`     | Filete de énfasis                                |
@@ -83,19 +83,22 @@ Medido en el navegador sobre el sitio construido, no estimado:
 
 | Par                          | Ratio    | Requisito |
 | ---------------------------- | -------- | --------- |
-| `fg` sobre `bg`              | 17,7:1   | 4,5:1     |
-| `fg-muted` sobre `bg`        | 6,6:1    | 4,5:1     |
-| `fg-subtle` sobre `bg`       | 5,0:1    | 4,5:1     |
-| `accent-text` sobre `bg`     | 7,1:1    | 4,5:1     |
-| `critical` sobre `bg`        | 6,2:1    | 4,5:1     |
-| `accent-fg` sobre `accent`   | 5,2:1    | 4,5:1     |
-| `fg-inverse-muted` sobre `inverse` | 8,4:1 | 4,5:1   |
-| `line-field` sobre `surface` | 3,4:1    | 3:1 (1.4.11) |
+| `fg` sobre `bg`              | 18,8:1   | 4,5:1     |
+| `fg-muted` sobre `bg` / `bg-subtle` | 5,7:1 / 5,2:1 | 4,5:1 |
+| `fg-subtle` sobre `bg` / `bg-subtle` | 5,5:1 / 5,0:1 | 4,5:1 |
+| `fg-quiet` sobre `bg` / `bg-subtle` | 3,5:1 / 3,2:1 | 3:1 (texto grande) |
+| `accent` sobre `bg`          | 12,4:1   | 4,5:1     |
+| `accent-fg` sobre `accent`   | 12,4:1   | 4,5:1     |
+| `critical` sobre `bg`        | 6,4:1    | 4,5:1     |
+| `fg-inverse-muted` sobre `inverse` | 8,9:1 | 4,5:1   |
+| `fg-inverse-quiet` sobre `inverse` | 4,5:1 | 4,5:1   |
+| `line-field` sobre `surface` | 3,6:1    | 3:1 (1.4.11) |
 
-`fg-subtle` estaba en 4,23:1 con `ink-500` y se oscureció expresamente hasta
-pasar el umbral: se usa en etiquetas de 11-14 px, que son texto normal a
-efectos de WCAG. `line` no llega a 3:1 y por eso **no puede usarse como borde
-de un control**: para eso está `line-field`.
+YourHotelWeb usa un gris del 35 % para la segunda línea de los titulares y un
+gris "faint" (`#8b9692`, 3,05:1) para etiquetas. Aquí no: `fg-quiet` se
+oscureció hasta pasar 3:1 también sobre gris claro, y las etiquetas usan
+`fg-subtle`, que pasa 4,5:1. `line` no llega a 3:1 y por eso **no puede usarse
+como borde de un control**: para eso está `line-field`.
 
 Si añades un token de texto o de borde interactivo, mídelo antes de usarlo.
 
@@ -103,17 +106,21 @@ Si añades un token de texto o de borde interactivo, mídelo antes de usarlo.
 
 ## 3. Tipografía
 
-Dos familias, ambas variables, ambas servidas desde el propio dominio por
-`next/font`. Se cargan en `src/config/fonts.ts` y se declaran como pilas en
-`src/config/brand.css`.
+Una familia en dos anchos y una monoespaciada, servidas desde el propio
+dominio por `next/font`. Se cargan en `src/config/fonts.ts` y se declaran como
+pilas en `src/config/brand.css`.
 
-- **Instrument Serif** — solo display: `h1`, títulos de sección, cifras
-  grandes. Aporta la voz editorial.
-- **Instrument Sans** — todo lo que hay que leer de verdad: párrafos, interfaz,
-  etiquetas, navegación.
+- **Archivo ancha** — la utilidad `type-display`: anchura 122 %, peso 600,
+  mayúsculas, interletraje −0,035 em. Solo titulares, listas grandes y cifras.
+  Siempre con un token de tamaño (`text-h1`, `text-h2`, `text-h2-side`,
+  `text-h3`, `text-list`, `text-metric`).
+- **Archivo normal** — todo lo que hay que leer de verdad.
+- **Geist Mono** — la utilidad `type-label`: etiquetas de 11 px en mayúsculas
+  espaciadas. Nunca párrafos.
 
-No hay monoespaciada. La sensación "técnica" la dan las mayúsculas espaciadas y
-las cifras tabulares, no una fuente de terminal.
+Las mayúsculas anchas se quedan sin sitio enseguida: `type-display` deja
+partir una palabra que no cabe en su línea antes que empujar la página hacia
+un lado. Si eso ocurre en un titular, el titular es demasiado largo.
 
 ### Escala
 
@@ -122,11 +129,17 @@ decisión que hace que un portátil de 16" se sienta diseñado y no reducido:
 
 | Token         | Móvil (360) | 16" (1366) | Techo  |
 | ------------- | ----------- | ---------- | ------ |
-| `text-h1`     | 38 px       | 60 px      | 64 px  |
-| `text-h2`     | 30 px       | 45 px      | 46 px  |
-| `text-h3`     | 21 px       | 26 px      | 27 px  |
+| `text-h1`     | 38 px       | 77 px      | 84 px  |
+| `text-h2`     | 32 px       | 59 px      | 64 px  |
+| `text-h2-side`| 28 px       | 38 px      | 42 px  |
+| `text-list`   | 30 px       | 52 px      | 56 px  |
+| `text-h3`     | 22 px       | 29 px      | 30 px  |
 | `text-metric` | 36 px       | 56 px      | 60 px  |
-| `text-lead`   | 17 px       | 20 px      | 21 px  |
+| `text-lead`   | 17 px       | 20 px      | 20 px  |
+
+`text-h2-side` existe para los titulares que van en una columna lateral junto a
+texto (`SectionHeader size="side"`): a tamaño `h2` una palabra de más de diez
+letras no cabe en el 40 % de la fila.
 
 Cuerpo fijo en 16 px con interlineado 1.65. No se reduce en móvil.
 
@@ -146,7 +159,7 @@ Cuerpo fijo en 16 px con interlineado 1.65. No se reduce en móvil.
 Dos tokens gobiernan el ritmo de todo el sitio:
 
 ```css
---section-y: clamp(4.5rem, 3rem + 5vw, 8.5rem);  /* aire vertical entre secciones */
+--section-y: clamp(6rem, 4.3rem + 4.4vw, 10rem);  /* aire vertical entre secciones */
 --gutter:    clamp(1.25rem, 0.85rem + 1.6vw, 2.5rem);  /* margen lateral */
 ```
 
@@ -171,11 +184,11 @@ Es deliberado: una línea de texto de 2000 px no se lee.
 
 ## 6. Bordes, radios y elevación
 
-- Radios contenidos: 2, 4, 8, 12, 16 px. Nada redondeado como una pastilla,
-  salvo distintivos y el marcador circular de los diagramas.
-- **La elevación se expresa con filetes, no con sombras.** Existen
-  `--shadow-raise` y `--shadow-pop` para superficies genuinamente flotantes;
-  hoy no los usa nadie, y eso es buena señal.
+- Botones y distintivos: píldora (`rounded-full`). Paneles y capturas:
+  `rounded-xl` / `rounded-2xl`. Tablas de datos: esquinas rectas.
+- **La elevación se expresa con filetes, no con sombras.** La única sombra en
+  uso es `--shadow-device`, en los marcos de portátil y móvil: son objetos, no
+  paneles.
 - Las rejillas de tarjetas usan `gap-px` sobre fondo `line`: el hueco es el
   filete. Así seis tarjetas se leen como una tabla y no como seis objetos.
 
@@ -234,12 +247,14 @@ Los iconos acompañan, nunca sustituyen a una etiqueta. Nada de emojis.
 
 ## 10. La firma visual
 
-El diagrama antes/después es el elemento propio de esta marca. Dos
-implementaciones, un mismo lenguaje:
+Dos elementos propios:
 
-- `ProcessRibbon` — versión comprimida y horizontal. Va en el hero.
-- `ProcessFlow` / `BeforeAfter` — versión completa en dos columnas. Va en
-  soluciones y casos.
+- **El trabajo en pantalla.** `ui/Devices` (`Laptop`, `Phone`, `Browser`)
+  enseña capturas reales de `public/trabajos/`. Nunca una maqueta de algo que no
+  existe; el pie de cada captura dice si los datos en pantalla son de ejemplo.
+- **El diagrama antes/después**, `ProcessFlow` / `BeforeAfter`. Va en la
+  sección oscura «De esto. A esto.» de la home, en soluciones y en casos,
+  siempre sobre un panel blanco.
 
 Gramática de los marcadores:
 

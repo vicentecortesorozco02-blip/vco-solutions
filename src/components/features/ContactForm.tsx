@@ -138,7 +138,7 @@ export function ContactForm({ className }: { className?: string }) {
         <span className="flex size-10 items-center justify-center rounded-full bg-accent text-accent-fg">
           <Check className="size-5" strokeWidth={2} />
         </span>
-        <h2 className="font-display text-h3 text-fg">Recibido. Gracias.</h2>
+        <h2 className="type-display text-h3 text-fg">Recibido. Gracias.</h2>
         <p className="max-w-[50ch] text-fg-muted">
           Lo leemos nosotros, no un formulario automático. Te contestamos en un
           día laborable con una opinión concreta sobre el proceso que nos has

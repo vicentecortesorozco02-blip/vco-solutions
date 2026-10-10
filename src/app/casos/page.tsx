@@ -7,7 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { routes } from "@/config/site";
-import { allCasesAreDemonstrations, caseSummaries } from "@/content/cases";
+import { caseSummaries, noClientProjects } from "@/content/cases";
 import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -32,7 +32,7 @@ export default function CasesPage() {
         crumbs={crumbs}
       />
 
-      {allCasesAreDemonstrations ? (
+      {noClientProjects ? (
         <Section tone="paper" rhythm="tight">
           <Container>
             <div className="max-w-[68ch] border-l-2 border-accent bg-bg-subtle p-6 lg:p-7">
@@ -41,19 +41,20 @@ export default function CasesPage() {
                 publicamos ninguno.
               </p>
               <p className="mt-3 text-sm text-fg-muted">
-                Lo que hay aquí son demostraciones: procesos reales del día a
-                día de una empresa, resueltos paso a paso, con la aritmética
-                explicada. Cuando entreguemos proyectos y tengamos permiso para
-                contarlos, aparecerán con nombre, cifras medidas y el método con
-                el que se midieron. Preferimos una página honesta a una página
-                llena.
+                Lo que hay aquí es de dos tipos, y cada ficha dice cuál es.
+                Producto propio: software que hemos construido y desplegado para
+                nuestro propio negocio, con capturas del sistema real.
+                Demostraciones: procesos del día a día de una empresa, resueltos
+                paso a paso, con la aritmética explicada. Cuando entreguemos
+                proyectos y tengamos permiso para contarlos, aparecerán con
+                nombre, cifras medidas y el método con el que se midieron.
               </p>
             </div>
           </Container>
         </Section>
       ) : null}
 
-      <Section tone="paper" rhythm={allCasesAreDemonstrations ? "tight" : "default"}>
+      <Section tone="paper" rhythm={noClientProjects ? "tight" : "default"}>
         <Container>
           <Reveal>
             <div className="grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-2 xl:grid-cols-3">
@@ -65,7 +66,7 @@ export default function CasesPage() {
         </Container>
       </Section>
 
-      <FinalCta index="02" />
+      <FinalCta />
 
       <script
         type="application/ld+json"

@@ -56,7 +56,7 @@ export function MethodPhases({
             <div className="flex flex-col gap-2">
               <h3
                 className={cn(
-                  "font-display text-h3 font-normal",
+                  "type-display text-h3",
                   inverse ? "text-fg-inverse" : "text-fg",
                 )}
               >
@@ -76,7 +76,7 @@ export function MethodPhases({
               <div className="flex flex-col gap-1.5">
                 <p
                   className={cn(
-                    "text-2xs font-medium uppercase tracking-[0.14em]",
+                    "type-label",
                     inverse ? "text-fg-inverse-muted" : "text-fg-subtle",
                   )}
                 >

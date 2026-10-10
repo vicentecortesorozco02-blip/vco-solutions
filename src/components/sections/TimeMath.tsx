@@ -13,13 +13,12 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
  */
 export function TimeMath() {
   return (
-    <Section id="calculo" tone="paper" divided>
-      <Container className="flex flex-col gap-12">
+    <Section id="calculo" tone="sunken">
+      <Container className="flex flex-col gap-14">
         <SectionHeader
-          index="02"
           eyebrow="La cuenta que nadie hace"
-          title="Doce minutos, veinticinco veces por semana, son más de doscientas horas al año"
-          lead="Las tareas repetitivas no se notan porque cada una es corta. Se notan cuando se suman."
+          title={["Pocos minutos.", "Muchas veces al año."]}
+          lead="Doce minutos, veinticinco veces por semana, son más de doscientas horas al año. Pon los números de tu proceso."
         />
 
         <Reveal>

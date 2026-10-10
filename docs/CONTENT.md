@@ -60,9 +60,19 @@ negocio · desbloquear el potencial · IA de última generación
 **No inventamos nada.** Ni clientes, ni logos, ni testimonios, ni porcentajes,
 ni horas ahorradas, ni proyectos entregados.
 
-Mientras no haya resultados reales:
+Tres tipos de trabajo, y cada ficha dice cuál es (`KindBadge`):
 
-- Los casos son `demonstration` y llevan su distintivo visible.
+- `product` — software propio, construido y desplegado (hoy, YourHotelWeb). Sus
+  cifras son hechos comprobables sobre el sistema («0 correos salen sin
+  revisar», «11 etapas»), con `provenance: "measured"` y `source`. Nunca horas
+  ahorradas que no se han medido. Las capturas son del sistema real; si hay
+  datos en pantalla y son de ejemplo, el pie lo dice.
+- `demonstration` — un ejemplo resuelto. Distintivo visible.
+- `project` — trabajo para un cliente. No hay ninguno todavía.
+
+Mientras no haya proyectos de clientes:
+
+- El aviso de `/casos` sigue visible (`noClientProjects`).
 - Toda cifra ilustrativa muestra su aritmética en el campo `workings`.
 - La sección de métricas de la home no presume: hace una cuenta con los números
   que introduce el propio visitante. Es más persuasivo que un porcentaje
@@ -81,23 +91,25 @@ o un diseño distinto.
 
 ## 5. Narrativa de la home
 
-Ocho secciones, cada una responde a una pregunta y solo a una:
+Diez secciones, con la estructura de YourHotelWeb (D-018). Cada una responde a
+una pregunta y solo a una:
 
-| Nº | Sección   | Pregunta que responde                       |
-| -- | --------- | ------------------------------------------- |
-| —  | Hero      | ¿Qué me estáis diciendo?                     |
-| 01 | Problema  | ¿Esto me pasa a mí?                          |
-| 02 | La cuenta | ¿Cuánto me está costando?                    |
-| 03 | Soluciones| ¿Qué me podéis quitar de encima?             |
-| 04 | Método    | ¿Cómo trabajáis?                             |
-| 05 | Caso      | ¿Cómo es esto de verdad?                     |
-| 06 | Principios| ¿Por qué vosotros?                           |
-| 07 | FAQ       | ¿Qué me impide dar el paso?                  |
-| 08 | CTA       | ¿Qué hago ahora?                             |
+| Sección              | Pregunta que responde                  |
+| -------------------- | -------------------------------------- |
+| Hero                 | ¿Qué hacéis, y lo habéis hecho ya?      |
+| Seis frentes         | ¿Qué me podéis quitar de encima?        |
+| Problema             | ¿Esto me pasa a mí?                     |
+| De esto. A esto.     | ¿Cómo cambia un proceso de verdad?      |
+| Trabajo real         | ¿Qué habéis construido?                 |
+| La cuenta            | ¿Cuánto me está costando?               |
+| Integraciones        | ¿Tengo que cambiar de herramientas?     |
+| Método               | ¿Cómo trabajáis?                        |
+| FAQ                  | ¿Qué me impide dar el paso?             |
+| Cierre               | ¿Qué hago ahora?                        |
 
-El orden va de reconocimiento a coste, de coste a solución, de solución a
-confianza y de confianza a acción. Cambiar el orden sin cambiar la copia rompe
-el hilo.
+Los titulares van en dos líneas (array en `title`): la primera afirma, la
+segunda remata. Cortos: si un titular pasa de cuatro líneas a 1366 px, sobra
+texto. Los compromisos (`principles`) viven ahora solo en `/metodo`.
 
 ---
 
@@ -112,6 +124,7 @@ Todo en `src/content/`, tipado en `types.ts`.
 | `method.ts`        | Las cinco fases y los cuatro compromisos           |
 | `manual-tasks.ts`  | La lista de reconocimiento del problema            |
 | `faq.ts`           | Preguntas generales                                |
+| `integrations.ts`  | Herramientas con las que hay integraciones reales  |
 | `company.ts`       | Página de empresa                                  |
 
 ### Añadir una solución
@@ -125,10 +138,19 @@ Todo en `src/content/`, tipado en `types.ts`.
 No hace falta tocar ningún componente. La página de detalle, el índice, el
 sitemap y los datos estructurados se generan solos.
 
+`shortTitle` es la palabra que sale en la lista grande de la home
+(«Presupuestos»): una sola, y que se entienda sola.
+
 ### Añadir un caso
 
 Igual, en `cases.ts`. Mientras sea `kind: "demonstration"`, `workings` es
-obligatorio (hay un test).
+obligatorio (hay un test). Un `product` o un `project` puede llevar `cover` y
+`gallery` (capturas en `public/trabajos/<slug>/`) y `url` si se puede visitar.
+
+### Añadir una integración
+
+Solo si hay código nuestro, funcionando, que hable con esa herramienta. Se
+escribe el nombre en texto, nunca el logotipo.
 
 ---
 

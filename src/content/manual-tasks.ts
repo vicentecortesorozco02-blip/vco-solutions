@@ -31,8 +31,8 @@ export const manualTasks: ManualTask[] = [
 
 export const problemStatement = {
   eyebrow: "El problema",
-  heading:
-    "Tu empresa está pagando a personas por hacer cosas que ya no hace falta hacer a mano",
+  /** Two lines: the first states it, the second lands it. */
+  heading: ["Nadie las eligió.", "Alguien las hace cada semana."],
   body: "No son tareas difíciles. Son tareas que consisten en mover información de un sitio a otro, comprobar que coincide y avisar a alguien. Cada una cuesta pocos minutos, y ese es exactamente el motivo por el que nadie las cuenta.",
-  kicker: "Marca mentalmente las que ocurren en tu empresa esta semana.",
+  kicker: "¿Te suena alguna? Calcula lo que te cuesta",
 };
