@@ -13,7 +13,11 @@ export const routes = {
   solution: (slug: string) => `/soluciones/${slug}`,
   cases: "/casos",
   case: (slug: string) => `/casos/${slug}`,
-  method: "/metodo",
+  areas: "/areas",
+  area: (slug: string) => `/areas/${slug}`,
+  sectors: "/sectores",
+  sector: (slug: string) => `/sectores/${slug}`,
+  method: "/metodo-vco",
   diagnosis: "/diagnostico",
   contact: "/contacto",
   company: "/empresa",
@@ -24,6 +28,48 @@ export const routes = {
   },
 } as const;
 
+/**
+ * The private panel (Life CRM). Never linked from the public site, never in
+ * the sitemap, blocked in robots.txt and behind sign-in.
+ */
+export const panelRoutes = {
+  home: "/panel",
+  signIn: "/panel/acceso",
+  calendar: "/panel/calendario",
+  tasks: "/panel/tareas",
+  projects: "/panel/proyectos",
+  project: (id: string) => `/panel/proyectos/${id}`,
+  university: "/panel/universidad",
+  money: "/panel/dinero",
+  subscriptions: "/panel/suscripciones",
+  subscription: (id: string) => `/panel/suscripciones/${id}`,
+  domains: "/panel/dominios",
+  contacts: "/panel/contactos",
+  documents: "/panel/documentos",
+  ai: "/panel/ia",
+  dates: "/panel/fechas",
+  inbox: "/panel/inbox",
+  settings: "/panel/ajustes",
+  /** Exportación a Obsidian: la lee `npm run obsidian`, no el navegador. */
+  obsidian: "/panel/obsidian",
+} as const;
+
+/** The panel sidebar. Ten entries, no more: see docs/LIFE_CRM.md. */
+export const panelNav = [
+  { key: "home", label: "Inicio", href: panelRoutes.home },
+  { key: "calendar", label: "Calendario", href: panelRoutes.calendar },
+  { key: "tasks", label: "Tareas", href: panelRoutes.tasks },
+  { key: "projects", label: "Proyectos", href: panelRoutes.projects },
+  { key: "university", label: "Universidad", href: panelRoutes.university },
+  { key: "money", label: "Dinero", href: panelRoutes.money },
+  { key: "subscriptions", label: "Suscripciones", href: panelRoutes.subscriptions },
+  { key: "domains", label: "Dominios", href: panelRoutes.domains },
+  { key: "contacts", label: "Contactos", href: panelRoutes.contacts },
+  { key: "documents", label: "Documentos", href: panelRoutes.documents },
+] as const;
+
+export type PanelNavKey = (typeof panelNav)[number]["key"];
+
 export interface NavItem {
   label: string;
   href: string;
@@ -33,19 +79,24 @@ export interface NavItem {
 
 export const primaryNav: NavItem[] = [
   {
-    label: "Soluciones",
-    href: routes.solutions,
-    description: "Qué tipo de trabajo manual eliminamos",
+    label: "Qué mejoramos",
+    href: routes.areas,
+    description: "Crecimiento comercial, experiencia del cliente, eficiencia",
+  },
+  {
+    label: "Sectores",
+    href: routes.sectors,
+    description: "Lo que se repite en tu tipo de negocio",
+  },
+  {
+    label: "Método VCO",
+    href: routes.method,
+    description: "Las cinco fases, de descubrir a medir",
   },
   {
     label: "Casos",
     href: routes.cases,
-    description: "Procesos completos, antes y después",
-  },
-  {
-    label: "Cómo trabajamos",
-    href: routes.method,
-    description: "Las cinco fases, de la primera reunión a la medición",
+    description: "Trabajo real y demostraciones, con el cálculo a la vista",
   },
   {
     label: "Empresa",
@@ -56,20 +107,20 @@ export const primaryNav: NavItem[] = [
 
 export const footerNav: { title: string; items: NavItem[] }[] = [
   {
-    title: "Soluciones",
+    title: "Qué mejoramos",
     items: [
-      { label: "Presupuestos automáticos", href: routes.solution("presupuestos-automaticos") },
-      { label: "Automatización administrativa", href: routes.solution("automatizacion-administrativa") },
-      { label: "Correo y comunicación", href: routes.solution("email-y-comunicacion") },
-      { label: "Procesos comerciales", href: routes.solution("procesos-comerciales") },
-      { label: "Herramientas internas", href: routes.solution("herramientas-internas") },
-      { label: "IA aplicada al negocio", href: routes.solution("ia-aplicada") },
+      { label: "Crecimiento comercial", href: routes.area("crecimiento-comercial") },
+      { label: "Experiencia del cliente", href: routes.area("experiencia-cliente") },
+      { label: "Eficiencia y rentabilidad", href: routes.area("eficiencia-rentabilidad") },
+      { label: "Soluciones concretas", href: routes.solutions },
+      { label: "Sectores", href: routes.sectors },
     ],
   },
   {
     title: "Empresa",
     items: [
-      { label: "Cómo trabajamos", href: routes.method },
+      { label: "Método VCO", href: routes.method },
+      { label: "Diagnóstico de potencial", href: routes.diagnosis },
       { label: "Casos", href: routes.cases },
       { label: "Quiénes somos", href: routes.company },
       { label: "Contacto", href: routes.contact },

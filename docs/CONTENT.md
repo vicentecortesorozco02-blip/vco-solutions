@@ -109,7 +109,7 @@ una pregunta y solo a una:
 
 Los titulares van en dos líneas (array en `title`): la primera afirma, la
 segunda remata. Cortos: si un titular pasa de cuatro líneas a 1366 px, sobra
-texto. Los compromisos (`principles`) viven ahora solo en `/metodo`.
+texto. Los compromisos (`principles`) viven ahora solo en `/metodo-vco`.
 
 ---
 
@@ -158,7 +158,7 @@ escribe el nombre en texto, nunca el logotipo.
 
 La acción principal de todo el sitio es una sola, y vive en `brand.ts`:
 
-> **Cuéntanos qué quieres automatizar**
+> **Descubre el potencial de tu empresa**
 
 Versión corta para la cabecera: *Cuéntanos tu proceso*.
 Secundaria: *Ver cómo trabajamos*.

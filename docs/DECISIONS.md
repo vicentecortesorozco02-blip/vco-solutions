@@ -340,3 +340,223 @@ negocio propio. Se etiqueta como «Producto propio» allí donde aparece
 (`KindBadge`). Sus cifras son hechos comprobables sobre el sistema, nunca
 ahorros sin medir. El aviso de `/casos` depende ahora de que no exista ningún
 `project` (`noClientProjects`).
+
+---
+
+## D-020 · Un panel privado (Life CRM) dentro de la misma app, sobre Supabase
+
+**Contexto.** El fundador quiere un centro de control personal (agenda, tareas,
+dinero, suscripciones, universidad, proyectos, dominios, contactos, documentos)
+con persistencia real, accesible desde esta misma web. El proyecto no tenía
+base de datos ni autenticación, y la regla era no meterlas sin pedirlo: aquí se
+pidieron explícitamente.
+
+**Decisión.**
+
+- Vive en `/panel`, en un grupo de rutas propio. La web pública pasa a
+  `app/(site)/` con su cabecera y su pie; las URL no cambian.
+- Datos en un proyecto de Supabase dedicado (`life-crm`), separado de los de
+  otros negocios. Migraciones versionadas en `supabase/migrations/`.
+- Dos dependencias nuevas: `@supabase/supabase-js` (cliente) y `@supabase/ssr`
+  (sesión en cookies con Server Components y el proxy). No hay alternativa más
+  pequeña que no sea reescribir el cliente de auth.
+- Acceso por correo y contraseña de Supabase Auth, limitado a
+  `PANEL_ALLOWED_EMAILS`. Privacidad con RLS en todas las tablas.
+- Todo se calcula en el servidor (agenda, recordatorios, totales). El cliente
+  solo lleva los diálogos, la búsqueda, el «+» y las casillas.
+
+**Motivo.** Reutilizar el stack, los tokens y los componentes existentes. Un
+segundo proyecto con su propio despliegue habría duplicado el sistema de
+diseño y la configuración.
+
+**Coste de revertir.** Medio: el panel no toca nada de la web pública salvo el
+grupo de rutas y `robots.ts`. Borrar `app/panel`, `components/panel`,
+`lib/life`, `lib/supabase` y `proxy.ts` lo elimina.
+
+Detalle en `docs/LIFE_CRM.md`.
+
+---
+
+## D-021 · El panel tiene modo oscuro y un color de aviso
+
+**Contexto.** La paleta es papel, tinta y un acento, sin modo oscuro. El panel
+se usa a diario, también de noche, y necesita distinguir «vence pronto» de
+«ya ha vencido».
+
+**Decisión.**
+
+- Modo oscuro solo en el panel: los tokens semánticos se redefinen bajo
+  `[data-theme="dark"]` y, con `data-theme="system"`, bajo
+  `prefers-color-scheme: dark`. El tema se guarda en el perfil y se aplica en el
+  servidor, sin parpadeo. En oscuro el acento pasa al verde menta claro: el pino
+  no se lee sobre fondo oscuro.
+- Un color nuevo, `caution` (ámbar apagado), solo para «pronto». `critical`
+  sigue siendo «ya». Nunca solo color: siempre va con texto o icono.
+- Lienzo agrupado al estilo Apple: `canvas` de fondo, tarjetas `surface` sin
+  bordes, `fill` para controles. Dos tamaños de texto propios, `title` y
+  `stat`, en ancho normal: el panel se lee, no se presenta.
+
+**La web pública no cambia.** Sigue sin modo oscuro y sin `caution`.
+
+---
+
+## D-022 · Las finanzas distinguen lo que pasó de lo que se prevé, y lo que no se sabe
+
+**Contexto.** El panel guardaba suscripciones con un importe y una fecha
+obligatorios. Los datos reales no son así: hay importes aproximados, fechas
+solo comunicadas, cobros por consumo sin periodicidad, cargos sin identificar,
+cuotas pagadas con retraso, el mismo pago visto en PayPal y en el banco, y
+facturas comunicadas que no se sabe si se pagaron.
+
+**Decisión.**
+
+- Cuatro conceptos nuevos: `accounts` (dónde se cobra), `charges` (lo que pasó
+  de verdad, con su estado), `subscription_prices` (el histórico de precios) y
+  campos de confianza en cada importe y cada fecha.
+- Un importe o una fecha que no se saben son `null`, y la base de datos obliga
+  a que su confianza sea `unknown`. **Nunca 0 €.** Los totales suman lo que
+  pueden y declaran cuántos datos han dejado fuera.
+- Las previsiones se calculan, no se guardan. Una previsión pasada sin cargo
+  que la respalde es «pendiente de comprobar», no un impago.
+- Solo un cargo `paid` es dinero gastado. Autorizaciones, intentos rechazados y
+  pagos espejo se guardan y no suman.
+- `import_life_data()` importa lotes de forma idempotente: rellena huecos,
+  nunca sobrescribe y convierte cada contradicción en una tarea de revisión.
+
+**Motivo.** La regla 3.4 del proyecto («prohibido inventar cifras») aplicada a
+los datos propios: una estimación presentada como un dato cierto es el mismo
+error que una métrica inventada en la web.
+
+**Coste de revertir.** Alto en datos, bajo en código: las tablas nuevas no
+tocan la web pública.
+
+---
+
+## D-023 · Socios, colores, tablero y un asistente dentro del panel
+
+**Contexto.** El panel ya contaba bien el dinero, pero faltaban cuatro cosas
+que el día a día pedía: proyectos con socios y gastos a medias, una pantalla de
+inicio que se lea de un vistazo, un sitio donde arrastrar tareas y una forma de
+apuntar cosas hablando.
+
+**Decisión.**
+
+- **Socios**: `partners`, `project_partners` y `charge_shares`. Quién pagó y a
+  quién le toca son dos datos distintos; el saldo sale de restarlos. Sin
+  porcentaje acordado no se reparte: se avisa.
+- **Colores**: ocho tokens `--color-tag-*`, un color por proyecto y un color por
+  tipo de cosa en el calendario. Nunca solos: el nombre va siempre al lado.
+- **Inicio**: seis cifras pequeñas en una línea y, debajo, una barra fina por
+  día con la semana entera. Ocupa la mitad y cuenta el doble.
+- **Tablero**: cuatro columnas por estado, se arrastra con el ratón y se mueve
+  con un desplegable en el móvil o con el teclado. El orden es un número
+  (`tasks.position`): mover una tarjeta escribe una fila.
+- **IA**: un chat que recibe un resumen escrito del panel y puede crear tarea,
+  evento o nota. Sin clave de API lo dice y no finge. Nada se guarda de la
+  conversación.
+- **Vault pasa a llamarse Documentos**, que es lo que es.
+
+**Motivo.** Todo esto lo pidió el dueño del panel después de usarlo unos días.
+
+**Coste de revertir.** Bajo salvo en socios, que añade datos.
+
+---
+
+## D-024 · Desplegables propios y diálogos que no recargan la pantalla
+
+**Contexto.** El panel usaba `<select>` nativos, que en macOS los pinta el
+sistema y no se parecen en nada al resto de la aplicación. Y abrir un editor
+era un cambio de URL que pasaba por el router: Next volvía a pedir la pantalla
+entera al servidor antes de que apareciera nada, así que un toque tardaba casi
+un segundo en contestar.
+
+**Decisión.**
+
+- **`components/panel/Select`**: un botón más una lista (`role="listbox"`) con
+  teclado completo, búsqueda por letras y un `input` oculto que lleva el valor
+  en el formulario. Se pinta con los tokens, así que es igual en toda máquina.
+  La lista se monta dentro del `<dialog>` cuando está en uno, porque la capa
+  superior tapa cualquier cosa puesta en el `body`.
+- **Campos que dependen de otro**: `FieldDef.showIf`. La frecuencia
+  personalizada pide los días ahí mismo y solo ella; repetir un evento solo
+  pregunta cada cuánto cuando repite.
+- **Abrir un editor no es cambiar de página**: los enlaces que solo añaden
+  `?nuevo=` o `?editar=` se interceptan y se empujan con `history.pushState`.
+  El diálogo aparece en unos 80 ms y la flecha de atrás lo sigue cerrando.
+- **Navegar**: `staleTimes` en la configuración (30 s), el menú precarga cada
+  pantalla y un `loading.tsx` enseña la forma de lo que viene.
+- **Las funciones se despliegan en París** (`cdg1`), donde está la base: antes
+  cada consulta cruzaba el Atlántico.
+
+**Motivo.** El panel se usa a diario. Lo que se abre decenas de veces al día
+tiene que contestar al instante, y un control del sistema operativo rompe la
+ilusión de aplicación propia.
+
+**Coste de revertir.** Bajo: el `Select` es un componente y la interceptación
+de clics, un efecto en `PanelDialogs`.
+
+---
+
+## D-025 · De «automatizamos procesos» a «descubrimos potencial»
+
+**Contexto.** La web vendía bien una cosa concreta —quitar trabajo manual—
+pero dejaba fuera la mitad de lo que esta empresa puede hacer por un cliente:
+contestar antes una petición, recuperar presupuestos parados, saber qué
+servicio deja margen, pedir reseñas a quien se va contento. Un empresario que
+no se identifica con «tengo tareas repetitivas» se iba sin ver nada para él.
+
+**Decisión.** El posicionamiento pasa a ser detectar el potencial de un
+negocio y convertirlo en crecimiento, rentabilidad y mejor servicio. La
+tecnología queda donde corresponde: dentro, como una palanca más.
+
+- **Tres áreas** (`content/areas.ts`): crecimiento comercial, experiencia del
+  cliente, eficiencia y rentabilidad. Cada una con su página.
+- **Siete sectores** (`content/sectors.ts`), escritos con el vocabulario de
+  cada oficio —escandallo, descuadre, liquidación, comisión de la OTA— porque
+  así se describe el problema cuando lo cuenta quien lo tiene.
+- **Ocho señales** en la home: situación, qué cuesta, qué oportunidad hay y
+  qué se hace. Ninguna lleva un porcentaje: lo que se afirma es el mecanismo.
+- **Método VCO** (`/metodo-vco`, antes `/metodo`): descubrir, detectar,
+  priorizar, transformar, medir. Sin el símbolo ®, que exige un registro que
+  no existe. La ruta antigua redirige con 308.
+- **Calculadora de escenarios** (`lib/impact.ts` + `ImpactCalculator`): seis
+  cuentas sobre los números del visitante, con la aritmética a la vista y
+  separando siempre facturación, ahorro, beneficio y retorno. La lógica vive
+  aparte de la interfaz y está cubierta por pruebas porque es lo único de la
+  web que podría estar mal sin que se note.
+- El CTA dominante pasa a ser `/diagnostico`.
+
+**Motivo.** Lo pidió el dueño, y coincide con lo que dice el mercado: nadie
+busca «transformación digital», pero sí «no doy abasto con las llamadas» o
+«cuánto me cuesta una tarea manual al año».
+
+**Coste de revertir.** Bajo en código, alto en SEO: las rutas nuevas ya están
+en el sitemap.
+
+---
+
+## D-026 · Las solicitudes de diagnóstico se guardan en la base
+
+**Contexto.** El formulario de contacto dependía de un webhook que nunca se
+configuró, así que en producción devolvía 503 honesto pero inútil. Y la web
+pública no tocaba la base de datos a propósito (ver D-020).
+
+**Decisión.** Hay una excepción, y es de escritura: la tabla `leads`.
+
+- `POST /api/diagnostico` valida con el mismo esquema que el navegador,
+  descarta por tamaño, por señuelo y por límite de IP, y escribe la solicitud.
+- RLS: insertar puede cualquiera, leer y modificar solo quien esté en
+  `panel_owners`. Comprobado con la clave publicable: `select` devuelve cero
+  filas y un `update` anónimo no toca nada.
+- La web pública sigue sin **leer** nada de la base.
+- Si además hay `CONTACT_WEBHOOK_URL`, se avisa por ahí; que el aviso falle no
+  pierde la solicitud. Si no hay dónde guardarla, 503 y el correo a la vista:
+  nunca un «enviado» falso.
+- Las solicitudes se ven y se marcan como atendidas en `/panel/inbox`.
+
+**Motivo.** Un formulario que no entrega el contacto es peor que no tener
+formulario, y la infraestructura para guardarlo ya estaba pagada.
+
+**Coste de revertir.** Medio: habría que llevarse los contactos antes de
+quitar la tabla.
+

@@ -104,6 +104,24 @@ Si añades un token de texto o de borde interactivo, mídelo antes de usarlo.
 
 ---
 
+### Panel privado
+
+El panel (`/panel`) usa los mismos tokens más estos, solo suyos (D-021):
+
+| Token | Uso |
+| ----- | --- |
+| `canvas` | Fondo agrupado, gris muy claro (oscuro: casi negro) |
+| `surface-raised` | Tarjeta al pasar el ratón, menús |
+| `fill`, `fill-strong` | Fondo de controles y barras, translúcido |
+| `caution`, `caution-quiet` | «Vence pronto». `critical` es «ya» |
+| `scrim` | Detrás de los diálogos |
+
+Modo oscuro: los tokens semánticos se redefinen bajo `[data-theme="dark"]`.
+Contraste medido en ambos temas (2026-10-10): todo el texto ≥ 4,5:1
+(`fg-subtle` 4,96 sobre lienzo claro; `caution` 4,78 sobre su fondo), bordes de
+campo ≥ 3:1 (3,62 claro, 3,27 oscuro). `fg-quiet` (3,47) solo para
+placeholders y días fuera del mes.
+
 ## 3. Tipografía
 
 Una familia en dos anchos y una monoespaciada, servidas desde el propio
@@ -142,6 +160,9 @@ texto (`SectionHeader size="side"`): a tamaño `h2` una palabra de más de diez
 letras no cabe en el 40 % de la fila.
 
 Cuerpo fijo en 16 px con interlineado 1.65. No se reduce en móvil.
+
+Panel: `text-title` para el título de cada pantalla y `text-stat` para las
+cifras grandes de las tarjetas. Ancho normal, peso 600, sin mayúsculas.
 
 ### Reglas
 
@@ -269,3 +290,44 @@ El carril del proceso manual es **discontinuo** y sus etiquetas van atenuadas;
 el automatizado es continuo y nítido. La diferencia se percibe antes de leer.
 El significado también está en texto para lectores de pantalla: nunca depende
 solo de la forma o del color.
+
+---
+
+## 11. Controles de formulario del panel
+
+El panel no usa `<select>`: un control del sistema operativo se ve distinto en
+cada máquina y rompe la ilusión de aplicación propia. Se usa
+`components/panel/Select`, un botón con una lista (`role="listbox"`) pintada
+con los tokens de siempre:
+
+- `bg-surface` y `ring-line-field` en reposo, `ring-accent` abierto.
+- La lista es `bg-surface-raised` con `--shadow-pop`, y la opción activa
+  `bg-accent-quiet` con su texto en `accent-text`, más una marca de
+  verificación: el color nunca va solo.
+- Alturas: 44 px (`min-h-11`) como control de formulario, 32 px (`min-h-8`) en
+  el tamaño `sm` de las tarjetas del tablero.
+- Teclado: flechas, inicio y fin, letras para buscar, Enter elige, Escape
+  cierra y devuelve el foco al botón.
+
+---
+
+## 12. Figuras de datos
+
+La web enseña cifras, no capturas decorativas. Las piezas están en
+`components/ui/Figure.tsx` y se rigen por cuatro reglas:
+
+- **Dos series como mucho.** Hoy en `line-strong` y el escenario de mejora en
+  `accent`. No hay paleta de series porque no hace falta: papel, tinta y un
+  acento siguen bastando.
+- **El color nunca va solo.** Cada barra lleva su etiqueta y su número al lado,
+  y por debajo es una `<table>` de verdad, legible con lector de pantalla y sin
+  estilos.
+- **La escala empieza en cero** y las barras llevan el extremo redondeado a
+  4 px. Nunca un eje doble ni dos escalas en la misma figura.
+- **Debajo de cada figura va la cuenta** y, cuando es un ejemplo, la palabra
+  «simulación» o «ilustrativo». Una cifra sin su cálculo es una promesa.
+
+Las capturas de trabajo real van en `Screenshot`: recuadro con la misma línea
+que el resto de la página y un pie que dice qué se está mirando. Se han
+retirado los marcos de portátil y de móvil; eran dibujo, no información.
+

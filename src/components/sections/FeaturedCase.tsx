@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { BeforeAfter } from "@/components/diagrams/ProcessFlow";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { StatRow } from "@/components/ui/Figure";
 import { DemonstrationBadge } from "@/components/ui/Metric";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
@@ -26,6 +27,30 @@ export function FeaturedCase() {
           tone="inverse"
           title={["De esto.", "A esto."]}
           lead={`${featuredCase.title}. ${featuredCase.excerpt}`}
+        />
+
+        {/* El cambio, contado en pasos antes de dibujarlo. */}
+        <StatRow
+          tone="inverse"
+          stats={[
+            {
+              label: "Pasos a mano hoy",
+              value: featuredCase.process.before.steps.length,
+              unit: "count",
+              note: featuredCase.process.before.summary,
+            },
+            {
+              label: "Pasos con el sistema",
+              value: featuredCase.process.after.steps.length,
+              unit: "count",
+              note: featuredCase.process.after.summary,
+            },
+            {
+              label: featuredCase.headline.label,
+              value: featuredCase.headline.value,
+              note: "cálculo ilustrativo, con las hipótesis a la vista",
+            },
+          ]}
         />
 
         <Reveal>

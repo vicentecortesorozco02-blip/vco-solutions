@@ -11,8 +11,9 @@
 | lucide-react   | —       | Iconos con importación individual                             |
 | zod            | 4.x     | Un solo esquema compartido por cliente y servidor             |
 | clsx + tailwind-merge | — | Composición de clases con resolución de conflictos correcta   |
+| @supabase/supabase-js + @supabase/ssr | 2.x / 0.12 | Base de datos y sesión del panel privado (D-020) |
 
-Cinco dependencias de producción. Ese número es un objetivo, no una casualidad.
+Pocas dependencias de producción. Ese número es un objetivo, no una casualidad.
 Cada adición se justifica en `DECISIONS.md`.
 
 **Sin librería de animación.** Se evaluó y no hacía falta: ver `DECISIONS.md`.
@@ -58,12 +59,19 @@ que satisfaga la misma interfaz. Ningún componente se entera.
 | `/soluciones/[slug]`  | SSG         | `generateStaticParams` desde el contenido |
 | `/casos`              | Estático    | Índice de casos                          |
 | `/casos/[slug]`       | SSG         | Ídem                                     |
-| `/metodo`             | Estático    | Las cinco fases, versión detallada       |
+| `/metodo-vco`         | Estático    | El Método VCO, versión detallada         |
 | `/empresa`            | Estático    | Posición, etapas comerciales, encaje     |
 | `/diagnostico`        | Estático    | Calculadora + qué falta por construir    |
 | `/contacto`           | Estático    | El formulario es el único cliente pesado |
 | `/legal/*`            | Estático    | `noindex`                                |
 | `/api/contacto`       | Dinámico    | Node.js runtime                          |
+| `/panel/*`            | Dinámico    | Privado, tras sesión. Ver `LIFE_CRM.md`  |
+| `/panel/suscripciones/[id]` | Dinámico | Ficha de un servicio con su historial |
+
+La web pública vive en `app/(site)/`, con su cabecera y su pie en
+`(site)/layout.tsx`. El panel vive en `app/panel/`, con su propio armazón. El
+layout raíz solo pone `<html>`, `<body>` y las fuentes. `src/proxy.ts` corre
+únicamente en `/panel`.
 
 Publicar una solución o un caso nuevo es añadir un objeto al array
 correspondiente. La ruta, el índice, el sitemap y los enlaces relacionados
@@ -164,10 +172,30 @@ cosas en el mismo cambio.
 | Contenido | Vitest      | Slugs únicos, enlaces internos, la regla de credibilidad  |
 | Marca     | Vitest      | Que la identidad no se escriba fuera de la configuración  |
 | Componente| Vitest + RTL| Botón y formulario, incluida su accesibilidad             |
-| E2E       | Playwright  | Rutas, navegación, menú móvil, desbordes, objetivos táctiles, formulario, sincronía de la paleta |
+| E2E       | Playwright  | Rutas, navegación, menú móvil, desbordes, objetivos táctiles, formulario, sincronía de la paleta, panel cerrado sin sesión |
+| Panel     | Vitest      | Fechas, recurrencias, agenda, recordatorios, dinero y validación (`lib/life`) |
 
 Playwright ejecuta tres perfiles: móvil (390), portátil de 16" (1366) y
 escritorio (1920).
 
 No buscamos cobertura alta. Buscamos que sea imposible romper en silencio: la
 navegación, el formulario, el responsive y la honestidad de las cifras.
+
+## Rutas y datos añadidos en la transformación de 2026-10-17
+
+- `/areas` y `/areas/[slug]`: las tres áreas de trabajo, desde
+  `content/areas.ts` (prerenderizadas con `generateStaticParams`).
+- `/sectores` y `/sectores/[slug]`: siete sectores, desde `content/sectors.ts`.
+- `/metodo-vco`: el Método VCO. `/metodo` redirige con 308 desde
+  `next.config.ts`.
+- `/diagnostico`: formulario real. Esquema compartido en
+  `lib/diagnosis-schema.ts`, endpoint en `app/api/diagnostico/route.ts`,
+  almacenamiento en la tabla `leads` de Supabase (ver D-026) y lectura en
+  `/panel/inbox` mediante `loadLeads()`.
+- `lib/impact.ts`: la aritmética de los seis escenarios, sin JSX y con
+  pruebas. La interfaz es `components/features/ImpactCalculator.tsx`.
+- `components/ui/Select.tsx`: el desplegable propio, antes en `panel/`. Lo
+  usan el panel y el formulario de diagnóstico.
+- `components/ui/FormField.tsx`: etiqueta, error y pista compartidos por los
+  dos formularios del sitio.
+

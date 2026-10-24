@@ -1,98 +1,105 @@
 import type { MethodPhase } from "./types";
 
 /**
- * The method.
+ * El Método VCO.
  *
- * This is commercial identity, not decoration. Five phases, each named with a
- * first-person verb, each with a deliverable the client can point at. Phase 01
- * produces the Mapa de tiempo, the artefact this company is known for.
+ * Cinco fases, cada una con un verbo y con algo que el cliente puede señalar
+ * al final. No lleva ®: la marca no está registrada todavía, y poner el
+ * símbolo sin el registro es exactamente el tipo de afirmación sin respaldo
+ * que este sitio no hace.
  */
 
-export const methodName = "Mapa de tiempo";
+export const methodName = "Método VCO";
 
 export const methodPromise =
-  "Empezamos por entender cómo trabajáis. Un proceso cada vez, con números delante.";
+  "Primero entendemos tu negocio. Después te enseñamos dónde hay oportunidades, por cuál conviene empezar y qué cambia cuando se aplica.";
+
+/** Lo que el método no es. Se usa en la página del método. */
+export const methodBoundaries = [
+  "No empezamos proponiendo software. Empezamos preguntando cómo entra un cliente, qué pasa después y dónde se queda parado.",
+  "No todas las mejoras son tecnológicas. Cambiar una frase del presupuesto, el orden de una llamada o quién responde primero puede rendir más que una aplicación.",
+  "No vendemos transformaciones de doce meses. Una oportunidad concreta, aplicada y medida, y después se decide la siguiente.",
+];
 
 export const methodPhases: MethodPhase[] = [
   {
     number: "01",
-    title: "Mapeamos",
+    title: "Descubrir",
     summary:
-      "Nos enseñas cómo trabajáis hoy. Sin preparar nada, sin maquillar el proceso.",
-    deliverable: "Un mapa de tu proceso, paso a paso, con quién hace qué.",
+      "Entendemos la empresa por dentro: cómo entran los clientes, cómo se vende, cómo se entrega y en qué se va el tiempo y el dinero.",
+    deliverable: "Un retrato de cómo funciona hoy tu negocio, con sus números delante.",
     detail: [
-      "Sesiones cortas con las personas que hacen el trabajo, no solo con quien lo dirige.",
-      "Seguimos el recorrido real de la información: de dónde sale, por cuántas manos pasa y dónde se para.",
-      "Anotamos las excepciones, que casi siempre son la mitad del problema.",
+      "Hablamos con quien hace el trabajo, no solo con quien lo dirige.",
+      "Seguimos el recorrido real de un cliente, desde que pregunta hasta que paga y vuelve.",
+      "Miramos ingresos, costes, volúmenes y plazos: lo que ya tienes, sin pedirte informes nuevos.",
     ],
   },
   {
     number: "02",
-    title: "Cuantificamos",
+    title: "Detectar",
     summary:
-      "Ponemos números encima de la mesa: cuántas veces, cuántos minutos, cuántos errores.",
-    deliverable:
-      "El coste real del proceso en horas y en euros, y qué parte es automatizable.",
+      "Buscamos lo que se está escapando: oportunidades sin aprovechar, fricciones, trabajo repetido y dinero que se pierde por el camino.",
+    deliverable: "La lista de oportunidades, cada una con dónde ocurre y qué está costando.",
     detail: [
-      "Medimos la frecuencia y la duración real de cada paso, no la estimada.",
-      "Separamos lo que un sistema puede hacer de lo que exige criterio humano.",
-      "Priorizamos por retorno: qué proceso conviene atacar primero y cuál puede esperar.",
+      "Preguntas sin contestar, presupuestos sin seguimiento, clientes que no vuelven, servicios rentables que nadie promociona.",
+      "Cada hallazgo se escribe con lo que se puede comprobar: cuántas veces pasa, cuánto tarda, cuánto vale.",
+      "Lo que no se puede medir todavía se marca como hipótesis, no como hecho.",
     ],
   },
   {
     number: "03",
-    title: "Rediseñamos",
+    title: "Priorizar",
     summary:
-      "Diseñamos el proceso nuevo antes de escribir una línea de código.",
-    deliverable: "El proceso objetivo, con los puntos de control acordados.",
+      "Ordenamos las mejoras por lo que pueden rendir, lo que cuesta aplicarlas y lo rápido que se notan.",
+    deliverable: "Un orden de trabajo acordado: por dónde empezar y qué puede esperar.",
     detail: [
-      "Definimos qué desaparece, qué se automatiza y qué sigue pasando por una persona.",
-      "Acordamos qué ocurre cuando algo falla, porque algo siempre falla.",
-      "Si la mejor solución es cambiar cómo trabajáis y no construir software, lo decimos aquí.",
+      "Cada oportunidad lleva impacto estimado, esfuerzo, inversión y plazo. Las cuatro cosas, no solo la primera.",
+      "Las hipótesis de impacto se enseñan con el cálculo a la vista, para que puedas discutirlas.",
+      "Arriba suele quedar lo pequeño y rápido, no lo espectacular.",
     ],
   },
   {
     number: "04",
-    title: "Construimos",
+    title: "Transformar",
     summary:
-      "Lo montamos e integramos con las herramientas que ya usáis. En semanas, no en trimestres.",
-    deliverable: "El sistema funcionando en producción, con tu equipo formado.",
+      "Aplicamos los cambios: comerciales, de atención, de proceso, de organización o de tecnología, según lo que haga falta.",
+    deliverable: "La mejora funcionando, con tu equipo sabiendo usarla.",
     detail: [
       "Entregas parciales desde el principio: se ve funcionando antes de estar terminado.",
-      "Nos conectamos a lo que ya existe. Cambiar de herramientas es una decisión tuya, no un requisito nuestro.",
-      "Formación al equipo con su proceso real, no con una demo.",
+      "Nos conectamos a las herramientas que ya tienes. Cambiarlas es una decisión tuya, no un requisito nuestro.",
+      "Si la mejor solución no necesita software, se aplica igual y se dice.",
     ],
   },
   {
     number: "05",
-    title: "Comprobamos",
+    title: "Medir",
     summary:
-      "Comparamos con el punto de partida. Si los números no mejoran, no está terminado.",
-    deliverable: "La medición del antes y el después, y el siguiente proceso priorizado.",
+      "Comparamos con el punto de partida los mismos indicadores, y decidimos la siguiente mejora con lo aprendido.",
+    deliverable: "El antes y el después, y la siguiente oportunidad priorizada.",
     detail: [
-      "Medimos lo mismo que medimos en la fase 02, para que la comparación signifique algo.",
+      "Medimos lo mismo que se midió en la fase 02, porque si cambia la vara la comparación no vale.",
       "Ajustamos con el uso real, que siempre descubre casos que nadie contó.",
-      "Decidimos juntos cuál es el siguiente proceso que merece la pena.",
+      "Si un cambio no mejora los números, se dice y se corrige.",
     ],
   },
 ];
 
-/** The four commitments that differentiate us. Used on the home and /empresa. */
+/** Los cuatro compromisos. Se usan en la home, en /metodo-vco y en /empresa. */
 export const principles = [
   {
-    title: "Vendemos tiempo, no tecnología",
-    body: "El software, las integraciones y la IA son el medio. Lo que se compra es trabajo manual que desaparece. Si un proceso se arregla sin construir nada, esa es la propuesta.",
+    title: "Primero el negocio, después la tecnología",
+    body: "Lo que se compra es crecimiento, tiempo o margen. El software, las integraciones y la IA son medios, y solo entran cuando son el medio más barato de conseguirlo.",
   },
   {
-    title: "Empezamos por un proceso, no por un proyecto",
-    body: "Nada de transformaciones de doce meses. Un proceso concreto, medido y funcionando. Después se decide el siguiente con datos, no con una presentación.",
+    title: "Pequeños cambios, grandes resultados",
+    body: "Una frase en un presupuesto, una llamada que antes no se hacía o un formulario más corto pueden mover más dinero que un desarrollo entero. Empezamos por ahí.",
   },
   {
-    title: "Nos adaptamos a tus herramientas",
-    body: "Trabajamos sobre el ERP, el correo y los programas que ya tenéis. Cambiar de herramienta es una decisión de negocio, no un atajo para el proveedor.",
+    title: "Una oportunidad cada vez",
+    body: "Nada de planes de doce meses. Se elige la mejora con mejor relación impacto-esfuerzo, se aplica, se mide y después se decide la siguiente con datos.",
   },
   {
-    title: "Enseñamos los números",
-    body: "El coste del proceso antes, el coste después y cómo se ha calculado. Sin porcentajes redondos ni promesas que no se pueden comprobar.",
+    title: "Enseñamos los cálculos",
+    body: "Cada estimación va con sus hipótesis a la vista y etiquetada como lo que es. Sin porcentajes redondos, sin resultados de clientes que no existen.",
   },
 ];

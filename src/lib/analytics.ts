@@ -22,6 +22,8 @@ export type AnalyticsEvent =
   | "form_success"
   | "form_error"
   | "diagnosis_calculated"
+  | "calculator_scenario"
+  | "calculator_used"
   | "faq_open";
 
 export interface AnalyticsPayload {
@@ -31,6 +33,8 @@ export interface AnalyticsPayload {
   id?: string;
   /** Numeric value, e.g. hours computed by the diagnosis tool. */
   value?: number;
+  /** Non-numeric variant, e.g. which calculator scenario was opened. */
+  variant?: string;
 }
 
 type Provider = (event: AnalyticsEvent, payload: AnalyticsPayload) => void;

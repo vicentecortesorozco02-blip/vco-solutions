@@ -2,7 +2,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { Laptop } from "@/components/ui/Devices";
+import { Screenshot } from "@/components/ui/Devices";
 import { KindBadge } from "@/components/ui/Metric";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
@@ -68,7 +68,7 @@ export function Work() {
                 className={index % 2 === 1 ? "md:mt-24" : undefined}
               >
                 <figure className="flex flex-col gap-5">
-                  <Laptop
+                  <Screenshot
                     src={shot.src}
                     alt={shot.alt}
                     sizes="(min-width: 1240px) 600px, (min-width: 768px) 48vw, 92vw"

@@ -9,10 +9,22 @@ import type { FaqItem } from "./types";
  */
 export const generalFaq: FaqItem[] = [
   {
+    id: "que-hacemos",
+    question: "¿Qué hacéis exactamente?",
+    answer:
+      "Analizamos cómo funciona tu empresa —cómo entra un cliente, cómo se vende, cómo se entrega y en qué se va el tiempo—, te enseñamos las oportunidades que encontramos ordenadas por lo que pueden rendir, y aplicamos las que decidas. A veces eso es software; muchas veces es cambiar un texto, un orden de llamada o quién contesta primero.",
+  },
+  {
+    id: "sin-software",
+    question: "¿Y si lo que necesito no es un programa?",
+    answer:
+      "Mejor: sale más barato y se nota antes. No necesitas más herramientas, necesitas aprovechar mejor las que ya tienes. Cuando la mejora no requiere desarrollo lo decimos y la aplicamos igual; proponer un sistema que no hace falta sería la manera más rápida de perder tu confianza.",
+  },
+  {
     id: "empresa-pequena",
     question: "¿Esto es para empresas como la mía?",
     answer:
-      "Si en tu empresa alguien dedica varias horas a la semana a tareas repetitivas, sí. El tamaño importa menos de lo que parece: el cálculo es el mismo para una empresa de seis personas que para una de doscientas, solo cambia el número de horas que hay en juego. En la primera conversación se ve enseguida si hay recorrido o no.",
+      "Si en tu empresa alguien dedica varias horas a la semana a tareas repetitivas, o si entran peticiones que no siempre se contestan, sí. El tamaño importa menos de lo que parece: el cálculo es el mismo para una empresa de seis personas que para una de doscientas, solo cambia el número de horas que hay en juego. En la primera conversación se ve enseguida si hay recorrido o no.",
   },
   {
     id: "precio",

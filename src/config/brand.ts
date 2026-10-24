@@ -32,17 +32,17 @@ export const brand = {
 
   // --- Mensaje ------------------------------------------------------------
   /** Una línea. Se usa como lema del sitio y en el pie. */
-  tagline: "Ingeniería de procesos para empresas",
+  tagline: "Consultoría de mejora para empresas",
 
   /**
    * La frase que explica el negocio. Alimenta las descripciones por defecto y
    * los datos estructurados. Máximo 160 caracteres.
    */
   description:
-    "Analizamos cómo trabaja tu empresa y construimos sistemas que eliminan tareas repetitivas, reducen errores y devuelven horas a tu equipo.",
+    "Analizamos cómo funciona tu empresa, detectamos las oportunidades que se te están escapando y aplicamos mejoras para vender más y trabajar mejor.",
 
   /** Lo que se vende, en tres palabras. Pie e imagen social. */
-  promise: "Menos trabajo manual",
+  promise: "Potencial aprovechado",
 
   // --- Contacto y dominio -------------------------------------------------
   domain: "vcosolutions.es",
@@ -171,14 +171,14 @@ export const socialProfiles: string[] = (
  * el texto se pueda probar desde un único sitio y la analítica sea comparable.
  */
 export const primaryCta = {
-  label: "Cuéntanos qué quieres automatizar",
-  shortLabel: "Cuéntanos tu proceso",
-  href: "/contacto",
+  label: "Descubre el potencial de tu empresa",
+  shortLabel: "Descubre tu potencial",
+  href: "/diagnostico",
 } as const;
 
 export const secondaryCta = {
-  label: "Ver cómo trabajamos",
-  href: "/metodo",
+  label: "Conoce el Método VCO",
+  href: "/metodo-vco",
 } as const;
 
 export type Brand = typeof brand;

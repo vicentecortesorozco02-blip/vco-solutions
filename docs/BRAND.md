@@ -137,7 +137,7 @@ comunicación**, no un lema cerrado: se validará con tráfico real.
 
 ### 3 — Propuesta
 
-> Menos trabajo manual → menos errores → más capacidad → mejor rendimiento.
+> Oportunidad detectada → mejora aplicada → resultado medido.
 
 ### 4 — Metodología
 
@@ -146,7 +146,7 @@ comunicación**, no un lema cerrado: se validará con tráfico real.
 
 ### 5 — CTA
 
-> Cuéntanos qué quieres automatizar.
+> Descubre el potencial de tu empresa.
 
 Un único CTA dominante en todo el sitio. Prohibidos como acción principal:
 «Contactar», «Más información», «Enviar», «Solicitar demo». Un CTA expresa

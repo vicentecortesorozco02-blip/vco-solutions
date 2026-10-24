@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -8,6 +9,7 @@ import { primaryNav } from "@/config/site";
 
 export default function NotFound() {
   return (
+    <SiteChrome>
     <Section tone="paper" rhythm="loose">
       <Container className="flex flex-col gap-8">
         <p className="type-label text-fg-subtle">
@@ -47,5 +49,6 @@ export default function NotFound() {
         </div>
       </Container>
     </Section>
+    </SiteChrome>
   );
 }

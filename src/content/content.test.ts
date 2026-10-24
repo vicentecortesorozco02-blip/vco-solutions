@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
+import { areas, signals } from "./areas";
 import { cases, publishedCases } from "./cases";
 import { generalFaq } from "./faq";
-import { methodPhases } from "./method";
+import { methodName, methodPhases } from "./method";
+import { sectors } from "./sectors";
 import { publishedSolutions, solutions } from "./solutions";
 
 /**
@@ -130,5 +132,150 @@ describe("faq", () => {
     for (const item of generalFaq) {
       expect(item.answer.length, item.id).toBeGreaterThan(60);
     }
+  });
+});
+
+describe("áreas", () => {
+  it("tiene tres, con número y slug únicos", () => {
+    expect(areas).toHaveLength(3);
+    expect(new Set(areas.map((area) => area.slug)).size).toBe(3);
+    expect(new Set(areas.map((area) => area.number)).size).toBe(3);
+  });
+
+  it("cada área explica problemas, palancas y qué se mide", () => {
+    for (const area of areas) {
+      expect(area.problems.length).toBeGreaterThan(2);
+      expect(area.levers.length).toBeGreaterThan(2);
+      expect(area.signals.length).toBeGreaterThan(2);
+      expect(area.faq.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("tiene metadatos dentro de los límites", () => {
+    for (const area of areas) {
+      expect(area.seo.title.length).toBeLessThanOrEqual(70);
+      expect(area.seo.description.length).toBeGreaterThan(50);
+      expect(area.seo.description.length).toBeLessThanOrEqual(180);
+    }
+  });
+
+  it("las señales apuntan a un área que existe y lo dicen todo", () => {
+    const slugs = new Set(areas.map((area) => area.slug));
+    expect(new Set(signals.map((signal) => signal.id)).size).toBe(signals.length);
+    for (const signal of signals) {
+      expect(slugs, signal.id).toContain(signal.area);
+      expect(signal.situation.length).toBeGreaterThan(20);
+      expect(signal.cost.length).toBeGreaterThan(20);
+      expect(signal.opportunity.length).toBeGreaterThan(10);
+      expect(signal.fix.length).toBeGreaterThan(20);
+    }
+  });
+});
+
+describe("sectores", () => {
+  it("tiene slugs únicos", () => {
+    const slugs = sectors.map((sector) => sector.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("usa valores finitos y no negativos en la comparación", () => {
+    for (const sector of sectors) {
+      const values = [
+        sector.example.compare?.now.value,
+        sector.example.compare?.better.value,
+      ];
+
+      for (const value of values) {
+        expect(Number.isFinite(value), sector.slug).toBe(true);
+        if (typeof value === "number") {
+          expect(value, sector.slug).toBeGreaterThanOrEqual(0);
+        }
+      }
+    }
+  });
+
+  it("incluye entre dos y tres cifras de apoyo", () => {
+    for (const sector of sectors) {
+      const count = sector.example.stats?.length;
+
+      expect(typeof count, sector.slug).toBe("number");
+      if (typeof count === "number") {
+        expect(count, sector.slug).toBeGreaterThanOrEqual(2);
+        expect(count, sector.slug).toBeLessThanOrEqual(3);
+      }
+    }
+  });
+
+  it("respalda cada cifra estructurada en la cuenta escrita", () => {
+    const numbersIn = (text: string): number[] =>
+      Array.from(text.matchAll(/\d+(?:\.\d{3})*(?:,\d+)?/g), ([value]) =>
+        Number(value.replaceAll(".", "").replace(",", ".")),
+      );
+
+    for (const sector of sectors) {
+      const compare = sector.example.compare;
+      const figures = [
+        ...(compare ? [compare.now, compare.better] : []),
+        ...(sector.example.stats ?? []),
+      ];
+      const workingsNumbers = numbersIn(sector.example.workings);
+
+      expect(
+        figures.length,
+        sector.slug + ": faltan cifras estructuradas",
+      ).toBeGreaterThanOrEqual(4);
+      for (const figure of figures) {
+        expect(
+          workingsNumbers,
+          sector.slug + ": " + figure.label + " (" + figure.value + ")",
+        ).toContain(figure.value);
+      }
+    }
+  });
+
+  it("cada sector trae problemas, oportunidades y un ejemplo con hipótesis", () => {
+    for (const sector of sectors) {
+      expect(sector.problems.length).toBeGreaterThan(2);
+      expect(sector.opportunities.length).toBeGreaterThan(2);
+      expect(sector.example.workings.length).toBeGreaterThan(80);
+      // Un ejemplo numérico sin hipótesis a la vista es una cifra inventada.
+      expect(sector.example.assumptions.length).toBeGreaterThan(0);
+      expect(sector.faq.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("tiene metadatos dentro de los límites", () => {
+    for (const sector of sectors) {
+      expect(sector.seo.title.length).toBeLessThanOrEqual(80);
+      expect(sector.seo.description.length).toBeGreaterThan(50);
+      expect(sector.seo.description.length).toBeLessThanOrEqual(180);
+    }
+  });
+
+  it("ningún identificador de pregunta se repite en todo el contenido", () => {
+    const ids = [
+      ...areas.flatMap((area) => area.faq.map((item) => item.id)),
+      ...sectors.flatMap((sector) => sector.faq.map((item) => item.id)),
+      ...generalFaq.map((item) => item.id),
+    ];
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe("el método", () => {
+  it("son cinco fases numeradas en orden", () => {
+    expect(methodPhases.map((phase) => phase.number)).toEqual(["01", "02", "03", "04", "05"]);
+  });
+
+  it("cada fase dice qué recibe el cliente", () => {
+    for (const phase of methodPhases) {
+      expect(phase.deliverable.length).toBeGreaterThan(20);
+      expect(phase.detail.length).toBeGreaterThan(1);
+    }
+  });
+
+  it("no se atribuye un registro de marca que no existe", () => {
+    expect(methodName).not.toContain("®");
+    expect(methodName).toBe("Método VCO");
   });
 });

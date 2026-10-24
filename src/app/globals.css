@@ -74,6 +74,39 @@
   --color-glint: oklch(1 0 0 / 0.12);
   --color-critical: oklch(0.505 0.165 27);
   --color-critical-quiet: oklch(0.955 0.028 27);
+  /* "Vence pronto" in the panel: between calm and critical. */
+  --color-caution: oklch(0.53 0.115 62);
+  --color-caution-quiet: oklch(0.955 0.03 75);
+
+  /* Panel (Life CRM). Apple-style grouped layout: a soft canvas with white
+     cards on it, no borders. Redefined for dark mode under [data-theme]. */
+  --color-canvas: var(--color-ink-50);
+  --color-surface-raised: var(--color-ink-0);
+  --color-fill: oklch(0.178 0.0128 177.6 / 0.05);
+  --color-fill-strong: oklch(0.178 0.0128 177.6 / 0.09);
+  /* Behind modal dialogs. */
+  --color-scrim: oklch(0.1 0.01 175 / 0.45);
+
+  /* Etiquetas de color del panel: proyectos y categorías del calendario.
+     El color nunca va solo, siempre junto al nombre. Cada par es el trazo
+     (sobre fondo claro, contraste AA con texto blanco) y su fondo suave. */
+  --color-tag-slate: oklch(0.44 0.03 230);
+  --color-tag-slate-quiet: oklch(0.94 0.012 230);
+  --color-tag-mint: oklch(0.45 0.08 165);
+  --color-tag-mint-quiet: oklch(0.945 0.03 165);
+  --color-tag-sky: oklch(0.47 0.1 240);
+  --color-tag-sky-quiet: oklch(0.945 0.03 240);
+  --color-tag-violet: oklch(0.47 0.12 300);
+  --color-tag-violet-quiet: oklch(0.945 0.03 300);
+  --color-tag-amber: oklch(0.5 0.11 70);
+  --color-tag-amber-quiet: oklch(0.95 0.035 75);
+  --color-tag-rose: oklch(0.5 0.15 15);
+  --color-tag-rose-quiet: oklch(0.95 0.03 15);
+  --color-tag-teal: oklch(0.46 0.08 195);
+  --color-tag-teal-quiet: oklch(0.945 0.03 195);
+  --color-tag-sand: oklch(0.46 0.045 95);
+  --color-tag-sand-quiet: oklch(0.945 0.025 95);
+
 
   /* Marcos de dispositivo. El trabajo real se enseña dentro de un portátil o
      un móvil dibujados en CSS: estos son sus materiales. */
@@ -121,6 +154,12 @@
   --text-list--line-height: 1.12;
   --text-metric: clamp(2.25rem, 1.72rem + 2.3vw, 3.75rem);
   --text-metric--line-height: 1;
+  /* Panel: page titles and the big numbers on cards. Normal width, not the
+     wide display face: the panel is read daily, not presented. */
+  --text-title: clamp(1.75rem, 1.5rem + 1.1vw, 2.5rem);
+  --text-title--line-height: 1.1;
+  --text-stat: clamp(1.75rem, 1.55rem + 0.9vw, 2.375rem);
+  --text-stat--line-height: 1.05;
 
   /* --- Layout ---------------------------------------------------------------- */
   --container-content: 46rem; /* long-form reading measure */
@@ -288,6 +327,134 @@
       black 10%,
       transparent 75%
     );
+  }
+}
+
+/* Panel dark mode. The panel root carries data-theme: "dark" forces it,
+   "system" follows the OS. The public site has no dark mode. */
+[data-theme="dark"] {
+  --color-bg: oklch(0.16 0.008 175);
+  --color-bg-subtle: oklch(0.19 0.009 175);
+  --color-bg-sunken: oklch(0.13 0.007 175);
+  --color-canvas: oklch(0.145 0.007 175);
+  --color-surface: oklch(0.205 0.009 175);
+  --color-surface-raised: oklch(0.245 0.01 175);
+  --color-fill: oklch(0.985 0.003 165 / 0.06);
+  --color-fill-strong: oklch(0.985 0.003 165 / 0.11);
+
+  --color-fg: oklch(0.96 0.004 165);
+  --color-fg-muted: oklch(0.76 0.01 170);
+  --color-fg-subtle: oklch(0.7 0.012 172);
+  --color-fg-quiet: oklch(0.6 0.012 172);
+
+  --color-line: oklch(0.3 0.01 175);
+  --color-line-soft: oklch(0.25 0.009 175);
+  --color-line-strong: oklch(0.38 0.012 175);
+  --color-line-field: oklch(0.52 0.014 172);
+
+  /* Pine is too dark to read on a dark canvas: its light mint takes over. */
+  --color-accent: oklch(0.8 0.075 172);
+  --color-accent-hover: oklch(0.86 0.06 172);
+  --color-accent-fg: oklch(0.2 0.03 175);
+  --color-accent-quiet: oklch(0.3 0.04 175);
+  --color-accent-text: oklch(0.82 0.075 172);
+
+  --color-positive: oklch(0.78 0.11 158);
+  --color-positive-quiet: oklch(0.3 0.05 158);
+  --color-critical: oklch(0.72 0.14 27);
+  --color-critical-quiet: oklch(0.3 0.06 27);
+  --color-caution: oklch(0.8 0.11 75);
+  --color-caution-quiet: oklch(0.31 0.05 70);
+  --color-tag-slate: oklch(0.78 0.04 230);
+  --color-tag-slate-quiet: oklch(0.3 0.03 230);
+  --color-tag-mint: oklch(0.8 0.08 165);
+  --color-tag-mint-quiet: oklch(0.3 0.04 165);
+  --color-tag-sky: oklch(0.8 0.09 240);
+  --color-tag-sky-quiet: oklch(0.31 0.05 240);
+  --color-tag-violet: oklch(0.8 0.1 300);
+  --color-tag-violet-quiet: oklch(0.31 0.05 300);
+  --color-tag-amber: oklch(0.82 0.11 75);
+  --color-tag-amber-quiet: oklch(0.31 0.05 70);
+  --color-tag-rose: oklch(0.8 0.12 15);
+  --color-tag-rose-quiet: oklch(0.31 0.06 15);
+  --color-tag-teal: oklch(0.8 0.08 195);
+  --color-tag-teal-quiet: oklch(0.3 0.04 195);
+  --color-tag-sand: oklch(0.82 0.04 95);
+  --color-tag-sand-quiet: oklch(0.3 0.025 95);
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --color-bg: oklch(0.16 0.008 175);
+    --color-bg-subtle: oklch(0.19 0.009 175);
+    --color-bg-sunken: oklch(0.13 0.007 175);
+    --color-canvas: oklch(0.145 0.007 175);
+    --color-surface: oklch(0.205 0.009 175);
+    --color-surface-raised: oklch(0.245 0.01 175);
+    --color-fill: oklch(0.985 0.003 165 / 0.06);
+    --color-fill-strong: oklch(0.985 0.003 165 / 0.11);
+
+    --color-fg: oklch(0.96 0.004 165);
+    --color-fg-muted: oklch(0.76 0.01 170);
+    --color-fg-subtle: oklch(0.7 0.012 172);
+    --color-fg-quiet: oklch(0.6 0.012 172);
+
+    --color-line: oklch(0.3 0.01 175);
+    --color-line-soft: oklch(0.25 0.009 175);
+    --color-line-strong: oklch(0.38 0.012 175);
+    --color-line-field: oklch(0.52 0.014 172);
+
+    /* Pine is too dark to read on a dark canvas: its light mint takes over. */
+    --color-accent: oklch(0.8 0.075 172);
+    --color-accent-hover: oklch(0.86 0.06 172);
+    --color-accent-fg: oklch(0.2 0.03 175);
+    --color-accent-quiet: oklch(0.3 0.04 175);
+    --color-accent-text: oklch(0.82 0.075 172);
+
+    --color-positive: oklch(0.78 0.11 158);
+    --color-positive-quiet: oklch(0.3 0.05 158);
+    --color-critical: oklch(0.72 0.14 27);
+    --color-critical-quiet: oklch(0.3 0.06 27);
+    --color-caution: oklch(0.8 0.11 75);
+    --color-caution-quiet: oklch(0.31 0.05 70);
+
+    --color-tag-slate: oklch(0.78 0.04 230);
+    --color-tag-slate-quiet: oklch(0.3 0.03 230);
+    --color-tag-mint: oklch(0.8 0.08 165);
+    --color-tag-mint-quiet: oklch(0.3 0.04 165);
+    --color-tag-sky: oklch(0.8 0.09 240);
+    --color-tag-sky-quiet: oklch(0.31 0.05 240);
+    --color-tag-violet: oklch(0.8 0.1 300);
+    --color-tag-violet-quiet: oklch(0.31 0.05 300);
+    --color-tag-amber: oklch(0.82 0.11 75);
+    --color-tag-amber-quiet: oklch(0.31 0.05 70);
+    --color-tag-rose: oklch(0.8 0.12 15);
+    --color-tag-rose-quiet: oklch(0.31 0.06 15);
+    --color-tag-teal: oklch(0.8 0.08 195);
+    --color-tag-teal-quiet: oklch(0.3 0.04 195);
+    --color-tag-sand: oklch(0.82 0.04 95);
+    --color-tag-sand-quiet: oklch(0.3 0.025 95);
+
+    color-scheme: dark;
+  }
+}
+
+/* Overscroll past the panel shows its canvas, not the site's white. */
+html:has([data-panel]) {
+  background-color: var(--color-canvas);
+}
+
+html:has([data-theme="dark"]),
+html:has([data-theme="dark"]) body {
+  background-color: oklch(0.145 0.007 175);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:has([data-theme="system"]),
+  html:has([data-theme="system"]) body {
+    background-color: oklch(0.145 0.007 175);
   }
 }
 

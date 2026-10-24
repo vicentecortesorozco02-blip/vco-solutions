@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 
 import { getSiteUrl, routes } from "@/config/site";
+import { areas } from "@/content/areas";
 import { publishedCases } from "@/content/cases";
+import { sectors } from "@/content/sectors";
 import { publishedSolutions } from "@/content/solutions";
 
 /**
@@ -18,9 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: { path: string; priority: number; changeFrequency: "monthly" | "yearly" }[] = [
     { path: routes.home, priority: 1, changeFrequency: "monthly" },
     { path: routes.solutions, priority: 0.9, changeFrequency: "monthly" },
-    { path: routes.cases, priority: 0.9, changeFrequency: "monthly" },
+    { path: routes.areas, priority: 0.9, changeFrequency: "monthly" },
+    { path: routes.sectors, priority: 0.9, changeFrequency: "monthly" },
+    { path: routes.cases, priority: 0.8, changeFrequency: "monthly" },
     { path: routes.method, priority: 0.8, changeFrequency: "yearly" },
-    { path: routes.diagnosis, priority: 0.7, changeFrequency: "monthly" },
+    { path: routes.diagnosis, priority: 0.9, changeFrequency: "monthly" },
     { path: routes.company, priority: 0.6, changeFrequency: "yearly" },
     { path: routes.contact, priority: 0.8, changeFrequency: "yearly" },
   ];
@@ -31,6 +35,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: route.changeFrequency,
       priority: route.priority,
+    })),
+    ...areas.map((area) => ({
+      url: `${base}${routes.area(area.slug)}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.85,
+    })),
+    ...sectors.map((sector) => ({
+      url: `${base}${routes.sector(sector.slug)}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
     })),
     ...publishedSolutions.map((solution) => ({
       url: `${base}${routes.solution(solution.slug)}`,

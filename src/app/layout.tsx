@@ -1,12 +1,8 @@
 import type { Metadata, Viewport } from "next";
 
-import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
-import { AnalyticsBridge } from "@/components/ui/AnalyticsBridge";
 import { brand } from "@/config/brand";
 import { fontVariables } from "@/config/fonts";
 import { getSiteUrl } from "@/config/site";
-import { organizationSchema, websiteSchema } from "@/lib/seo";
 
 import "./globals.css";
 
@@ -37,6 +33,10 @@ export const viewport: Viewport = {
   themeColor: brand.colors.bg,
 };
 
+/**
+ * The document shell, shared by the public site and the private panel.
+ * Each of them brings its own chrome: see (site)/layout.tsx and panel/.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -48,28 +48,7 @@ export default function RootLayout({
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
 
-        <a
-          href="#contenido"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-inverse focus:px-4 focus:py-2 focus:text-sm focus:text-fg-inverse"
-        >
-          Saltar al contenido
-        </a>
-
-        <Header />
-
-        <main id="contenido" className="pt-16 lg:pt-[4.5rem]">
-          {children}
-        </main>
-
-        <Footer />
-        <AnalyticsBridge />
-
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([organizationSchema(), websiteSchema()]),
-          }}
-        />
+        {children}
       </body>
     </html>
   );

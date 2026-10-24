@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { getSiteUrl, isProduction } from "@/config/site";
+import { getSiteUrl, isProduction, panelRoutes } from "@/config/site";
 
 /**
  * Preview deployments must never be indexed: a staging copy of the site
@@ -17,7 +17,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/legal/"],
+      disallow: ["/api/", "/legal/", panelRoutes.home],
     },
     sitemap: `${base}/sitemap.xml`,
     host: base,

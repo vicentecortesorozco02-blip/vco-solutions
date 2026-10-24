@@ -86,6 +86,8 @@ Antes de crear un componente nuevo, comprueba que no exista:
 | Un titular en dos tonos  | `SectionHeader` con `title` como array, o `TitleLines` |
 | Una captura de trabajo real | `components/ui/Devices` (`Laptop`, `Phone`, `Browser`) |
 | Qué tipo de trabajo es   | `KindBadge` (demostración, producto propio, cliente) |
+| Un registro nuevo en el panel | Un `EntityDef` en `lib/life/entities.ts`, no un formulario |
+| Piezas del panel         | `components/panel/ui` (`Card`, `StatTile`, `Row`, `ViewTabs`…) |
 
 ### 3.4 Cifras y credibilidad
 
@@ -175,10 +177,11 @@ Además, para cambios visuales:
 ## 6. Qué NO hacer
 
 - No instales dependencias por comodidad. Cada una se justifica en
-  `docs/DECISIONS.md`. Hoy son cinco en producción y hay un motivo escrito para
+  `docs/DECISIONS.md`. Son pocas en producción y hay un motivo escrito para
   cada una.
 - No metas un CMS, una base de datos ni un sistema de tracking sin que se haya
-  pedido explícitamente.
+  pedido explícitamente. El panel privado (`/panel`) usa Supabase porque se
+  pidió: ver D-020 y `docs/LIFE_CRM.md`. La web pública no lee la base.
 - No conviertas una sección en componente cliente para medir un clic: usa los
   atributos `data-analytics-*` y el listener delegado que ya existe.
 - No añadas colores nuevos. La paleta es papel, tinta y un acento.

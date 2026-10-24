@@ -175,3 +175,92 @@ export interface CaseStudy extends CaseSummary {
   gallery?: Shot[];
   seo: { title: string; description: string };
 }
+
+// ---------------------------------------------------------------------------
+// Áreas, sectores y señales
+// ---------------------------------------------------------------------------
+
+/** Las tres áreas en las que trabajamos. El orden es el de la home. */
+export type AreaSlug =
+  | "crecimiento-comercial"
+  | "experiencia-cliente"
+  | "eficiencia-rentabilidad";
+
+/**
+ * Una situación que el visitante reconoce como suya.
+ *
+ * Siempre las tres partes: qué pasa, qué se está escapando y qué se puede
+ * hacer. Una situación sin salida es un reproche, no una propuesta.
+ */
+export interface Signal {
+  id: string;
+  /** Lo que ocurre, en voz de quien lo vive. */
+  situation: string;
+  /** Qué se está perdiendo por eso. Sin cifras inventadas. */
+  cost: string;
+  /** La oportunidad que hay debajo. */
+  opportunity: string;
+  /** Qué se hace al respecto. Puede no ser software. */
+  fix: string;
+  area: AreaSlug;
+}
+
+export interface Area {
+  slug: AreaSlug;
+  /** "01" .. "03". Marcador editorial. */
+  number: string;
+  /** H1 de su página. */
+  title: string;
+  /** Para tarjetas y navegación. */
+  shortTitle: string;
+  /** Una frase: qué consigue el cliente. */
+  promise: string;
+  /** Dos o tres frases de entrada. */
+  intro: string;
+  /** Problemas habituales, cada uno con su consecuencia. */
+  problems: { title: string; body: string }[];
+  /** Palancas concretas que usamos. Nada de adjetivos. */
+  levers: { title: string; body: string }[];
+  /** Qué se mide para saber si ha funcionado. */
+  signals: string[];
+  faq: FaqItem[];
+  seo: { title: string; description: string };
+}
+
+export interface Sector {
+  slug: string;
+  /** H1 de su página: "Hoteles y alojamientos". */
+  name: string;
+  /** Para listas y navegación. */
+  shortName: string;
+  intro: string;
+  /** Lo que se repite en ese sector, en lenguaje del sector. */
+  problems: string[];
+  opportunities: { title: string; body: string }[];
+  /**
+   * Un ejemplo numérico. `workings` enseña la aritmética y la interfaz lo
+   * etiqueta como simulación: nunca es el resultado de un cliente.
+   */
+  example: {
+    title: string;
+    /** La aritmética escrita, tal como se enseña bajo la figura. */
+    workings: string;
+    assumptions: string[];
+    /** Las dos barras de la figura: situación de hoy y escenario de mejora. */
+    compare: {
+      unit: "eur" | "count" | "hours";
+      /** Qué compara: «Reservas directas al mes», «Facturación perdida»… */
+      label: string;
+      now: { label: string; value: number };
+      better: { label: string; value: number };
+    };
+    /** Dos o tres cifras sueltas que sostienen el cálculo. */
+    stats: {
+      label: string;
+      value: number;
+      unit: "eur" | "count" | "hours" | "percent";
+    }[];
+  };
+  faq: FaqItem[];
+  seo: { title: string; description: string };
+}

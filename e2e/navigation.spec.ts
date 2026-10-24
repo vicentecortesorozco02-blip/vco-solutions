@@ -2,11 +2,18 @@ import { expect, test } from "@playwright/test";
 
 const routes = [
   "/",
+  "/areas",
+  "/areas/crecimiento-comercial",
+  "/areas/experiencia-cliente",
+  "/areas/eficiencia-rentabilidad",
+  "/sectores",
+  "/sectores/hoteles-y-alojamientos",
+  "/sectores/pymes-con-equipo-administrativo",
   "/soluciones",
   "/soluciones/presupuestos-automaticos",
   "/casos",
   "/casos/presupuestos-por-correo",
-  "/metodo",
+  "/metodo-vco",
   "/empresa",
   "/diagnostico",
   "/contacto",
@@ -26,10 +33,16 @@ test.describe("rutas", () => {
       // Every page must expose the site's single conversion action somewhere
       // the visitor can actually see it, without opening a menu.
       await expect(
-        page.locator('a[href="/contacto"]:visible').first(),
+        page.locator('a[href="/diagnostico"]:visible, a[href="/contacto"]:visible').first(),
       ).toBeVisible();
     });
   }
+
+  test("la ruta antigua del método redirige a la nueva", async ({ page }) => {
+    const response = await page.goto("/metodo");
+    expect(response?.status()).toBe(200);
+    expect(new URL(page.url()).pathname).toBe("/metodo-vco");
+  });
 
   test("una ruta inexistente devuelve 404 con salida", async ({ page }) => {
     const response = await page.goto("/no-existe");
@@ -65,14 +78,14 @@ test.describe("menú móvil", () => {
 
     const menu = page.locator("#menu-movil");
     await expect(menu).toBeVisible();
-    await expect(menu.getByRole("link", { name: /Soluciones/ })).toBeVisible();
+    await expect(menu.getByRole("link", { name: /Sectores/ })).toBeVisible();
 
     await page.keyboard.press("Escape");
     await expect(menu).toBeHidden();
 
     await toggle.click();
-    await menu.getByRole("link", { name: /Cómo trabajamos/ }).click();
-    await expect(page).toHaveURL(/\/metodo$/);
+    await menu.getByRole("link", { name: /Método VCO/ }).click();
+    await expect(page).toHaveURL(/\/metodo-vco$/);
     await expect(menu).toBeHidden();
   });
 });

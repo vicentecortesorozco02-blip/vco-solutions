@@ -50,7 +50,7 @@ export default function OpengraphImage() {
               maxWidth: 900,
             }}
           >
-            Menos trabajo a mano. Más horas para tu equipo.
+            Tu empresa tiene más potencial del que imaginas.
           </div>
 
           <div style={{ display: "flex", fontSize: 26, color: muted, maxWidth: 780 }}>
@@ -58,8 +58,11 @@ export default function OpengraphImage() {
           </div>
         </div>
 
+        {/* El recorrido de la casa: lo que se detecta, lo que se aplica y lo
+            que se mide. La última parada va en el acento porque es la que
+            importa. */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          {["Correo", "Persona", "Excel", "PDF", "Respuesta"].map((step) => (
+          {["Oportunidad detectada", "Mejora aplicada"].map((step) => (
             <div
               key={step}
               style={{
@@ -87,7 +90,7 @@ export default function OpengraphImage() {
               borderRadius: 999,
             }}
           >
-            Sistema
+            Resultado medido
           </div>
         </div>
       </div>

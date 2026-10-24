@@ -96,6 +96,11 @@ Copiar `.env.example` a `.env.local`. Ninguna es obligatoria en desarrollo.
 | ---------------------- | ------------------------------------------------------------------ |
 | `NEXT_PUBLIC_SITE_URL` | Origen canónico. En Vercel se deduce solo.                          |
 | `CONTACT_WEBHOOK_URL`  | Destino del formulario. Sin él, en producción el endpoint devuelve 503 y la interfaz ofrece el correo. Es deliberado: un formulario nunca debe decir que ha enviado algo que ha tirado a la basura. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Base de datos del panel privado `/panel`. Sin ellas, el panel muestra un aviso y no abre. |
+| `PANEL_ALLOWED_EMAILS` | Correos que pueden entrar al panel, separados por comas. Vacío = cerrado. |
+| `GEMINI_API_KEY`       | Chat del panel (`/panel/ia`). Sin ella, el chat avisa y el resto del panel funciona igual. |
+
+El panel privado (Life CRM) está documentado en [`docs/LIFE_CRM.md`](docs/LIFE_CRM.md).
 
 ## Despliegue
 

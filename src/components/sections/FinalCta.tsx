@@ -8,9 +8,9 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { brand, primaryCta } from "@/config/brand";
 
 const steps = [
-  "Nos describes la tarea en dos líneas.",
-  "Te contestamos con una opinión honesta.",
-  "Si merece la pena, la medimos antes de proponer nada.",
+  "Nos cuentas a qué se dedica tu empresa y qué te gustaría mejorar.",
+  "Hablamos veinte minutos sobre cómo entra un cliente y dónde se os va el tiempo.",
+  "Te decimos qué oportunidades vemos y por cuál empezaríamos. También si no vemos ninguna.",
 ];
 
 /**
@@ -27,11 +27,10 @@ export function FinalCta() {
         <div className="flex flex-col gap-10">
           <SectionHeader
             eyebrow="Empezar"
-            title={["Dinos qué tarea", "te cuesta tiempo."]}
+            title={["Veinte minutos", "para saber qué puedes mejorar."]}
           />
           <p className="max-w-[34rem] text-lead text-fg-muted">
-            Te contestamos si es un caso claro, si conviene medirlo antes o si,
-            sinceramente, no merece la pena tocarlo.
+            Tu próximo gran avance puede empezar con un cambio pequeño. Lo primero es verlo.
           </p>
           <ol className="max-w-[34rem]">
             {steps.map((step, index) => (
@@ -47,7 +46,7 @@ export function FinalCta() {
           <div className="flex flex-col gap-6 rounded-2xl bg-surface p-7 ring-1 ring-line sm:p-9">
             <p className="type-label text-fg-subtle">Primera conversación sin coste</p>
             <p className="text-h4 font-medium text-fg">
-              Cuéntanos el proceso. Si no vemos recorrido, te lo decimos.
+              Cuéntanos tu caso. Si no vemos recorrido, te lo decimos en la misma conversación.
             </p>
             <Button
               href={primaryCta.href}
