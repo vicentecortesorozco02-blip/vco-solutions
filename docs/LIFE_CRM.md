@@ -25,6 +25,10 @@ Cada pantalla responde una pregunta:
 | `/panel/ajustes`         | Nombre y apariencia                       |
 | `/panel/acceso`          | Entrar (y crear la cuenta la primera vez) |
 
+Se entra desde la web con el enlace **«Entrar a mi CRM»** de la cabecera, en
+escritorio y en móvil (ver D-029). Sin sesión lleva a `/panel/acceso` y, al
+identificarse, al panel.
+
 La barra lateral tiene diez entradas y no más. IA, Inbox y Fechas cuelgan
 debajo, separadas; en móvil van en «Más».
 
@@ -53,6 +57,14 @@ src/components/panel/  la interfaz
   registro (campos, etiquetas, opciones). De ahí salen la validación (zod),
   el diálogo de edición y la búsqueda. Añadir un campo es una línea ahí y una
   columna en una migración.
+- **Una pareja importe/confianza se alinea, no bloquea.** La base exige que un
+  importe vacío sea «pendiente de confirmar» y al revés (CHECK
+  `subscriptions_amount_known`, y lo mismo en fechas, dominios y saldos). El
+  formulario lo cuadra solo: si escribes una cifra, la cifra es tuya y queda
+  confirmada; si la borras, vuelve a «pendiente». Antes devolvía un error de
+  campo sobre un desplegable que nadie había tocado, y el efecto era que la
+  suscripción no se guardaba y no se veía por qué. La regresión está en
+  `forms.test.ts`.
 - **Los diálogos los abre la URL**: `?nuevo=task&v_due_date=2026-10-12`,
   `?editar=task:<uuid>`. Un resultado de búsqueda, una celda del calendario y
   una fila de una lista abren el mismo editor con un enlace normal, y el botón
@@ -76,7 +88,7 @@ Lo que una lista de suscripciones no puede contar está en `lib/life/finance.ts`
 y en cuatro tablas más: `accounts`, `charges`, `subscription_prices` y los
 campos de confianza de `subscriptions` y `domains`.
 
-Tres reglas sostienen el resto:
+Cuatro reglas sostienen el resto:
 
 1. **Un cargo es historia; una previsión es aritmética.** Nunca se suman. Una
    previsión que ya pasó sin cargo que la respalde es «pendiente de comprobar»:
@@ -86,6 +98,10 @@ Tres reglas sostienen el resto:
    importe vacío obliga a `amount_status = 'unknown'` y al revés.
 3. **Lo confirmado y lo estimado se suman por separado**, para que un
    «aproximadamente 5 €» no parezca tan firme como un 32 € confirmado.
+4. **Un total es en euros.** Un importe en dólares se guarda en dólares, se
+   escribe con su símbolo y se queda fuera del total, contado aparte («1 en
+   otra moneda»). No hay tipo de cambio en el sistema y no se inventa: ver
+   D-027.
 
 Además:
 
@@ -103,6 +119,14 @@ Además:
   se confirma.
 - **Clasificación por proyecto solo cuando está acreditada**; el resto queda en
   «sin clasificar» a propósito.
+- **El saldo de una cuenta es una foto con fecha**, no un dato permanente:
+  `balance`, `balance_as_of` y `balance_status`. «Disponible» suma los saldos
+  apuntados y avisa de los que llevan más de un mes sin tocar. De cada cuenta se
+  guardan las cuatro últimas cifras, nunca el IBAN completo.
+- **Un traspaso entre cuentas propias no es gasto ni ingreso.** Es un cargo de
+  tipo `transfer` con su cuenta de contrapartida obligatoria, y queda fuera de
+  los totales: importar los dos extractos que lo reflejan no lo cuenta dos
+  veces. Ver D-028.
 
 ### Importar sin duplicar
 
@@ -242,8 +266,13 @@ del panel funciona igual.
 
 ## Fase 2 (no hecho, a propósito)
 
-- Conciliación automática con el banco (hoy los cargos se apuntan a mano o se
-  importan en lote).
+- Importador de extractos CSV con vista previa: hoy los cargos se apuntan a
+  mano o se importan en lote con `import_life_data`. El modelo ya está listo
+  (traspasos, monedas, cuenta en los movimientos); falta la pantalla que lea el
+  archivo, enseñe lo que va a entrar y marque duplicados y traspasos antes de
+  escribir nada.
+- Presupuestos y objetivos de ahorro.
+- Conciliación automática con el banco.
 
 - Notificaciones fuera del panel (correo diario con `deriveReminders`, push).
 - Importar el calendario de Google o iCal, y exportar a .ics.

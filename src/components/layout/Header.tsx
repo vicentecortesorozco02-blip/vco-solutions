@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Lock, Menu, X } from "lucide-react";
 
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { brand, primaryCta } from "@/config/brand";
-import { primaryNav, routes } from "@/config/site";
+import { panelRoutes, primaryNav, routes } from "@/config/site";
 import { cn } from "@/lib/cn";
 
 /**
@@ -94,7 +94,20 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="hidden justify-self-end lg:block">
+          <div className="hidden items-center gap-5 justify-self-end lg:flex">
+            {/*
+             * Acceso al panel privado. Es un enlace discreto, no un segundo
+             * botón: la acción dominante de la cabecera sigue siendo una. No
+             * expone nada — sin sesión, /panel manda a identificarse.
+             */}
+            <Link
+              href={panelRoutes.home}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full px-1 text-sm text-fg-muted transition-colors duration-[var(--duration-fast)] hover:text-fg"
+            >
+              <Lock className="size-3.5" strokeWidth={1.75} aria-hidden />
+              Entrar a mi CRM
+            </Link>
+
             <Button
               href={primaryCta.href}
               size="md"
@@ -105,20 +118,40 @@ export function Header() {
             </Button>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-controls="menu-movil"
-            className="-mr-2 inline-flex size-11 items-center justify-center justify-self-end rounded-full text-fg lg:hidden"
-          >
-            <span className="sr-only">{open ? "Cerrar menú" : "Abrir menú"}</span>
-            {open ? (
-              <X className="size-5" strokeWidth={1.75} />
-            ) : (
-              <Menu className="size-5" strokeWidth={1.75} />
-            )}
-          </button>
+          <div className="-mr-2 flex items-center justify-self-end lg:hidden">
+            {/*
+             * En móvil el acceso al CRM va en la barra, no dentro del menú:
+             * tiene que estar a la vista sin abrir nada. 44 px de objetivo.
+             */}
+            <Link
+              href={panelRoutes.home}
+              aria-label="Entrar a mi CRM"
+              className="inline-flex size-11 items-center justify-center rounded-full text-fg-muted"
+            >
+              <Lock
+                className="size-[1.125rem]"
+                strokeWidth={1.75}
+                aria-hidden
+              />
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              aria-controls="menu-movil"
+              className="inline-flex size-11 items-center justify-center rounded-full text-fg"
+            >
+              <span className="sr-only">
+                {open ? "Cerrar menú" : "Abrir menú"}
+              </span>
+              {open ? (
+                <X className="size-5" strokeWidth={1.75} />
+              ) : (
+                <Menu className="size-5" strokeWidth={1.75} />
+              )}
+            </button>
+          </div>
         </Container>
       </header>
 
@@ -146,9 +179,13 @@ export function Header() {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="flex flex-col gap-1">
-                    <span className="type-display text-h3 text-fg">{item.label}</span>
+                    <span className="type-display text-h3 text-fg">
+                      {item.label}
+                    </span>
                     {item.description ? (
-                      <span className="text-sm text-fg-muted">{item.description}</span>
+                      <span className="text-sm text-fg-muted">
+                        {item.description}
+                      </span>
                     ) : null}
                   </span>
                 </Link>
@@ -158,6 +195,15 @@ export function Header() {
         </nav>
 
         <div className="sticky bottom-0 flex flex-col gap-4 border-t border-line bg-bg px-[var(--gutter)] pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
+          <Link
+            href={panelRoutes.home}
+            onClick={() => setOpen(false)}
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-fg"
+          >
+            <Lock className="size-4" strokeWidth={1.75} aria-hidden />
+            Entrar a mi CRM
+          </Link>
+
           <Button
             href={primaryCta.href}
             size="lg"

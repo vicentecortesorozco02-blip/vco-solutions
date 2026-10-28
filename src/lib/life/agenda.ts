@@ -95,6 +95,8 @@ export interface AgendaItem {
   /** Event category, or the closest one for derived items. Drives the icon. */
   category: EventCategory;
   amount?: number;
+  /** The currency of `amount`. Absent means euros. */
+  currency?: string;
   priority?: Priority;
   done?: boolean;
 }
@@ -176,6 +178,7 @@ export function buildAgenda(data: LifeData, from: ISODate, to: ISODate): AgendaI
         detail: sub.amount === null ? "Cobro, importe sin confirmar" : "Cobro de suscripción",
         category: "payment",
         amount: sub.amount === null ? undefined : Number(sub.amount),
+        currency: sub.currency,
       });
     }
   }

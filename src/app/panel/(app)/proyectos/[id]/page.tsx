@@ -161,7 +161,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                   trailing={
                     <>
                       <Pill tone={shared ? "accent" : "neutral"}>{shared ? "Compartido" : "De uno solo"}</Pill>
-                      <span className="tnum text-sm font-semibold text-fg">{formatMoney(Number(charge.amount))}</span>
+                      <span className="tnum text-sm font-semibold text-fg">{formatMoney(Number(charge.amount), { currency: charge.currency })}</span>
                     </>
                   }
                 />
@@ -274,7 +274,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                             .join(" · ")}
                         </span>
                       </Link>
-                      <span className="tnum text-sm font-semibold text-fg">{formatMoney(Number(charge.amount))}</span>
+                      <span className="tnum text-sm font-semibold text-fg">{formatMoney(Number(charge.amount), { currency: charge.currency })}</span>
                     </li>
                   ))}
                 </ul>
@@ -355,7 +355,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                   title={s.name}
                   muted={!s.active}
                   detail={frequencyLabel[s.frequency]}
-                  trailing={<span className="tnum text-sm font-semibold">{formatMoney(Number(s.amount))}</span>}
+                  trailing={<span className="tnum text-sm font-semibold">{formatMoney(Number(s.amount), { currency: s.currency })}</span>}
                 />
               ))}
               {domains.map((d) => (

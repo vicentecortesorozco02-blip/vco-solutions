@@ -8,7 +8,7 @@ import type {
   Subscription,
   SubscriptionPrice,
 } from "./model";
-import { countsAsSpent } from "./model";
+import { HOME_CURRENCY, countsAsSpent, isHomeCurrency, isInternalTransfer } from "./model";
 import { canForecast, chargesBetween, monthlyCost, nextCharge } from "./recurrence";
 
 /**
@@ -37,9 +37,38 @@ export function chargeDate(charge: Charge): ISODate | null {
   return charge.operation_date ?? charge.value_date ?? charge.booking_date ?? charge.reported_on;
 }
 
-/** Charges that are money gone: `paid`, not counted twice, not a fee mirror. */
+/**
+ * Charges that are money gone: `paid`, not counted twice, not a transfer
+ * between your own accounts — that one only changes pocket.
+ */
 export function isSpend(charge: Charge): boolean {
-  return countsAsSpent(charge.status) && charge.mirror_of_id === null;
+  return (
+    countsAsSpent(charge.status) &&
+    charge.mirror_of_id === null &&
+    !isInternalTransfer(charge.kind)
+  );
+}
+
+/**
+ * Lo que hay en las cuentas, según el último saldo apuntado en cada una.
+ *
+ * No es lo que dice el banco ahora: es lo que tú apuntaste y cuándo. Una
+ * cuenta sin saldo no cuenta como 0 €, se cuenta aparte.
+ */
+export function availableTotal(accounts: Account[]): Total {
+  return accounts.reduce(
+    (total, account) => addToTotal(total, account.balance, account.balance_status),
+    emptyTotal,
+  );
+}
+
+/** El saldo apuntado hace más de `days` días: una foto que ya está vieja. */
+export function staleBalances(accounts: Account[], today: ISODate, days = 30): Account[] {
+  return accounts.filter(
+    (account) =>
+      account.balance !== null &&
+      (account.balance_as_of === null || diffDays(account.balance_as_of, today) > days),
+  );
 }
 
 export const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
@@ -55,18 +84,33 @@ export interface Total {
   estimated: number;
   /** How many items had no figure at all. */
   unknown: number;
+  /** How many items were in another currency, so they stayed out. */
+  foreign: number;
 }
 
-export const emptyTotal: Total = { confirmed: 0, estimated: 0, unknown: 0 };
+export const emptyTotal: Total = { confirmed: 0, estimated: 0, unknown: 0, foreign: 0 };
 
-export function addToTotal(total: Total, amount: number | null, confidence: Confidence): Total {
+/**
+ * A total is in euros. An amount in another currency is counted apart, never
+ * added: without an exchange rate there is no honest way to mix them, and an
+ * invented rate would be worse than the gap.
+ */
+export function addToTotal(
+  total: Total,
+  amount: number | null,
+  confidence: Confidence,
+  currency: string = HOME_CURRENCY,
+): Total {
   if (amount === null || confidence === "unknown") return { ...total, unknown: total.unknown + 1 };
+  if (!isHomeCurrency(currency)) return { ...total, foreign: total.foreign + 1 };
   if (confidence === "confirmed") return { ...total, confirmed: total.confirmed + amount };
   return { ...total, estimated: total.estimated + amount };
 }
 
-export const totalOf = (items: { amount: number | null; confidence: Confidence }[]): Total =>
-  items.reduce((total, item) => addToTotal(total, item.amount, item.confidence), emptyTotal);
+export const totalOf = (
+  items: { amount: number | null; confidence: Confidence; currency?: string }[],
+): Total =>
+  items.reduce((total, item) => addToTotal(total, item.amount, item.confidence, item.currency), emptyTotal);
 
 /** Both parts together, for a single headline figure. */
 export const totalSum = (total: Total) => total.confirmed + total.estimated;
@@ -94,6 +138,8 @@ export interface Payment {
   name: string;
   /** Null when the amount is not known. */
   amount: number | null;
+  /** The currency the amount is in. Only euros reach a total. */
+  currency: string;
   confidence: Confidence;
   subscriptionId: string | null;
   chargeId: string | null;
@@ -144,6 +190,7 @@ export function buildPaymentPlan(data: PlanInput, from: ISODate, to: ISODate, to
         state: date < today ? "unchecked" : "forecast",
         name: sub.name,
         amount: sub.amount === null ? null : Number(sub.amount),
+        currency: sub.currency,
         confidence: worst(sub.amount_status, sub.date_status),
         subscriptionId: sub.id,
         chargeId: null,
@@ -201,6 +248,7 @@ function fromCharge(charge: Charge, sub?: Subscription): Payment {
     state,
     name: charge.description || sub?.name || charge.merchant || "Cargo",
     amount: Number(charge.amount),
+    currency: charge.currency,
     // What a bank or an invoice says happened is as firm as it gets.
     confidence: "confirmed",
     subscriptionId: charge.subscription_id,
@@ -228,7 +276,7 @@ export function upcoming(data: PlanInput, today: ISODate, days: number): Payment
 }
 
 export const upcomingTotal = (payments: Payment[]): Total =>
-  totalOf(payments.map((p) => ({ amount: p.amount, confidence: p.confidence })));
+  totalOf(payments.map((p) => ({ amount: p.amount, confidence: p.confidence, currency: p.currency })));
 
 /** What subscriptions cost per month, split by how sure the figures are. */
 export function recurringMonthly(subscriptions: Subscription[]): Total {
@@ -236,7 +284,12 @@ export function recurringMonthly(subscriptions: Subscription[]): Total {
     .filter((s) => s.status !== "cancelled")
     .reduce((total, sub) => {
       const cost = monthlyCost(sub);
-      return addToTotal(total, cost, cost === null ? "unknown" : worst(sub.amount_status, sub.date_status));
+      return addToTotal(
+        total,
+        cost,
+        cost === null ? "unknown" : worst(sub.amount_status, sub.date_status),
+        sub.currency,
+      );
     }, emptyTotal);
 }
 
@@ -261,11 +314,14 @@ export function monthlyByScope(subscriptions: Subscription[], projects: Project[
     const cost = monthlyCost(sub);
     const confidence = cost === null ? "unknown" : worst(sub.amount_status, sub.date_status);
     if (sub.scope === "project" && sub.project_id) {
-      perProject.set(sub.project_id, addToTotal(perProject.get(sub.project_id) ?? emptyTotal, cost, confidence));
+      perProject.set(
+        sub.project_id,
+        addToTotal(perProject.get(sub.project_id) ?? emptyTotal, cost, confidence, sub.currency),
+      );
     } else if (sub.scope === "personal") {
-      personal = addToTotal(personal, cost, confidence);
+      personal = addToTotal(personal, cost, confidence, sub.currency);
     } else {
-      pending = addToTotal(pending, cost, confidence);
+      pending = addToTotal(pending, cost, confidence, sub.currency);
     }
   }
 
@@ -316,6 +372,8 @@ export function spentByAccount(charges: Charge[], accounts: Account[], from: ISO
   for (const charge of charges) {
     const date = chargeDate(charge);
     if (!isSpend(charge) || !date || date < from || date > to) continue;
+    // Only euros: a dollar charge is not spending in euros.
+    if (!isHomeCurrency(charge.currency)) continue;
     const key = charge.account_id ?? "";
     totals.set(key, (totals.get(key) ?? 0) + Number(charge.amount));
   }

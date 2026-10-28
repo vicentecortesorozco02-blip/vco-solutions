@@ -7,6 +7,7 @@ import {
   CHARGE_KINDS,
   CHARGE_STATUSES,
   CONFIDENCES,
+  CURRENCIES,
   COURSE_ITEM_KINDS,
   EVENT_CATEGORIES,
   FREQUENCIES,
@@ -26,6 +27,7 @@ import {
   chargeKindLabel,
   chargeStatusLabel,
   confidenceLabel,
+  currencyLabel,
   courseItemKindLabel,
   eventCategoryLabel,
   frequencyLabel,
@@ -171,11 +173,12 @@ export const entities = {
     fields: [
       { name: "name", label: "Nombre", type: "text", required: true, placeholder: "Vercel Pro" },
       { name: "amount", label: "Importe", type: "money", half: true, hint: "Déjalo vacío si aún no lo sabes" },
-      { name: "amount_status", label: "El importe es", type: "select", options: opts(CONFIDENCES, confidenceLabel), defaultValue: "unknown", half: true },
+      { name: "amount_status", label: "El importe es", type: "select", options: opts(CONFIDENCES, confidenceLabel), defaultValue: "confirmed", half: true },
+      { name: "currency", label: "Moneda", type: "select", options: opts(CURRENCIES, currencyLabel), defaultValue: "EUR", half: true, hint: "Lo que no sea euros se cuenta aparte, nunca sumado" },
       { name: "frequency", label: "Frecuencia", type: "select", options: opts(FREQUENCIES, frequencyLabel), defaultValue: "monthly", half: true },
       { name: "custom_days", label: "Cada cuántos días", type: "number", min: 1, max: 3650, half: true, showIf: { field: "frequency", is: ["custom"] }, hint: "28 = cada cuatro semanas" },
       { name: "next_charge_date", label: "Próximo cobro", type: "date", half: true, hint: "La siguiente vez que te lo cobran" },
-      { name: "date_status", label: "La fecha es", type: "select", options: opts(CONFIDENCES, confidenceLabel), defaultValue: "unknown", half: true },
+      { name: "date_status", label: "La fecha es", type: "select", options: opts(CONFIDENCES, confidenceLabel), defaultValue: "confirmed", half: true },
       { name: "status", label: "Estado", type: "select", options: opts(SUBSCRIPTION_STATUSES, subscriptionStatusLabel), defaultValue: "active", half: true },
       { name: "category", label: "Categoría", type: "select", options: opts(SUBSCRIPTION_CATEGORIES, subscriptionCategoryLabel), defaultValue: "software", half: true },
       { name: "scope", label: "Es un gasto", type: "select", options: opts(SCOPES, scopeLabel), defaultValue: "pending", half: true },
@@ -205,6 +208,10 @@ export const entities = {
       { name: "name", label: "Nombre", type: "text", required: true, placeholder: "Caixa con tarjeta" },
       { name: "institution", label: "Banco o plataforma", type: "text", half: true },
       { name: "kind", label: "Tipo", type: "select", options: opts(ACCOUNT_KINDS, accountKindLabel), defaultValue: "bank", half: true },
+      { name: "balance", label: "Saldo", type: "money", half: true, hint: "Déjalo vacío si no lo sabes. Un 0 € escrito es un saldo real" },
+      { name: "balance_as_of", label: "Saldo a fecha de", type: "date", half: true, defaultValue: "today" },
+      { name: "balance_status", label: "El saldo es", type: "select", options: opts(CONFIDENCES, confidenceLabel), defaultValue: "confirmed", half: true },
+      { name: "iban_last4", label: "Cuatro últimas cifras", type: "text", half: true, placeholder: "1861", hint: "Para reconocerla en un extracto. El IBAN completo no se guarda" },
       { name: "has_card", label: "Tiene tarjeta", type: "checkbox" },
       { name: "is_target", label: "Es la cuenta donde quiero centralizar los cobros", type: "checkbox" },
       { name: "source", label: "De dónde sale el dato", type: "text", advanced: true },
@@ -220,11 +227,13 @@ export const entities = {
     fields: [
       { name: "description", label: "Concepto", type: "text", required: true, placeholder: "Tal como aparece en el extracto" },
       { name: "amount", label: "Importe", type: "money", required: true, half: true },
+      { name: "currency", label: "Moneda", type: "select", options: opts(CURRENCIES, currencyLabel), defaultValue: "EUR", half: true, hint: "Lo que no sea euros se cuenta aparte, nunca sumado" },
       { name: "status", label: "Qué pasó", type: "select", options: opts(CHARGE_STATUSES, chargeStatusLabel), defaultValue: "paid", half: true },
       { name: "kind", label: "Tipo", type: "select", options: opts(CHARGE_KINDS, chargeKindLabel), defaultValue: "payment", half: true },
       { name: "operation_date", label: "Fecha de operación", type: "date", half: true },
       { name: "subscription_id", label: "Suscripción", type: "subscription", half: true },
       { name: "account_id", label: "Cuenta", type: "account", half: true },
+      { name: "counterpart_account_id", label: "Cuenta de origen", type: "account", half: true, showIf: { field: "kind", is: ["transfer"] }, hint: "De dónde sale el dinero: un traspaso no es gasto" },
       { name: "identified", label: "Sé lo que es", type: "checkbox", defaultValue: true },
       { name: "project_id", label: "Proyecto", type: "project", half: true },
       { name: "paid_by_partner_id", label: "Lo pagó", type: "partner", half: true, hint: "Vacío: lo pagaste tú" },
@@ -254,8 +263,10 @@ export const entities = {
       { name: "description", label: "Concepto", type: "text", placeholder: "Compra semanal" },
       { name: "date", label: "Fecha", type: "date", required: true, half: true, defaultValue: "today" },
       { name: "category", label: "Categoría", type: "select", options: opts(MONEY_CATEGORIES, moneyCategoryLabel), defaultValue: "other", half: true },
+      { name: "account_id", label: "Cuenta", type: "account", half: true, hint: "Dónde entra el ingreso o de dónde sale el gasto" },
       { name: "planned", label: "Pago previsto, aún sin pagar", type: "checkbox" },
       { name: "project_id", label: "Proyecto", type: "project", advanced: true },
+      { name: "source", label: "De dónde sale el dato", type: "text", advanced: true },
     ],
   },
   project: {
@@ -321,7 +332,7 @@ export const entities = {
     fields: [
       { name: "domain", label: "Dominio", type: "text", required: true, placeholder: "ejemplo.com" },
       { name: "renews_on", label: "Renueva el", type: "date", half: true, hint: "Vacío si no lo sabes" },
-      { name: "renews_status", label: "La fecha es", type: "select", options: opts(CONFIDENCES, confidenceLabel), defaultValue: "unknown", half: true },
+      { name: "renews_status", label: "La fecha es", type: "select", options: opts(CONFIDENCES, confidenceLabel), defaultValue: "confirmed", half: true },
       { name: "cost", label: "Coste anual", type: "money", half: true },
       { name: "provider", label: "Proveedor", type: "text", half: true },
       { name: "project_id", label: "Proyecto", type: "project", half: true },
@@ -533,29 +544,28 @@ export function parseEntityForm(kind: EntityKind, form: FormData): ParseResult {
   if (kind === "subscription" && values.frequency === "custom" && !values.custom_days) {
     crossErrors.custom_days = "Indica cada cuántos días se cobra";
   }
-  // An unknown figure is empty, and an empty figure is unknown: the database
-  // enforces the same thing, so say it in Spanish before it gets there.
+  // An unknown figure is empty and an empty figure is unknown: the database
+  // enforces it with a CHECK. Lining the pair up here is the honest reading of
+  // what the user did — they typed the figure, so it is not "pendiente de
+  // confirmar" any more — and it means the form never refuses to save over a
+  // dropdown the user never touched.
+  const alignConfidence = (value: string, status: string) => {
+    if (values[value] === null || values[value] === undefined) {
+      values[status] = "unknown";
+    } else if (values[status] === "unknown") {
+      values[status] = "confirmed";
+    }
+  };
+
   if (kind === "subscription") {
-    if (values.amount === null && values.amount_status !== "unknown") {
-      crossErrors.amount_status = "Sin importe, esto tiene que ser «Pendiente de confirmar»";
-    }
-    if (values.amount !== null && values.amount_status === "unknown") {
-      crossErrors.amount_status = "Si has puesto un importe, di de dónde sale";
-    }
-    if (values.next_charge_date === null && values.date_status !== "unknown") {
-      crossErrors.date_status = "Sin fecha, esto tiene que ser «Pendiente de confirmar»";
-    }
-    if (values.next_charge_date !== null && values.date_status === "unknown") {
-      crossErrors.date_status = "Si has puesto una fecha, di de dónde sale";
-    }
+    alignConfidence("amount", "amount_status");
+    alignConfidence("next_charge_date", "date_status");
   }
-  if (kind === "domain") {
-    if (values.renews_on === null && values.renews_status !== "unknown") {
-      crossErrors.renews_status = "Sin fecha, esto tiene que ser «Pendiente de confirmar»";
-    }
-    if (values.renews_on !== null && values.renews_status === "unknown") {
-      crossErrors.renews_status = "Si has puesto una fecha, di de dónde sale";
-    }
+  if (kind === "domain") alignConfidence("renews_on", "renews_status");
+  if (kind === "account") alignConfidence("balance", "balance_status");
+  if (kind === "charge" && values.kind !== "transfer") values.counterpart_account_id = null;
+  if (kind === "charge" && values.kind === "transfer" && !values.counterpart_account_id) {
+    crossErrors.counterpart_account_id = "Un traspaso necesita la cuenta de origen";
   }
   if (kind === "event" && values.end_date && typeof values.date === "string" && String(values.end_date) < values.date) {
     crossErrors.end_date = "El último día no puede ser anterior al primero";

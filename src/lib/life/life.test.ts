@@ -58,6 +58,7 @@ function charge(partial: Partial<Charge>): Charge {
   return {
     ...row,
     id: "c1",
+    counterpart_account_id: null,
     description: "Cargo",
     kind: "payment",
     status: "paid",
@@ -129,6 +130,8 @@ function tx(partial: Partial<Transaction>): Transaction {
   return {
     ...row,
     id: "x1",
+    account_id: null,
+    source: null,
     kind: "expense",
     amount: 10,
     date: "2026-10-05",
@@ -362,20 +365,24 @@ describe("entity forms", () => {
     expect(result.values).toMatchObject({ name: "Supabase", amount: 25.5, company: null, url: "https://supabase.com" });
   });
 
-  it("no deja un importe sin decir de dónde sale, ni al contrario", () => {
-    const noSource = parseEntityForm(
+  it("alinea el importe con su confianza en vez de negarse a guardar", () => {
+    // Antes esto devolvía un error de campo y no se guardaba nada. Lo que la
+    // base exige es que la pareja cuadre, no que la rellene el usuario a mano.
+    const typed = parseEntityForm(
       "subscription",
       form({ name: "Local", amount: "145", amount_status: "unknown", frequency: "monthly", date_status: "unknown" }),
     );
-    expect(noSource.ok).toBe(false);
-    expect(noSource.fieldErrors.amount_status).toContain("de dónde sale");
+    expect(typed.ok).toBe(true);
+    expect(typed.values.amount).toBe(145);
+    expect(typed.values.amount_status).toBe("confirmed");
 
     const noAmount = parseEntityForm(
       "subscription",
       form({ name: "Local", amount: "", amount_status: "communicated", frequency: "monthly", date_status: "unknown" }),
     );
-    expect(noAmount.ok).toBe(false);
-    expect(noAmount.fieldErrors.amount_status).toContain("Pendiente de confirmar");
+    expect(noAmount.ok).toBe(true);
+    expect(noAmount.values.amount).toBeNull();
+    expect(noAmount.values.amount_status).toBe("unknown");
   });
 
   it("explains a missing required field in Spanish", () => {
@@ -452,7 +459,7 @@ describe("finanzas: previsiones honestas", () => {
   it("una suscripción cancelada no genera cobros nuevos", () => {
     const cancelled = sub({ id: "x", status: "cancelled", next_charge_date: "2026-10-20" });
     expect(buildPaymentPlan({ subscriptions: [cancelled], charges: [] }, "2026-10-01", "2026-12-31", "2026-10-15")).toEqual([]);
-    expect(recurringMonthly([cancelled])).toEqual({ confirmed: 0, estimated: 0, unknown: 0 });
+    expect(recurringMonthly([cancelled])).toEqual({ confirmed: 0, estimated: 0, unknown: 0, foreign: 0 });
   });
 
   it("una autorización y un intento fallido no cuentan como pago", () => {

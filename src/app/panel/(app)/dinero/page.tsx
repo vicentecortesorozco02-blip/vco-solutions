@@ -35,6 +35,7 @@ import { cn } from "@/lib/cn";
 import { addMonths, endOfMonth, formatMonth, formatShort, relativeDay, startOfMonth } from "@/lib/life/dates";
 import {
   accountChangesPending,
+  availableTotal,
   awaitingPayment,
   cancelPending,
   chargeDate,
@@ -42,6 +43,7 @@ import {
   pendingConfirmations,
   recurringMonthly,
   spentByAccount,
+  staleBalances,
   toReview,
   totalSum,
   unidentified,
@@ -77,6 +79,8 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
   const next30Total = upcomingTotal(next30);
   const recurring = recurringMonthly(data.subscriptions);
   const scopes = monthlyByScope(data.subscriptions, data.projects);
+  const available = availableTotal(data.accounts);
+  const stale = staleBalances(data.accounts, today);
   const pending = pendingConfirmations(data.subscriptions, data.domains);
 
   const unknown = unidentified(data.charges);
@@ -153,6 +157,20 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
       />
 
       <section aria-label="Resumen" className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+        {/*
+         * Disponible es la suma de los saldos apuntados, con su fecha: lo que
+         * tú anotaste, no lo que el banco diga ahora. Una cuenta sin saldo no
+         * vale 0 €, se cuenta aparte.
+         */}
+        <StatCard
+          label="Disponible"
+          value={available.unknown === data.accounts.length ? "Pendiente de confirmar" : <TotalValue total={available} />}
+          detail={
+            stale.length
+              ? `${stale.length} ${stale.length === 1 ? "saldo sin actualizar" : "saldos sin actualizar"}`
+              : "según el último saldo apuntado"
+          }
+        />
         <StatCard label="Gastado este mes" value={formatMoney(spent)} detail="cargos y gastos ya pagados" />
         <StatCard label="Lo que viene" value={<TotalValue total={next30Total} />} detail="próximos 30 días" />
         <StatCard label="Suscripciones" value={<TotalValue total={recurring} />} detail="al mes, de media" />
@@ -219,7 +237,7 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
                           {sub.name}
                         </Link>
                         <span className="tnum shrink-0 text-fg-muted">
-                          {sub.amount === null ? "sin importe" : formatMoney(Number(sub.amount))}
+                          {sub.amount === null ? "sin importe" : formatMoney(Number(sub.amount), { currency: sub.currency })}
                         </span>
                       </li>
                     ))}
@@ -356,7 +374,7 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
                             .join(" · ")}
                         </span>
                       </Link>
-                      <span className="tnum font-semibold text-fg">{formatMoney(Number(charge.amount))}</span>
+                      <span className="tnum font-semibold text-fg">{formatMoney(Number(charge.amount), { currency: charge.currency })}</span>
                     </li>
                   ))}
                 </ul>
@@ -379,7 +397,7 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
                           {charge.reported_on ? `Comunicada el ${formatShort(charge.reported_on)}` : "Sin fecha"}
                         </span>
                       </Link>
-                      <span className="tnum font-semibold text-fg">{formatMoney(Number(charge.amount))}</span>
+                      <span className="tnum font-semibold text-fg">{formatMoney(Number(charge.amount), { currency: charge.currency })}</span>
                     </li>
                   ))}
                 </ul>
@@ -531,7 +549,7 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
                 trailing={
                   <span className="flex items-center gap-2">
                     {charge.status === "paid" ? null : <PaymentStateChip state={charge.status === "failed" ? "failed" : charge.status === "pending" ? "pending" : "cancelled"} />}
-                    <span className="tnum text-[0.9375rem] font-semibold text-fg">{formatMoney(Number(charge.amount))}</span>
+                    <span className="tnum text-[0.9375rem] font-semibold text-fg">{formatMoney(Number(charge.amount), { currency: charge.currency })}</span>
                   </span>
                 }
               />

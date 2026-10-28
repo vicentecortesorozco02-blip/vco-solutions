@@ -23,6 +23,7 @@ import {
   monthlyByScope,
   nextChargeView,
   recurringMonthly,
+  totalOf,
   totalSum,
   upcoming,
   upcomingTotal,
@@ -233,7 +234,8 @@ export default async function SubscriptionsPage({
                   <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-3">
                     <h3 className="text-sm font-semibold text-fg first-letter:uppercase">{formatMonth(`${month}-01`)}</h3>
                     <span className="tnum text-sm font-semibold text-fg">
-                      {formatMoney(list.reduce((sum, p) => sum + (p.amount ?? 0), 0))}
+                      {/* El total del mes es en euros: otra moneda se cuenta aparte. */}
+                      <TotalValue total={totalOf(list)} />
                     </span>
                   </div>
                   <ul className="flex flex-col">
@@ -294,7 +296,7 @@ function PaymentRow({
           {payment.amount === null ? (
             <span className="text-fg-muted">Sin importe</span>
           ) : (
-            formatMoney(payment.amount)
+            formatMoney(payment.amount, { currency: payment.currency })
           )}
         </span>
         {compact && payment.state !== "paid" && payment.state !== "forecast" ? (

@@ -560,3 +560,85 @@ formulario, y la infraestructura para guardarlo ya estaba pagada.
 **Coste de revertir.** Medio: habría que llevarse los contactos antes de
 quitar la tabla.
 
+
+---
+
+## D-027 · Un total es en euros; otra moneda se cuenta aparte
+
+**Contexto.** Vercel y Mapbox facturan en dólares. Las tablas tenían columna
+`currency` desde el principio, pero ningún formulario la ofrecía y ningún total
+la miraba: un cargo de 120,99 USD entraba como euros y se sumaba al gasto del
+mes. Mapbox estaba guardado como «11,83 €», que era una conversión aproximada
+de 13,31 USD hecha en algún momento y ya sin rastro de su origen.
+
+**Decisión.** El euro es la moneda de la casa y lo demás se respeta tal cual.
+
+- `CURRENCIES` (hoy euro y dólar) y un campo «Moneda» en suscripciones y
+  cargos. `HOME_CURRENCY` es el euro.
+- `formatMoney(importe, { currency })`: cada cifra se escribe con su símbolo.
+  Poner «€» en algo que no lo es sería mentir sobre el dato.
+- `Total` gana `foreign`: cuántas cifras se quedaron fuera por no ser euros.
+  `addToTotal` no las suma, las cuenta. `TotalValue` lo dice: «1 en otra
+  moneda», al lado de «2 sin importe».
+- `spentByAccount`, `spentByMonth`, `subscriptionTotals`, `monthSummary` y
+  `upcomingPaymentsTotal` solo miran euros.
+
+**Motivo.** No hay tipo de cambio en el sistema, y no se va a inventar uno. Una
+conversión fabricada contamina todos los totales que la usen y no deja ver que
+está fabricada; un hueco declarado se arregla cuando haya el dato.
+
+**Coste de revertir.** Bajo: quitar el campo y el contador.
+
+---
+
+## D-028 · Saldos, traspasos internos y la cuenta de un ingreso
+
+**Contexto.** Faltaban tres piezas para llevar el dinero de verdad. Una cuenta
+no tenía saldo, así que «cuánto tengo disponible» no se podía responder. Un
+traspaso entre cuentas propias no tenía dónde caer: importado desde los dos
+extractos que lo reflejan aparecía dos veces, y encima inflaba a la vez los
+ingresos y los gastos. Y un ingreso no sabía en qué cuenta entraba.
+
+**Decisión.** Migración `20261025090000_balances_transfers.sql`, que solo añade.
+
+- `accounts.balance`, `balance_as_of` y `balance_status`, con la misma regla que
+  el resto: lo que no se sabe es nulo y lo nulo es «sin confirmar». Un 0 €
+  escrito sí es un saldo, y se distingue de un hueco por su estado.
+  `availableTotal()` suma los saldos apuntados y `staleBalances()` avisa de los
+  que llevan más de 30 días sin tocar: el panel enseña la foto que tú hiciste,
+  con su fecha, no lo que el banco diga ahora.
+- `accounts.iban_last4`: cuatro cifras para reconocer la cuenta en un extracto.
+  El IBAN completo no se guarda, a propósito.
+- `charges.kind` admite `transfer`, con `counterpart_account_id` obligatorio por
+  CHECK: un traspaso sin su otra punta no es un traspaso. `isSpend()` lo excluye,
+  así que no cuenta como gasto ni como ingreso.
+- `transactions.account_id` y `transactions.source`.
+
+**Motivo.** Sin esto no se pueden importar los extractos sin duplicar, que es
+justo lo que más caro sale de arreglar después.
+
+**Coste de revertir.** Medio: las columnas se pueden dejar de usar, pero los
+traspasos ya apuntados habría que reclasificarlos.
+
+---
+
+## D-029 · La cabecera lleva un enlace al panel
+
+**Contexto.** El panel no se enlazaba desde ninguna parte (ver D-020): se
+entraba escribiendo `/panel`. El dueño pidió un acceso visible.
+
+**Decisión.** Un enlace «Entrar a mi CRM» en la cabecera, discreto y en los dos
+tamaños: texto con candado junto a la acción principal en escritorio, y un botón
+de 44 px en la barra en móvil, fuera del menú para que no haya que abrirlo.
+
+- Es un enlace, no un segundo botón: la cabecera sigue teniendo una sola acción
+  dominante (regla 3.5 de `CLAUDE.md`).
+- No cambia nada de la seguridad: sin sesión, `/panel` manda a `/panel/acceso`
+  y, al entrar, vuelve al panel. Sigue fuera del sitemap, con `noindex` y
+  `Disallow: /panel`, y RLS debajo.
+
+**Motivo.** El enlace anuncia la puerta, no lo que hay detrás. Que el dueño
+entre desde su web es más cómodo que recordar una ruta, y lo que protege los
+datos nunca fue el secreto de la URL.
+
+**Coste de revertir.** Ninguno: se quita el enlace.

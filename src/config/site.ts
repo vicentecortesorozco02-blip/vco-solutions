@@ -29,8 +29,10 @@ export const routes = {
 } as const;
 
 /**
- * The private panel (Life CRM). Never linked from the public site, never in
- * the sitemap, blocked in robots.txt and behind sign-in.
+ * The private panel (Life CRM). The header carries one discreet "Entrar a mi
+ * CRM" link to it, at the owner's request; nothing else on the site points
+ * here. It stays out of the sitemap, blocked in robots.txt and behind sign-in,
+ * with RLS underneath: the link advertises the door, not what is behind it.
  */
 export const panelRoutes = {
   home: "/panel",

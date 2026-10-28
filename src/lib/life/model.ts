@@ -226,6 +226,24 @@ export const confidenceShort: Record<Confidence, string> = {
 };
 export const isEstimate = (confidence: Confidence) => confidence !== "confirmed";
 
+/**
+ * Las monedas que el panel sabe tratar.
+ *
+ * El euro es la moneda de la casa: los totales están en euros y nada más se
+ * suma a ellos. Un importe en otra moneda se guarda tal cual, se enseña con su
+ * símbolo y se queda fuera del total, contado aparte. Sin tipo de cambio no
+ * hay conversión posible, y una conversión inventada sería peor que el hueco.
+ */
+export const CURRENCIES = ["EUR", "USD"] as const;
+export type Currency = (typeof CURRENCIES)[number];
+export const currencyLabel: Record<Currency, string> = {
+  EUR: "Euros (€)",
+  USD: "Dólares ($)",
+};
+export const HOME_CURRENCY: Currency = "EUR";
+export const isHomeCurrency = (currency: string | null | undefined) =>
+  (currency ?? HOME_CURRENCY) === HOME_CURRENCY;
+
 export const SUBSCRIPTION_STATUSES = ["active", "review", "cancel_pending", "cancelled"] as const;
 export type SubscriptionStatus = (typeof SUBSCRIPTION_STATUSES)[number];
 export const subscriptionStatusLabel: Record<SubscriptionStatus, string> = {
@@ -268,13 +286,20 @@ export const accountKindLabel: Record<AccountKind, string> = {
   other: "Otro",
 };
 
-export const CHARGE_KINDS = ["payment", "bank_fee", "invoice"] as const;
+export const CHARGE_KINDS = ["payment", "bank_fee", "invoice", "transfer"] as const;
 export type ChargeKind = (typeof CHARGE_KINDS)[number];
 export const chargeKindLabel: Record<ChargeKind, string> = {
   payment: "Pago",
   bank_fee: "Gasto bancario",
   invoice: "Factura",
+  transfer: "Traspaso entre mis cuentas",
 };
+/**
+ * Un traspaso mueve dinero de un bolsillo propio a otro: no es gasto ni
+ * ingreso. Queda fuera de los totales, para que importar los dos extractos
+ * que lo reflejan no lo cuente dos veces.
+ */
+export const isInternalTransfer = (kind: ChargeKind) => kind === "transfer";
 
 /** Only `paid` is money gone. An authorisation or a failed attempt is not. */
 export const CHARGE_STATUSES = ["paid", "failed", "authorization", "pending", "refunded", "cancelled"] as const;
@@ -439,6 +464,12 @@ export interface Account extends Row {
   name: string;
   institution: string | null;
   kind: AccountKind;
+  /** Las cuatro últimas cifras del IBAN. El IBAN completo no se guarda. */
+  iban_last4: string | null;
+  /** Null cuando no se sabe. Un 0 € declarado sí es un dato: lo dice su estado. */
+  balance: number | null;
+  balance_as_of: ISODate | null;
+  balance_status: Confidence;
   has_card: boolean;
   /** Where subscriptions should end up. A goal, not a fact. */
   is_target: boolean;
@@ -484,6 +515,8 @@ export interface Charge extends Row {
   /** The same payment seen twice (PayPal and the bank): counted once. */
   mirror_of_id: string | null;
   account_id: string | null;
+  /** The other end of a transfer between your own accounts. */
+  counterpart_account_id: string | null;
   project_id: string | null;
   notes: string | null;
   source: string | null;
@@ -497,6 +530,9 @@ export interface Transaction extends Row {
   description: string | null;
   planned: boolean;
   project_id: string | null;
+  /** En qué cuenta entra el ingreso, o de cuál sale el gasto. */
+  account_id: string | null;
+  source: string | null;
 }
 
 export interface Domain extends Row {

@@ -244,7 +244,7 @@ export default async function PanelHome() {
                       .filter(Boolean)
                       .join(" · ") || undefined}
                     muted={item.done}
-                    trailing={item.amount !== undefined ? <span className="tnum text-sm font-medium text-fg">{formatMoney(item.amount)}</span> : undefined}
+                    trailing={item.amount !== undefined ? <span className="tnum text-sm font-medium text-fg">{formatMoney(item.amount, { currency: item.currency })}</span> : undefined}
                   />
                 );
               })}

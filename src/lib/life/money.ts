@@ -1,6 +1,7 @@
 import { addMonths, endOfMonth, startOfMonth } from "./dates";
 import { chargeDate, isSpend } from "./finance";
 import type { Charge, ISODate, MoneyCategory, Subscription, Transaction } from "./model";
+import { isHomeCurrency } from "./model";
 import { chargesBetween, monthlyCost, yearlyCost } from "./recurrence";
 
 /**
@@ -11,15 +12,30 @@ import { chargesBetween, monthlyCost, yearlyCost } from "./recurrence";
  * what is planned and what subscriptions will charge.
  */
 
-const euro = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" });
-const euroRound = new Intl.NumberFormat("es-ES", {
-  style: "currency",
-  currency: "EUR",
-  maximumFractionDigits: 0,
-});
+const formatters = new Map<string, Intl.NumberFormat>();
 
-export function formatMoney(amount: number, { round = false } = {}): string {
-  return (round ? euroRound : euro).format(amount);
+/**
+ * Un importe con su moneda.
+ *
+ * El euro es lo habitual y por eso es el valor por defecto, pero un cargo de
+ * Vercel en dólares se escribe en dólares: poner «€» en una cifra que no lo es
+ * sería mentir sobre el dato.
+ */
+export function formatMoney(
+  amount: number,
+  { round = false, currency = "EUR" }: { round?: boolean; currency?: string } = {},
+): string {
+  const key = `${currency}:${round}`;
+  let formatter = formatters.get(key);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat("es-ES", {
+      style: "currency",
+      currency,
+      ...(round ? { maximumFractionDigits: 0 } : {}),
+    });
+    formatters.set(key, formatter);
+  }
+  return formatter.format(amount);
 }
 
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
@@ -54,7 +70,7 @@ export function monthSummary(
   // Unknown amounts add nothing: they are reported apart, never as 0 €.
   const recurring = sum(
     subscriptions
-      .filter((s) => s.status !== "cancelled" && s.amount !== null)
+      .filter((s) => s.status !== "cancelled" && s.amount !== null && isHomeCurrency(s.currency))
       .map((s) => chargesBetween(s, from, to).length * Number(s.amount)),
   );
 
@@ -119,13 +135,16 @@ export interface SubscriptionTotals {
  */
 export function subscriptionTotals(subscriptions: Subscription[]): SubscriptionTotals {
   const live = subscriptions.filter((s) => s.status !== "cancelled");
-  const monthly = live.map(monthlyCost);
-  const yearly = live.map(yearlyCost);
+  // Only euros reach the figures; the rest are counted as not comparable.
+  const inEuros = live.filter((s) => isHomeCurrency(s.currency));
+  const monthly = inEuros.map(monthlyCost);
+  const yearly = inEuros.map(yearlyCost);
   return {
     monthly: sum(monthly.filter((value): value is number => value !== null)),
     yearly: sum(yearly.filter((value): value is number => value !== null)),
     active: live.length,
-    unknown: monthly.filter((value) => value === null).length,
+    unknown:
+      monthly.filter((value) => value === null).length + (live.length - inEuros.length),
   };
 }
 
@@ -137,7 +156,7 @@ export function spentByMonth(charges: Charge[], anyDayInMonth: ISODate): number 
     charges
       .filter((c) => {
         const date = chargeDate(c);
-        return isSpend(c) && date !== null && date >= from && date <= to;
+        return isSpend(c) && isHomeCurrency(c.currency) && date !== null && date >= from && date <= to;
       })
       .map((c) => Number(c.amount)),
   );
@@ -157,7 +176,7 @@ export function upcomingPaymentsTotal(
   );
   const charges = sum(
     subscriptions
-      .filter((s) => s.status !== "cancelled" && s.amount !== null)
+      .filter((s) => s.status !== "cancelled" && s.amount !== null && isHomeCurrency(s.currency))
       .map((s) => chargesBetween(s, from, to).length * Number(s.amount)),
   );
   return planned + charges;

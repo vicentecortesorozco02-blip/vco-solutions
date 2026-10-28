@@ -20,6 +20,19 @@ test.describe("panel privado", () => {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
   });
 
+  test("el botón «Entrar a mi CRM» de la cabecera lleva al acceso", async ({ page }) => {
+    await page.goto("/");
+
+    const link = page.getByRole("link", { name: "Entrar a mi CRM" }).first();
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute("href", "/panel");
+
+    // Sin sesión, la puerta está cerrada: el enlace existe, el panel no se abre.
+    await link.click();
+    await expect(page).toHaveURL(/\/panel\/acceso$/);
+    await expect(page.locator("h1")).toHaveCount(1);
+  });
+
   test("robots.txt y el sitemap no exponen el panel", async ({ request }) => {
     const sitemap = await (await request.get("/sitemap.xml")).text();
     expect(sitemap).not.toContain("/panel");

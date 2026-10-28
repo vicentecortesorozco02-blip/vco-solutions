@@ -224,7 +224,7 @@ function MonthGrid({
                         {item.time ? <span className="tnum mr-1 opacity-80">{item.time}</span> : null}
                         {item.title}
                         {item.amount !== undefined ? (
-                          <span className="tnum ml-1 opacity-80">{formatMoney(item.amount, { round: true })}</span>
+                          <span className="tnum ml-1 opacity-80">{formatMoney(item.amount, { round: true, currency: item.currency })}</span>
                         ) : null}
                       </Link>
                     </li>
@@ -310,7 +310,7 @@ function AgendaChip({ item, here, look }: { item: AgendaItem; here: string; look
           {item.time ? <span className="tnum mr-1 text-fg-subtle">{item.time}</span> : null}
           <span className="font-medium text-fg">{item.title}</span>
           {item.amount !== undefined ? (
-            <span className="tnum ml-1 text-fg-muted">{formatMoney(item.amount, { round: true })}</span>
+            <span className="tnum ml-1 text-fg-muted">{formatMoney(item.amount, { round: true, currency: item.currency })}</span>
           ) : null}
         </span>
       </Link>
@@ -361,7 +361,7 @@ function DayList({ items, date, here, look }: { items: AgendaItem[]; date: strin
                 ) : null}
               </span>
               {item.amount !== undefined ? (
-                <span className="tnum text-sm font-medium text-fg">{formatMoney(item.amount)}</span>
+                <span className="tnum text-sm font-medium text-fg">{formatMoney(item.amount, { currency: item.currency })}</span>
               ) : null}
             </Link>
           </li>

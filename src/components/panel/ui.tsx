@@ -387,6 +387,8 @@ export function TotalValue({ total, round = false }: { total: Total; round?: boo
   const parts = [
     total.estimated > 0 ? `${formatMoney(total.estimated, { round })} estimado` : null,
     total.unknown > 0 ? `${total.unknown} sin importe` : null,
+    // Another currency is not added to a euro total: it is said out loud.
+    total.foreign > 0 ? `${total.foreign} en otra moneda` : null,
   ].filter(Boolean);
   return (
     <>

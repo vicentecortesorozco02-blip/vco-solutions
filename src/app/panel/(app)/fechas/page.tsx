@@ -84,7 +84,7 @@ function Milestone({ item, today }: { item: AgendaItem; today: string }) {
               .join(" · ")}
           </span>
         </span>
-        {item.amount !== undefined ? <span className="tnum text-sm font-semibold text-fg">{formatMoney(item.amount)}</span> : null}
+        {item.amount !== undefined ? <span className="tnum text-sm font-semibold text-fg">{formatMoney(item.amount, { currency: item.currency })}</span> : null}
       </Link>
     </li>
   );
