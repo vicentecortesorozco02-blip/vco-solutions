@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AgendaIcon } from "@/components/panel/icons";
-import { HeaderLink, PageHeader, ViewTabs, tagClass } from "@/components/panel/ui";
+import { HeaderLink, ViewTabs, tagClass } from "@/components/panel/ui";
 import { panelRoutes } from "@/config/site";
 import { cn } from "@/lib/cn";
 import { type AgendaItem, buildAgenda, itemsOn } from "@/lib/life/agenda";
@@ -78,18 +78,9 @@ export default async function CalendarPage({
         : formatMonth(focus);
 
   return (
-    <div className="flex flex-col gap-6">
-      <PageHeader
-        title="Calendario"
-        question="¿Qué tengo próximamente?"
-        actions={
-          <HeaderLink primary icon={Plus} href={newHref("event", here, { date: view === "dia" ? focus : today })}>
-            Nuevo evento
-          </HeaderLink>
-        }
-      />
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="flex flex-col gap-3">
+      <header className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1">
+        <h1 className="text-xl font-semibold tracking-[-0.02em] text-fg">Calendario</h1>
         <div className="flex items-center gap-1">
           <NavButton href={url(view, step(-1))} label="Anterior">
             <ChevronLeft className="size-5" strokeWidth={2} aria-hidden />
@@ -97,7 +88,7 @@ export default async function CalendarPage({
           <NavButton href={url(view, step(1))} label="Siguiente">
             <ChevronRight className="size-5" strokeWidth={2} aria-hidden />
           </NavButton>
-          <h2 className="ml-2 text-lg font-semibold tracking-[-0.015em] text-fg first-letter:uppercase">{title}</h2>
+          <h2 className="ml-1 text-base font-semibold tracking-[-0.015em] text-fg first-letter:uppercase">{title}</h2>
           {focus !== today ? (
             <Link
               href={url(view, today)}
@@ -108,7 +99,8 @@ export default async function CalendarPage({
             </Link>
           ) : null}
         </div>
-        <ViewTabs
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+          <ViewTabs
           label="Vista del calendario"
           current={view}
           tabs={[
@@ -117,7 +109,11 @@ export default async function CalendarPage({
             { key: "mes", label: "Mes", href: url("mes", focus) },
           ]}
         />
-      </div>
+          <HeaderLink primary icon={Plus} href={newHref("event", here, { date: view === "dia" ? focus : today })}>
+            Nuevo evento
+          </HeaderLink>
+        </div>
+      </header>
 
       {view === "mes" ? (
         <MonthGrid items={items} from={range.from} to={range.to} focus={focus} today={today} url={url} here={here} look={look} />
@@ -173,7 +169,7 @@ function MonthGrid({
           </div>
         ))}
       </div>
-      <ol className="grid grid-cols-7">
+      <ol className="grid grid-cols-7 lg:auto-rows-[calc((100dvh-10.5rem)/6)]">
         {days.map((day) => {
           const dayItems = itemsOn(items, day);
           const inMonth = day.slice(0, 7) === month;
@@ -182,7 +178,7 @@ function MonthGrid({
             <li
               key={day}
               className={cn(
-                "relative flex min-h-16 flex-col gap-1 border-b border-r border-line-soft p-1 sm:min-h-28 sm:p-1.5 [&:nth-child(7n)]:border-r-0",
+                "relative flex min-h-16 flex-col gap-1 overflow-hidden border-b border-r border-line-soft p-1 sm:min-h-28 sm:p-1.5 lg:min-h-0 [&:nth-child(7n)]:border-r-0",
                 !inMonth && "bg-bg-subtle/40",
               )}
             >

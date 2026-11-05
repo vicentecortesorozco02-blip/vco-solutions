@@ -292,9 +292,12 @@ export function Row({
   detail,
   trailing,
   leading,
+  actions,
   muted = false,
 }: {
   href: string;
+  /** Buttons after the link, e.g. edit and delete. Sit outside the link. */
+  actions?: ReactNode;
   icon?: LucideIcon;
   /** Tints the icon bubble, e.g. with the project's colour. */
   iconColor?: TagColor;
@@ -331,6 +334,7 @@ export function Row({
         </span>
         {trailing ? <span className="flex shrink-0 items-center gap-2">{trailing}</span> : null}
       </Link>
+      {actions}
     </li>
   );
 }

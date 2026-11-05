@@ -48,7 +48,7 @@ export function WeekStrip({
           <li key={day.date} className="border-b border-line-soft last:border-b-0">
             <Link
               href={`${panelRoutes.calendar}?vista=dia&fecha=${day.date}`}
-              className="flex min-h-12 flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2 transition-colors hover:bg-fill sm:flex-nowrap sm:px-4"
+              className="flex min-h-9 flex-wrap items-center gap-x-3 gap-y-0.5 px-3 py-1.5 transition-colors hover:bg-fill sm:flex-nowrap sm:px-4"
             >
               <span
                 className={cn(

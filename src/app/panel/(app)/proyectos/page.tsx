@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AddKnownProjectsButton } from "@/components/panel/Actions";
-import { EmptyState, HeaderLink, PageHeader, Pill, ProgressBar, tagClass } from "@/components/panel/ui";
+import { EmptyState, HeaderLink, PageHeader, Pill, tagClass } from "@/components/panel/ui";
 import { panelRoutes } from "@/config/site";
 import { cn } from "@/lib/cn";
 import { countdown } from "@/lib/life/dates";
@@ -72,7 +72,12 @@ export default async function ProjectsPage() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <span className="flex min-w-0 items-center gap-2 text-lg font-semibold tracking-[-0.015em] text-fg">
-                          <span className={cn("size-2.5 shrink-0 rounded-full", tagClass(project.color, "fill"))} aria-hidden />
+                          {project.logo ? (
+                            // eslint-disable-next-line @next/next/no-img-element -- data URL
+                            <img src={project.logo} alt="" className="size-8 shrink-0 rounded-lg object-cover" />
+                          ) : (
+                            <span className={cn("size-2.5 shrink-0 rounded-full", tagClass(project.color, "fill"))} aria-hidden />
+                          )}
                           <span className="truncate">{project.name}</span>
                         </span>
                         {priorityWeight[project.priority] >= 2 ? (
@@ -81,11 +86,7 @@ export default async function ProjectsPage() {
                       </div>
                       {project.description ? <p className="line-clamp-2 text-sm text-fg-muted">{project.description}</p> : null}
                       <div className="mt-auto flex flex-col gap-2">
-                        <div className="flex items-baseline justify-between text-sm">
-                          <span className="text-fg-subtle">{projectStatusLabel[project.status]}</span>
-                          <span className="tnum font-semibold text-fg">{project.progress} %</span>
-                        </div>
-                        <ProgressBar value={project.progress} label={`Progreso de ${project.name}`} />
+                        <span className="text-sm text-fg-subtle">{projectStatusLabel[project.status]}</span>
                         <p className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-fg-subtle">
                           <span>
                             {s.openTasks} tarea{s.openTasks === 1 ? "" : "s"} abierta{s.openTasks === 1 ? "" : "s"}

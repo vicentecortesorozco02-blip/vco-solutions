@@ -7,9 +7,8 @@ import { useOptimistic, useState, useTransition } from "react";
 import { moveTask } from "@/app/panel/actions";
 import { cn } from "@/lib/cn";
 import { editHref } from "@/lib/life/links";
-import { TASK_STATUSES, type TagColor, type TaskStatus, priorityLabel, taskStatusLabel } from "@/lib/life/model";
+import { type TagColor, type TaskStatus, priorityLabel, taskStatusLabel } from "@/lib/life/model";
 
-import { Select } from "@/components/ui/Select";
 import { tagClass } from "./ui";
 
 export interface BoardTask {
@@ -34,9 +33,8 @@ const columns: { status: TaskStatus; hint: string }[] = [
 /**
  * The tasks as a board you can drag.
  *
- * Dragging is the quick way; it is not the only way. Every card carries a
- * menu with the same four columns, because a drag does not exist on a phone
- * and does not exist for a keyboard either.
+ * Dragging is the only way to move a card here; the status can still be
+ * changed from each task's edit form.
  */
 export function TaskBoard({ tasks, here }: { tasks: BoardTask[]; here: string }) {
   const [, startTransition] = useTransition();
@@ -90,7 +88,7 @@ export function TaskBoard({ tasks, here }: { tasks: BoardTask[]; here: string })
               </header>
               <p className="px-2 text-xs text-fg-subtle">{hint}</p>
 
-              <ul className="flex flex-col gap-2">
+              <ul className="flex flex-col gap-3">
                 {list.map((task) => (
                   <li
                     key={task.id}
@@ -102,10 +100,14 @@ export function TaskBoard({ tasks, here }: { tasks: BoardTask[]; here: string })
                       if (dragging) move(dragging, status, task);
                     }}
                     className={cn(
-                      "flex cursor-grab flex-col gap-1.5 rounded-xl bg-surface p-3 shadow-[var(--shadow-raise)] active:cursor-grabbing",
+                      "relative flex cursor-grab flex-col gap-1.5 overflow-hidden rounded-xl border border-line bg-surface p-3 pl-4 shadow-[var(--shadow-raise)] active:cursor-grabbing",
                       dragging === task.id && "opacity-50",
                     )}
                   >
+                    <span
+                      className={cn("absolute inset-y-0 left-0 w-1", tagClass(task.projectColor ?? "slate", "fill"))}
+                      aria-hidden
+                    />
                     <div className="flex items-start gap-2">
                       <GripVertical className="mt-0.5 size-4 shrink-0 text-fg-quiet" strokeWidth={2} aria-hidden />
                       <Link
@@ -134,15 +136,6 @@ export function TaskBoard({ tasks, here }: { tasks: BoardTask[]; here: string })
                       ) : null}
                     </div>
 
-                    <div className="pl-6">
-                      <Select
-                        size="sm"
-                        aria-label={`Mover «${task.title}» a`}
-                        value={task.status}
-                        onValueChange={(value) => move(task.id, value as TaskStatus)}
-                        options={TASK_STATUSES.map((value) => ({ value, label: taskStatusLabel[value] }))}
-                      />
-                    </div>
                   </li>
                 ))}
                 {list.length === 0 ? <li className="px-2 py-6 text-center text-xs text-fg-quiet">Vacío</li> : null}

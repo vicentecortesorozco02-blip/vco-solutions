@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUp, Check, Sparkles } from "lucide-react";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 
 import { type ChatTurn, askAssistant } from "@/app/panel/actions";
 import { cn } from "@/lib/cn";
@@ -25,15 +25,17 @@ const suggestions = [
  * panel closes the conversation. What it creates, however, is real and shows
  * up under the answer.
  */
-export function AssistantChat({ configured }: { configured: boolean }) {
+export function AssistantChat({ configured, compact = false }: { configured: boolean; compact?: boolean }) {
+  const inputId = useId();
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, startTransition] = useTransition();
   const end = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (compact) return;
     end.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, pending]);
+  }, [messages, pending, compact]);
 
   const send = (text: string) => {
     const clean = text.trim();
@@ -51,9 +53,9 @@ export function AssistantChat({ configured }: { configured: boolean }) {
   };
 
   return (
-    <div className="flex min-h-[60vh] flex-col gap-4">
-      <div className="flex flex-1 flex-col gap-4" aria-live="polite">
-        {messages.length === 0 ? (
+    <div className={cn("flex flex-col gap-4", compact ? "gap-3" : "min-h-[60vh]")}>
+      <div className={cn("flex flex-1 flex-col gap-4", compact && messages.length > 0 && "absolute top-full right-0 left-0 z-30 mt-2 max-h-[60vh] overflow-y-auto rounded-2xl bg-canvas p-3 shadow-[var(--shadow-pop)]")} aria-live="polite">
+        {messages.length === 0 && compact ? null : messages.length === 0 ? (
           <div className="flex flex-col items-center gap-4 rounded-2xl bg-surface px-6 py-12 text-center">
             <span className="grid size-12 place-items-center rounded-full bg-fill text-fg-muted">
               <Sparkles className="size-6" strokeWidth={1.75} aria-hidden />
@@ -113,13 +115,13 @@ export function AssistantChat({ configured }: { configured: boolean }) {
           event.preventDefault();
           send(draft);
         }}
-        className="sticky bottom-20 flex items-end gap-2 rounded-2xl bg-surface p-2 shadow-[var(--shadow-raise)] lg:bottom-4"
+        className={cn("flex items-end gap-2 rounded-2xl bg-surface shadow-[var(--shadow-raise)]", compact ? "rounded-full p-0.5 pl-2" : "p-2", !compact && "sticky bottom-20 lg:bottom-4", compact && "order-first")}
       >
-        <label htmlFor="assistant-input" className="sr-only">
+        <label htmlFor={inputId} className="sr-only">
           Escribe tu mensaje
         </label>
         <textarea
-          id="assistant-input"
+          id={inputId}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {
@@ -130,12 +132,15 @@ export function AssistantChat({ configured }: { configured: boolean }) {
           }}
           rows={1}
           placeholder={configured ? "Pregunta o pide que apunte algo…" : "Falta configurar la clave de IA"}
-          className="max-h-40 min-h-11 flex-1 resize-none bg-transparent px-2 py-2.5 text-[0.9375rem] text-fg placeholder:text-fg-quiet focus:outline-none"
+          className={cn("flex-1 resize-none bg-transparent px-2 text-[0.9375rem] text-fg placeholder:text-fg-quiet focus:outline-none", compact ? "max-h-24 min-h-9 py-2 text-sm" : "max-h-40 min-h-11 py-2.5")}
         />
         <button
           type="submit"
           disabled={pending || !draft.trim()}
-          className="grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-fg transition-colors hover:bg-accent-hover disabled:opacity-40"
+          className={cn(
+            "grid shrink-0 place-items-center rounded-full bg-accent text-accent-fg transition-colors hover:bg-accent-hover disabled:opacity-40",
+            compact ? "size-9" : "size-11",
+          )}
         >
           <ArrowUp className="size-5" strokeWidth={2.2} aria-hidden />
           <span className="sr-only">Enviar</span>

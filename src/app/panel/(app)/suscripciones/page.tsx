@@ -15,6 +15,7 @@ import {
   TotalValue,
   ViewTabs,
 } from "@/components/panel/ui";
+import { RowActions } from "@/components/panel/RowActions";
 import { panelRoutes } from "@/config/site";
 import { cn } from "@/lib/cn";
 import { addDays, formatMonth, formatShort, formatWeekdayShort, relativeDay } from "@/lib/life/dates";
@@ -167,6 +168,7 @@ export default async function SubscriptionsPage({
                         icon={Repeat}
                         title={sub.name}
                         muted={status === "cancelled"}
+                        actions={<RowActions kind="subscription" id={sub.id} label={sub.name} editHref={editHref("subscription", sub.id, here)} />}
                         detail={[
                           frequencyLabel[sub.frequency] +
                             (sub.frequency === "custom" && sub.custom_days ? ` · cada ${sub.custom_days} días` : ""),

@@ -337,6 +337,19 @@ export async function setSubscriptionStatus(id: string, status: SubscriptionStat
   return { ok: true, savedAt: Date.now() };
 }
 
+/** Sets or clears a project's logo. The browser has already shrunk it. */
+export async function setProjectLogo(id: string, logo: string | null): Promise<FormState> {
+  if (!uuid.test(id)) return { ok: false, message: "Petición no válida." };
+  if (logo !== null && (!/^data:image\/(png|jpeg|webp);base64,/.test(logo) || logo.length > 200_000)) {
+    return { ok: false, message: "La imagen no es válida o pesa demasiado." };
+  }
+  const { supabase } = await requirePanelSession();
+  const { error } = await supabase.from("projects").update({ logo }).eq("id", id);
+  if (error) return { ok: false, message: "No se pudo guardar el logo." };
+  refresh();
+  return { ok: true, savedAt: Date.now() };
+}
+
 /** A shared expense was settled with a partner. */
 export async function settleShare(id: string, settled: boolean): Promise<void> {
   if (!uuid.test(id)) return;

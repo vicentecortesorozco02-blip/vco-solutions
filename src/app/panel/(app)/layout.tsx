@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { signOut } from "@/app/panel/actions";
+import { AssistantChat } from "@/components/panel/AssistantChat";
 import { CommandMenu } from "@/components/panel/CommandMenu";
 import { SidebarNav, TabBar } from "@/components/panel/Nav";
 import { PanelDialogs } from "@/components/panel/PanelDialogs";
@@ -40,7 +41,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         Saltar al contenido
       </a>
 
-      <div className="mx-auto flex max-w-[90rem]">
+      <div className="flex w-full">
         <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col gap-8 overflow-y-auto px-4 py-6 lg:flex">
           <Link
             href={panelRoutes.settings}
@@ -72,8 +73,13 @@ export default async function PanelLayout({ children }: { children: React.ReactN
 
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="sticky top-0 z-[var(--z-sticky)] flex items-center gap-3 bg-canvas/85 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 backdrop-blur-xl sm:px-6 lg:px-10 lg:pt-6">
-            <div className="flex-1">
-              <CommandMenu />
+            <div className="flex min-w-0 flex-1 items-start gap-3">
+              <div className="w-full lg:w-auto lg:min-w-64">
+                <CommandMenu />
+              </div>
+              <div className="relative hidden min-w-0 flex-1 lg:block">
+                <AssistantChat configured={Boolean(process.env.GEMINI_API_KEY)} compact />
+              </div>
             </div>
             <div className="flex items-center gap-2 lg:hidden">
               <ThemeToggle theme={session.profile.theme} />
@@ -83,7 +89,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
             </div>
           </div>
 
-          <main id="panel-main" className="flex-1 px-4 pt-3 pb-32 sm:px-6 lg:px-10 lg:pt-6 lg:pb-16">
+          <main id="panel-main" className="min-w-0 flex-1 px-4 pt-3 pb-32 sm:px-6 lg:px-10 lg:pt-6 lg:pb-16">
             {children}
           </main>
         </div>

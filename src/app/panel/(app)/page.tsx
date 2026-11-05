@@ -1,7 +1,6 @@
 import {
   CalendarDays,
   CircleAlert,
-  FolderKanban,
   GraduationCap,
   Inbox,
   Repeat,
@@ -16,11 +15,12 @@ import Link from "next/link";
 import { AddKnownProjectsButton, DoneToggle, InboxCapture } from "@/components/panel/Actions";
 import { iconForAgenda, reminderIcon } from "@/components/panel/icons";
 import { Card, CardTitle, HeaderLink, MiniStat, Pill, Row, RowList } from "@/components/panel/ui";
+import { MonthCalendar } from "@/components/panel/MonthCalendar";
 import { WeekStrip, type WeekDay } from "@/components/panel/WeekStrip";
 import { panelRoutes } from "@/config/site";
 import { cn } from "@/lib/cn";
 import { buildAgenda, type AgendaItem } from "@/lib/life/agenda";
-import { addDays, countdown, diffDays, eachDay, formatLong, greeting } from "@/lib/life/dates";
+import { addDays, countdown, diffDays, eachDay, endOfMonth, formatLong, greeting, startOfMonth } from "@/lib/life/dates";
 import { editHref, newHref } from "@/lib/life/links";
 import { totalSum, unidentified, upcoming, upcomingTotal } from "@/lib/life/finance";
 import { formatMoney, monthSummary, spentByMonth, subscriptionTotals } from "@/lib/life/money";
@@ -31,10 +31,16 @@ import { loadInbox, loadLifeData, requirePanelSession } from "@/lib/life/server"
 export const metadata: Metadata = { title: "Inicio" };
 
 /** ¿Qué tengo que saber ahora? */
-export default async function PanelHome() {
+export default async function PanelHome({ searchParams }: { searchParams: Promise<{ mes?: string }> }) {
   const { profile, today, hour } = await requirePanelSession();
   const [data, inbox] = await Promise.all([loadLifeData(), loadInbox()]);
   const name = profile.display_name;
+  const { mes } = await searchParams;
+  const calendarMonth = mes && /^\d{4}-\d{2}$/.test(mes) ? `${mes}-01` : today;
+  const monthItems = new Map<string, AgendaItem[]>();
+  for (const item of buildAgenda(data, startOfMonth(calendarMonth), endOfMonth(calendarMonth))) {
+    monthItems.set(item.date, [...(monthItems.get(item.date) ?? []), item]);
+  }
 
   const todayItems = buildAgenda(data, today, today);
   const todayTasks = data.tasks.filter((t) => t.due_date === today);
@@ -46,7 +52,6 @@ export default async function PanelHome() {
   const unknownCharges = unidentified(data.charges).length;
   const subs = subscriptionTotals(data.subscriptions);
   const month = monthSummary(data.transactions, data.subscriptions, today);
-  const activeProjects = data.projects.filter((p) => p.status === "active");
   const pendingUni = data.courseItems
     .filter((i) => i.status !== "done" && i.due_date && i.due_date >= today)
     .sort((a, b) => (a.due_date! < b.due_date! ? -1 : 1));
@@ -64,10 +69,6 @@ export default async function PanelHome() {
       dueUnknown: payable.filter((item) => item.amount === undefined).length,
     };
   });
-  const weekDue = {
-    total: week.reduce((sum, day) => sum + day.due, 0),
-    unknown: week.reduce((count, day) => count + day.dueUnknown, 0),
-  };
   const projectOf = new Map<string, string>();
   for (const task of data.tasks) if (task.project_id) projectOf.set(task.id, task.project_id);
   for (const sub of data.subscriptions) if (sub.project_id) projectOf.set(sub.id, sub.project_id);
@@ -78,7 +79,7 @@ export default async function PanelHome() {
   };
 
   const focus = topPriorities(data, today);
-  const reminders = deriveReminders(data, today).slice(0, 8);
+  const reminders = deriveReminders(data, today).filter((r) => r.level === "critical").slice(0, 8);
 
   const isEmpty =
     data.tasks.length + data.events.length + data.projects.length + data.subscriptions.length + data.courses.length === 0;
@@ -112,7 +113,7 @@ export default async function PanelHome() {
         </Card>
       ) : null}
 
-      <section aria-label="Resumen" className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
+      <section aria-label="Resumen" className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
         <MiniStat
           label="Hoy"
           icon={Sun}
@@ -141,13 +142,6 @@ export default async function PanelHome() {
           tone={nextUni?.due_date && diffDays(today, nextUni.due_date) <= 2 ? "caution" : "default"}
         />
         <MiniStat
-          label="Proyectos"
-          icon={FolderKanban}
-          href={panelRoutes.projects}
-          value={activeProjects.length}
-          detail={activeProjects.length === 1 ? "activo" : "activos"}
-        />
-        <MiniStat
           label="Suscripciones"
           icon={Repeat}
           href={panelRoutes.subscriptions}
@@ -163,52 +157,20 @@ export default async function PanelHome() {
         />
       </section>
 
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
       <section aria-labelledby="week-title" className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 id="week-title" className="text-lg font-semibold tracking-[-0.015em] text-fg">
-            Los próximos siete días
+            Próxima semana
           </h2>
           <Link href={panelRoutes.calendar} className="text-sm font-medium text-accent-text hover:underline">
             Calendario
           </Link>
         </div>
         <WeekStrip days={week} today={today} colorOf={colorOfItem} />
-        <p className="px-1 text-sm text-fg-muted">
-          {weekDue.total > 0 ? `${formatMoney(weekDue.total)} a pagar esta semana` : "Sin pagos esta semana"}
-          {weekDue.unknown > 0 ? ` · ${weekDue.unknown} sin importe confirmado` : ""}
-          {" · "}
-          {plural(week.reduce((count, day) => count + day.items.length, 0), "cosa en la agenda", "cosas en la agenda")}
-        </p>
       </section>
-
-      <section aria-labelledby="focus-title" className="flex flex-col gap-3">
-        <h2 id="focus-title" className="text-lg font-semibold tracking-[-0.015em] text-fg">
-          Lo más importante ahora
-        </h2>
-        {focus.length ? (
-          <ol className="grid gap-3 md:grid-cols-3">
-            {focus.map((item, index) => (
-              <li key={item.key} className="flex items-start gap-3 rounded-2xl bg-surface p-4">
-                {item.taskId ? (
-                  <DoneToggle id={item.taskId} done={false} label={item.title} />
-                ) : (
-                  <span className="tnum grid size-8 shrink-0 place-items-center rounded-full bg-accent-quiet text-sm font-semibold text-accent-text">
-                    {index + 1}
-                  </span>
-                )}
-                <Link href={item.href} className="flex min-w-0 flex-1 flex-col gap-0.5 py-0.5">
-                  <span className="text-[0.9375rem] font-semibold text-fg">{item.title}</span>
-                  <span className="text-sm text-fg-muted">{item.reason}</span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="rounded-2xl bg-surface px-5 py-4 text-[0.9375rem] text-fg-muted">
-            Nada urgente. Buen momento para avanzar en un proyecto.
-          </p>
-        )}
-      </section>
+      <MonthCalendar month={calendarMonth} today={today} itemsFor={(date) => monthItems.get(date) ?? []} />
+      </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <section aria-labelledby="today-title" className="flex flex-col gap-3">
@@ -258,8 +220,21 @@ export default async function PanelHome() {
           <h2 id="alerts-title" className="text-lg font-semibold tracking-[-0.015em] text-fg">
             Avisos
           </h2>
-          {reminders.length ? (
+          {focus.length || reminders.length ? (
             <ul className="flex flex-col gap-2">
+              {focus.map((item) => (
+                <li key={item.key} className="flex items-center gap-3 rounded-2xl bg-surface px-4 py-3">
+                  {item.taskId ? (
+                    <DoneToggle id={item.taskId} done={false} label={item.title} />
+                  ) : (
+                    <CircleAlert className="size-5 shrink-0 text-critical" strokeWidth={1.9} aria-hidden />
+                  )}
+                  <Link href={item.href} className="flex min-w-0 flex-1 flex-col">
+                    <span className="truncate text-[0.9375rem] font-medium text-fg">{item.title}</span>
+                    <span className="truncate text-sm text-fg-muted">{item.reason}</span>
+                  </Link>
+                </li>
+              ))}
               {reminders.map((reminder) => {
                 const Icon = reminder.level === "critical" ? CircleAlert : reminderIcon[reminder.kind];
                 return (
@@ -291,7 +266,7 @@ export default async function PanelHome() {
               })}
             </ul>
           ) : (
-            <p className="rounded-2xl bg-surface px-5 py-4 text-[0.9375rem] text-fg-muted">Sin avisos. Todo en orden.</p>
+            <p className="rounded-2xl bg-surface px-5 py-4 text-[0.9375rem] text-fg-muted">Nada urgente. Todo en orden.</p>
           )}
 
           <div className="mt-3 flex flex-col gap-2">

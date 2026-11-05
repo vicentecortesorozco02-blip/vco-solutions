@@ -25,6 +25,7 @@ export const homeOf: Record<EntityKind, string> = {
   domain: panelRoutes.domains,
   contact: panelRoutes.contacts,
   vault: panelRoutes.documents,
+  access: panelRoutes.projects,
   inbox: panelRoutes.inbox,
 };
 

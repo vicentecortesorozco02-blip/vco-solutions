@@ -135,6 +135,11 @@ export async function fetchLifeData(
   ].find((result) => result.error)?.error;
   if (firstError) throw new Error(`No se pudieron cargar tus datos: ${firstError.message}`);
 
+  // Loaded apart: until its migration runs the table does not exist, and
+  // that must not take the whole panel down.
+  const accessResult = await supabase.from("access_items").select("*").order("title");
+  const access = accessResult.error ? [] : (accessResult.data ?? []);
+
   return {
     events: events.data ?? [],
     tasks: tasks.data ?? [],
@@ -152,6 +157,7 @@ export async function fetchLifeData(
     courses: courses.data ?? [],
     courseItems: courseItems.data ?? [],
     projects: projects.data ?? [],
+    access,
   };
 }
 

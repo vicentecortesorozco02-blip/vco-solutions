@@ -371,6 +371,8 @@ export interface Project extends Row {
   target_date: ISODate | null;
   url: string | null;
   notes: string | null;
+  /** A small data-URL image, or null. Absent until the logo migration runs. */
+  logo?: string | null;
 }
 
 export interface Course extends Row {
@@ -461,6 +463,7 @@ export interface Subscription extends Row {
 }
 
 export interface Account extends Row {
+  project_id?: string | null;
   name: string;
   institution: string | null;
   kind: AccountKind;
@@ -564,12 +567,24 @@ export interface Contact extends Row {
 }
 
 export interface VaultItem extends Row {
+  project_id?: string | null;
   title: string;
   category: VaultCategory;
   notes: string | null;
   url: string | null;
   date: ISODate | null;
   expires_on: ISODate | null;
+}
+
+/** Where a login lives. Never the password: that stays in the password manager. */
+export interface AccessItem extends Row {
+  project_id: string | null;
+  title: string;
+  url: string | null;
+  username: string | null;
+  /** Which password manager or place keeps the secret. */
+  stored_in: string | null;
+  notes: string | null;
 }
 
 export interface Partner extends Row {

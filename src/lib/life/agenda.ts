@@ -19,6 +19,7 @@ import type {
   Task,
   Transaction,
   VaultItem,
+  AccessItem,
 } from "./model";
 import { courseItemKindLabel } from "./model";
 import { chargesBetween, eventOccurrences, nextBirthday } from "./recurrence";
@@ -45,6 +46,7 @@ export interface LifeData {
   chargeShares: ChargeShare[];
   domains: Domain[];
   vault: VaultItem[];
+  access: AccessItem[];
   contacts: Contact[];
   courses: Course[];
   courseItems: CourseItem[];
@@ -64,6 +66,7 @@ export const emptyLifeData: LifeData = {
   chargeShares: [],
   domains: [],
   vault: [],
+  access: [],
   contacts: [],
   courses: [],
   courseItems: [],

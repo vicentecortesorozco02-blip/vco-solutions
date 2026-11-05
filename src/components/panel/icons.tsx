@@ -1,5 +1,6 @@
 import { createElement } from "react";
 import {
+  KeyRound,
   Bell,
   BookOpen,
   Briefcase,
@@ -106,6 +107,7 @@ export const entityIcon: Record<EntityKind, LucideIcon> = {
   domain: Globe,
   contact: Users,
   vault: Vault,
+  access: KeyRound,
   inbox: StickyNote,
 };
 

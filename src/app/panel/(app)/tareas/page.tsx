@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import { DoneToggle } from "@/components/panel/Actions";
 import { TaskBoard, type BoardTask } from "@/components/panel/TaskBoard";
-import { EmptyState, HeaderLink, PageHeader, Pill, Row, RowList, ViewTabs } from "@/components/panel/ui";
+import { EmptyState, HeaderLink, Pill, Row, RowList, ViewTabs } from "@/components/panel/ui";
 import { panelRoutes } from "@/config/site";
 import { addDays, formatShort, relativeDay, shortTime } from "@/lib/life/dates";
 import { newHref } from "@/lib/life/links";
@@ -63,22 +63,11 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
   }));
 
   return (
-    <div className="flex flex-col gap-6">
-      <PageHeader
-        title="Tareas"
-        question="¿Qué tengo que hacer?"
-        actions={
-          <HeaderLink
-            primary
-            icon={Plus}
-            href={newHref("task", panelRoutes.tasks, { due_date: view === "proximas" ? addDays(today, 1) : today })}
-          >
-            Nueva tarea
-          </HeaderLink>
-        }
-      />
-
-      <ViewTabs
+    <div className="flex flex-col gap-4">
+      <header className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1">
+        <h1 className="text-xl font-semibold tracking-[-0.02em] text-fg">Tareas</h1>
+        <div className="min-w-0 flex-1">
+          <ViewTabs
         label="Vistas de tareas"
         current={view}
         tabs={[
@@ -89,14 +78,19 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
           { key: "todas", label: "Todas", href: href("todas"), count: byView.todas.length },
         ]}
       />
+        </div>
+          <HeaderLink
+            primary
+            icon={Plus}
+            href={newHref("task", panelRoutes.tasks, { due_date: view === "proximas" ? addDays(today, 1) : today })}
+          >
+            Nueva tarea
+          </HeaderLink>
+      </header>
 
       {view === "tablero" ? (
         <>
           <TaskBoard tasks={board} here={here} />
-          <p className="px-1 text-sm text-fg-muted">
-            Arrastra una tarjeta de una columna a otra. En el móvil, o con el teclado, usa el desplegable de cada
-            tarjeta.
-          </p>
         </>
       ) : list.length === 0 ? (
         <EmptyState
