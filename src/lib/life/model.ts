@@ -169,13 +169,41 @@ export const transactionKindLabel: Record<TransactionKind, string> = {
   income: "Ingreso",
 };
 
-export const COURSE_ITEM_KINDS = ["assignment", "exam", "practice", "other"] as const;
+export const COURSE_ITEM_KINDS = ["assignment", "exam", "practice", "admin", "other"] as const;
 export type CourseItemKind = (typeof COURSE_ITEM_KINDS)[number];
 export const courseItemKindLabel: Record<CourseItemKind, string> = {
   assignment: "Trabajo",
   exam: "Examen",
   practice: "Práctica",
+  admin: "Trámite",
   other: "Otro",
+};
+
+/** Where a course is in the student's life. Only "passed" counts as done. */
+export const COURSE_STATUSES = ["pending", "planned", "enrolled", "passed"] as const;
+export type CourseStatus = (typeof COURSE_STATUSES)[number];
+export const courseStatusLabel: Record<CourseStatus, string> = {
+  pending: "Pendiente",
+  planned: "Planificada",
+  enrolled: "Matriculada",
+  passed: "Aprobada",
+};
+
+export const COURSE_CATEGORIES = ["core", "elective", "thesis", "internship"] as const;
+export type CourseCategory = (typeof COURSE_CATEGORIES)[number];
+export const courseCategoryLabel: Record<CourseCategory, string> = {
+  core: "Obligatoria",
+  elective: "Optativa",
+  thesis: "Trabajo Fin de Grado",
+  internship: "Prácticas externas",
+};
+
+export const SEMESTERS = ["first", "second", "annual"] as const;
+export type Semester = (typeof SEMESTERS)[number];
+export const semesterLabel: Record<Semester, string> = {
+  first: "1.er cuatrimestre",
+  second: "2.º cuatrimestre",
+  annual: "Anual",
 };
 
 export const VAULT_CATEGORIES = [
@@ -382,7 +410,35 @@ export interface Course extends Row {
   room: string | null;
   url: string | null;
   notes: string | null;
+  /** Kept in step with `status === "enrolled"` by the form. */
   active: boolean;
+  // The plan fields below are absent until the university migration runs.
+  code?: string | null;
+  ects?: number | null;
+  /** Year of the degree plan the course belongs to (1.º–4.º). */
+  plan_year?: number | null;
+  semester?: Semester | null;
+  category?: CourseCategory;
+  status?: CourseStatus;
+  /** "2026-2027": when it is, was or will be taken. */
+  academic_year?: string | null;
+  /** Final grade out of 10. Only typed from an official result. */
+  grade?: number | null;
+  /** What is still unconfirmed, said in words: "Nombre exacto y créditos". */
+  to_confirm?: string | null;
+}
+
+/** The degree as a whole. One row per student in practice. */
+export interface Degree extends Row {
+  name: string;
+  university: string | null;
+  total_ects: number;
+  elective_ects: number | null;
+  /** ECTS passed according to the official transcript, copied by hand. */
+  passed_ects: number | null;
+  passed_ects_as_of: ISODate | null;
+  url: string | null;
+  notes: string | null;
 }
 
 export interface Task extends Row {

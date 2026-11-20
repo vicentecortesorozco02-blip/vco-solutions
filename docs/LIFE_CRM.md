@@ -12,7 +12,7 @@ Cada pantalla responde una pregunta:
 | `/panel/tareas`          | ¿Qué tengo que hacer? (hoy, próximas, atrasadas, todas y un tablero que se arrastra) |
 | `/panel/proyectos`       | ¿En qué estoy trabajando?                 |
 | `/panel/proyectos/[id]`  | Tareas y costes de un proyecto            |
-| `/panel/universidad`     | ¿Qué tengo que entregar?                  |
+| `/panel/universidad`     | ¿Qué me queda para graduarme? (cuatrimestres, entregas, TFG y prácticas) |
 | `/panel/dinero`          | ¿Qué pago, cuánto, desde qué cuenta y cuándo? |
 | `/panel/suscripciones`   | ¿Qué me van a cobrar? (por meses o en lista) |
 | `/panel/suscripciones/[id]` | La ficha de un servicio, con su historial |
@@ -205,6 +205,26 @@ pones tú.
   inbox, borrar, persistir tras recargar, tema oscuro, 14 páginas a 390, 768,
   1366 y 1920 sin desbordes) se probó contra la base real con un usuario de
   prueba que después se eliminó.
+
+## Universidad
+
+`/panel/universidad` es el plan de estudios, no solo una lista de entregas
+(ver D-030). La lógica está en `lib/life/university.ts` y sus pruebas.
+
+- **Asignaturas** (`courses`): código, ECTS, curso del plan, cuatrimestre,
+  tipo (obligatoria, optativa, TFG, prácticas), estado (pendiente,
+  planificada, matriculada, aprobada), curso académico, nota sobre 10 y
+  «pendiente de confirmar». Solo «aprobada» cuenta como hecho; la nota solo
+  existe en una aprobada.
+- **Grado** (`degrees`): créditos totales, optatividad exigida y créditos
+  superados según el expediente. El porcentaje de carrera sale **solo** de ese
+  último dato; sin él se dice «sin calcular».
+- **Cuatrimestres**: de septiembre a enero es el primero y de febrero a agosto
+  el segundo. «Ahora» y «Siguiente» son las asignaturas con ese curso académico
+  y cuatrimestre; «Después», el resto sin aprobar. El TFG y las prácticas van
+  aparte, con sus trámites (entregas de tipo «Trámite»).
+- El calendario de la página junta entregas y eventos de categoría
+  Universidad.
 
 ## Socios y gastos compartidos
 

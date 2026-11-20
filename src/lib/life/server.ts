@@ -9,7 +9,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import type { LifeData } from "./agenda";
 import { hourIn, todayIn } from "./dates";
-import type { Lead, Profile } from "./model";
+import type { Degree, Lead, Profile } from "./model";
 
 const DEFAULT_ZONE = "Europe/Madrid";
 
@@ -190,3 +190,19 @@ export const loadLeads = cache(async (): Promise<Lead[]> => {
   return data ?? [];
 });
 
+/**
+ * The degree being studied, if one is set up.
+ *
+ * Loaded apart, like `access_items`: until its migration runs the table does
+ * not exist, and that must not take the university page down.
+ */
+export const loadDegree = cache(async (): Promise<Degree | null> => {
+  const { supabase } = await requirePanelSession();
+  const { data, error } = await supabase
+    .from("degrees")
+    .select("*")
+    .order("created_at")
+    .limit(1)
+    .maybeSingle();
+  return error ? null : data;
+});

@@ -104,6 +104,7 @@ export const entityIcon: Record<EntityKind, LucideIcon> = {
   project: FolderKanban,
   course: GraduationCap,
   courseItem: BookOpen,
+  degree: GraduationCap,
   domain: Globe,
   contact: Users,
   vault: Vault,

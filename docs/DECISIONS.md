@@ -642,3 +642,34 @@ entre desde su web es más cómodo que recordar una ruta, y lo que protege los
 datos nunca fue el secreto de la URL.
 
 **Coste de revertir.** Ninguno: se quita el enlace.
+
+---
+
+## D-030 · Universidad como plan de estudios, y el porcentaje solo del expediente
+
+**Contexto.** La página de Universidad solo sabía de entregas. El dueño quiere
+ver de un vistazo qué cursa ahora, qué tiene el cuatrimestre siguiente, qué le
+quedará después y cuántos créditos le faltan para graduarse.
+
+**Decisión.**
+
+- Cada asignatura lleva su sitio en el plan (código, ECTS, curso, cuatrimestre,
+  tipo) y su estado: pendiente, planificada, matriculada o aprobada, con el
+  curso académico en que se cursa. Lo que falta por comprobar se escribe en
+  `to_confirm` y la interfaz lo enseña como «Por confirmar».
+- El grado es una fila propia (`degrees`): créditos totales, optatividad
+  exigida y los créditos superados **según el expediente**, copiados a mano con
+  su fecha.
+- El porcentaje de carrera sale solo de ese dato del expediente. Sumar las
+  asignaturas del panel daría una cifra falsa: lo aprobado en primero no suele
+  estar apuntado. Sin el dato, la página dice «Porcentaje sin calcular».
+- El TFG y las prácticas son asignaturas de tipo propio, fuera de las columnas
+  de cuatrimestre, con sus trámites como entregas de tipo «Trámite».
+- «Este curso» (`active`) ya no se edita: sigue al estado «Matriculada».
+
+**Motivo.** Es la misma regla que el dinero: lo que no se sabe no se rellena,
+y lo estimado no se presenta como firme. Una nota o una aprobada solo entran
+desde un resultado oficial.
+
+**Coste de revertir.** Bajo: las columnas son opcionales y la tabla `degrees`
+se lee aparte; la página anterior funcionaba solo con entregas.

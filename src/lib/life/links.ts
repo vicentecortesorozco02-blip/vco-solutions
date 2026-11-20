@@ -22,6 +22,7 @@ export const homeOf: Record<EntityKind, string> = {
   project: panelRoutes.projects,
   course: panelRoutes.university,
   courseItem: panelRoutes.university,
+  degree: panelRoutes.university,
   domain: panelRoutes.domains,
   contact: panelRoutes.contacts,
   vault: panelRoutes.documents,

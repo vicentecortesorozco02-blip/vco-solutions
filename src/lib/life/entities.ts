@@ -8,7 +8,9 @@ import {
   CHARGE_STATUSES,
   CONFIDENCES,
   CURRENCIES,
+  COURSE_CATEGORIES,
   COURSE_ITEM_KINDS,
+  COURSE_STATUSES,
   EVENT_CATEGORIES,
   FREQUENCIES,
   MONEY_CATEGORIES,
@@ -28,7 +30,9 @@ import {
   chargeStatusLabel,
   confidenceLabel,
   currencyLabel,
+  courseCategoryLabel,
   courseItemKindLabel,
+  courseStatusLabel,
   eventCategoryLabel,
   frequencyLabel,
   moneyCategoryLabel,
@@ -36,6 +40,8 @@ import {
   projectStatusLabel,
   recurrenceLabel,
   scopeLabel,
+  SEMESTERS,
+  semesterLabel,
   subscriptionCategoryLabel,
   subscriptionStatusLabel,
   tagColorLabel,
@@ -294,15 +300,76 @@ export const entities = {
     singular: "Asignatura",
     feminine: true,
     titleField: "name",
-    searchFields: ["name", "teacher", "room", "notes"],
+    searchFields: ["name", "code", "teacher", "room", "notes", "to_confirm"],
     fields: [
       { name: "name", label: "Nombre", type: "text", required: true },
-      { name: "teacher", label: "Profesor", type: "text", half: true },
-      { name: "room", label: "Aula", type: "text", half: true },
-      { name: "schedule", label: "Horario", type: "text", placeholder: "Lun y mié · 10:00–12:00" },
+      { name: "code", label: "Código", type: "text", half: true, placeholder: "22031" },
+      { name: "ects", label: "Créditos ECTS", type: "number", min: 0.5, max: 60, half: true },
+      {
+        name: "status",
+        label: "Estado",
+        type: "select",
+        options: opts(COURSE_STATUSES, courseStatusLabel),
+        defaultValue: "pending",
+        half: true,
+        hint: "Aprobada solo con la nota oficial publicada",
+      },
+      {
+        name: "academic_year",
+        label: "Curso académico",
+        type: "text",
+        placeholder: "2026-2027",
+        half: true,
+        hint: "Cuándo la cursas o la cursarás",
+      },
+      { name: "grade", label: "Nota final (0–10)", type: "number", min: 0, max: 10, showIf: { field: "status", is: ["passed"] } },
+      { name: "plan_year", label: "Curso del plan (1–4)", type: "number", min: 1, max: 6, half: true },
+      {
+        name: "semester",
+        label: "Cuatrimestre",
+        type: "select",
+        options: [{ value: "", label: "Sin indicar" }, ...opts(SEMESTERS, semesterLabel)],
+        half: true,
+      },
+      { name: "category", label: "Tipo", type: "select", options: opts(COURSE_CATEGORIES, courseCategoryLabel), defaultValue: "core", half: true },
+      {
+        name: "to_confirm",
+        label: "Pendiente de confirmar",
+        type: "text",
+        placeholder: "Nombre exacto, créditos…",
+        half: true,
+        hint: "Vacío cuando todo esté comprobado",
+      },
+      { name: "teacher", label: "Profesor", type: "text", half: true, advanced: true },
+      { name: "room", label: "Aula", type: "text", half: true, advanced: true },
+      { name: "schedule", label: "Horario", type: "text", placeholder: "Lun y mié · 10:00–12:00", advanced: true },
       { name: "url", label: "Campus o carpeta", type: "url", advanced: true },
-      { name: "active", label: "Este curso", type: "checkbox", defaultValue: true, advanced: true },
       { name: "notes", label: "Notas", type: "textarea", advanced: true },
+    ],
+  },
+  degree: {
+    table: "degrees",
+    singular: "Grado",
+    feminine: false,
+    titleField: "name",
+    searchFields: ["name", "university", "notes"],
+    fields: [
+      { name: "name", label: "Titulación", type: "text", required: true },
+      { name: "university", label: "Universidad", type: "text" },
+      { name: "total_ects", label: "Créditos del grado", type: "number", required: true, min: 1, max: 600, half: true },
+      { name: "elective_ects", label: "Créditos optativos exigidos", type: "number", min: 0, max: 600, half: true },
+      {
+        name: "passed_ects",
+        label: "Créditos superados según el expediente",
+        type: "number",
+        min: 0,
+        max: 600,
+        half: true,
+        hint: "Cópialo del expediente oficial. Sin él no se calcula el porcentaje",
+      },
+      { name: "passed_ects_as_of", label: "Fecha del expediente", type: "date", half: true },
+      { name: "url", label: "Plan de estudios o secretaría", type: "url", advanced: true },
+      { name: "notes", label: "Notas y requisitos", type: "textarea", advanced: true },
     ],
   },
   courseItem: {
@@ -598,6 +665,15 @@ export function parseEntityForm(kind: EntityKind, form: FormData): ParseResult {
   }
   if (kind === "event" && values.recurrence_interval === null) values.recurrence_interval = 1;
   if (kind === "project" && values.progress === null) values.progress = 0;
+  if (kind === "course") {
+    if (typeof values.academic_year === "string" && !/^\d{4}-\d{4}$/.test(values.academic_year)) {
+      crossErrors.academic_year = "Escríbelo como 2026-2027";
+    }
+    // A grade only exists once the course is passed; "Este curso" follows the status.
+    if (values.status !== "passed") values.grade = null;
+    values.active = values.status === "enrolled";
+  }
+  if (kind === "degree" && values.passed_ects === null) values.passed_ects_as_of = null;
 
   if (Object.keys(crossErrors).length) return { ok: false, values: raw, fieldErrors: crossErrors };
   return { ok: true, values, fieldErrors: {} };
